@@ -8,8 +8,10 @@ __________________________________
 Recive      -> io.on("connection"=>{} //llega que un nuevo cliente entro en la url
 crea        ->
 {
-    socket.username = "Anon"
-    socket.position= baseDeDatos[req.params.id].jugadores.push({username:socket.username,position:position}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
+    socket.username = "Anon";
+    socket.position = dataBase[req.params.id].jugadores.length;
+    dataBase[req.params.id].cant_jugadores++;
+    dataBase[req.params.id].jugadores.push({username:socket.username,position:socket.position}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
 }
 Devuelve    -> io.sockets.emit('new_player', dataBase[req.params.id].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
 
@@ -37,9 +39,9 @@ Recive      -> socket.on("init_game",data=>{}) //llega desde el front de pos=0 e
 hace        ->
 {
     initGame();
-    dataBase[req.params.id].stack_cartas=cardStackGenerator()
+    var stats= statStack();
 }
-Devuelve    -> io.sockets.emit('init_game',dataBase[req.params.id].jugadores) //evento para iniciar el juego en todos los front
+Devuelve    -> io.sockets.emit('init_game',{jugadores:dataBase[req.params.id].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
 
 
 
@@ -62,12 +64,12 @@ __________________________________
 Recive      -> socket.on("voted_gov",data=>{})  //este cliente voto si/no sobre el gobierno
 hace        -> 
 {//asumo por ahora que lo guardo en un array posicion es el req.params.id del juego
-    if(data.vote){baseDeDatos[req.params.id].votos.positivo++} //se suma el voto (que es un bool)
-    else{baseDeDatos[req.params.id].votos.positivo--}
-    baseDeDatos[req.params.id].votos.total++
-    if(baseDeDatos[req.params.id].votos.total==baseDeDatos[req.params.id].cant_jugadores) //si es el jugador final que voto
+    if(data.vote){dataBase[req.params.id].votos.positivo++} //se suma el voto (que es un bool)
+    else{dataBase[req.params.id].votos.positivo--}
+    dataBase[req.params.id].votos.total++
+    if(dataBase[req.params.id].votos.total==dataBase[req.params.id].cant_jugadores) //si es el jugador final que voto
     {
-        if(baseDeDatos[req.params.id].votos.positivos>=0) //si hay mas del 50% de votos positivos, devuelve a todos que el gobierno es exitoso, si el cliente es el pm, accede a 3 cartas
+        if(dataBase[req.params.id].votos.positivos>=0) //si hay mas del 50% de votos positivos, devuelve a todos que el gobierno es exitoso, si el cliente es el pm, accede a 3 cartas
         {
             var winner = determine_winner()//por si al ganar este duo, ganan los fascistas
             if(winner!=false) //si hay un ganador 
@@ -77,6 +79,7 @@ hace        ->
             }
             var trio_cartas=[];
             for(var i=0;i<3;i++){trio_cartas.push(dataBase[req.params.id].stack_cartas.pop())} //obtengo las 3 cartas que se le envia al pm
+            resetVotos(); //resetea los valores de los votos
             io.sockets.emit("duo_won",{pm_pos:dataBase[req.params.id].pm_pos,trio_cartas:trio_cartas})}//se envia pm_pos para que el front del pm acceda al trio de cartas
         else
         {
@@ -88,6 +91,7 @@ hace        ->
                 dataBase[req.params.id].passed=0;    
             }
             io.socket.emit("duo_lost",{passed_law:passed_law,law:dataBase[req.params.id].stack_cartas});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+            resetVotos(); //resetea los valores de los votos
             nextTurn();
             io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos}) //se envia a todos el nuevo pm con este evento 
         }
@@ -131,7 +135,7 @@ Devuelve  ->
     io.socket.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
     nextTurn();
     var stats_stack=statStack();
-    io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos}) //se envia a todos el nuevo pm con este evento 
+    io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
 }
 __________________________________
 
@@ -156,10 +160,10 @@ MIN_RED_H //minima cantidad de leyes rojas + Hitle cansiller
 H //rol hitler
 FASC //rol fascista
 LIB //rol liberal
-CANT_LIBS //cantidad de liberales
-CANT_FASC //cantidad de fascistas
+CANT_LIBS //cantidad de liberales max
+CANT_FASC //cantidad de fascistas max
 
-Funciones Auxiliares:
+//Funciones Auxiliares:
 function cardStackGenerator()
 {
     /*
@@ -197,37 +201,63 @@ function statStack()
         blue:dataBase[req.params.id].blue;
         red:dataBase[req.params.id].red;
         cant_left:dataBase[req.params.id].stack_cartas.legth;
+        cant_descart:dataBase[req.params.id].stack_descartados.length;
     }
 }
 
 function initGame()
 {
-    var hechos=[];
-    var counterLibs=0;
-    var counterfasc=0;
-    var hit=0;
+    var counters={counterLibs:0,counterfasc:0,hit:0}
     dataBase[req.params.id].jugadores.foreach(element =>
     {
-        var rol=generateRol(counterLibs,counterfasc,hit);
+        var rol=generateRol(counters);
         element.rol=rol;
     })
+    dataBase[req.params.id].pm_pos=0;
+    dataBase[req.params.id].stack_cartas=cardStackGenerator();
+    dataBase[req.params.id].stack_descartados=[];
+    dataBase[req.params.id].blue=0;
+    dataBase[req.params.id].red=0;
+    dataBase[req.params.id].chancellor={};
+    dataBase[req.params.id].passed=0;
+    resetVotos();
 }
 
-function generateRol(counterLibs,counterfasc,hit)
+function resetVotos()
+{
+    dataBase[req.params.id].votos.positivos=0;
+    dataBase[req.params.id].votos.total=0;
+}
+
+function generateRol(counters)
 {
     var rand=Math.floor(Math.random()*2)
     if(rand == 0) //toca hitler
     {
-        if(hit==0)
+        if(counters.hit==0)
         {
-            H++;
+            counters.hit++;
             return H;
         }
-        else{return generateRol(counterLibs,counterfasc,hit);}
+        else{return generateRol(counters);}
     }
     else if(rand == 1) //toca lib
     {
-        
+        if(counters.counterLibs==CANT_LIBS){return generateRol(counters);}
+        else
+        {
+            counters.counterLibs++;
+            return BLUE;
+        }
+    }
+    else if(rand == 2)//toca fascista
+    {
+        if(counters.counterfasc==CANT_FASC){return generateRol(counnters);}
+        else
+        {
+            counters.counterfasc++;
+            return RED;
+        }
     }
 }
 
