@@ -1,0 +1,60 @@
+SERVER
+
+socket.io:
+__________________________________
+Recive      -> io.on("connection"=>{}
+crea        ->
+{
+    socket.username = "Anon"
+    socket.position= baseDeDatos[id].jugadores.push({username:socket.username,position:position}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partidas
+}
+Devuelve    -> io.sockets.emit('new_player', {position: socket.position, username: socket.username})
+__________________________________
+Recive      -> socket.on("changed_username",data=>{})
+cambia      -> socket.username=data.username
+Devuelve    -> io.sockets.emit('change_username_on_position', {position: socket.position, username: socket.username})
+__________________________________
+Recive      -> socket.on("init_game",data=>{})
+crea        ->
+Devuelve    -> io.sockets.emit('init_game',{cards:cardStackGenerator()})
+__________________________________
+Recive      -> socket.on("voted_gov",data=>{})
+hace        -> 
+{//asumo por ahora que lo guardo en un array posicion es el id del juego
+    if(data.vote){baseDeDatos[id].votos.positivo++}
+    else{baseDeDatos[id].votos.positivo--}
+    baseDeDatos[id].votos.total++
+    if(baseDeDatos[id].votos.total==baseDeDatos[id].cant_jugadores)
+    {
+        if(baseDeDatos[id].votos.positivos>=0){io.sockets.emit('duo_won')}
+        else
+        {
+            var passed_law=false;
+            dataBase[id].passed++;
+            if(database[id].passed==CANT_PASSED_MAX)
+            {
+                passed_law=true;
+                dataBase[id].passed=0;    
+            }
+            io.socket.emit('duo_lost',{passed_law:passed_law});     
+        }
+    }
+}
+Devuelve    -> 
+__________________________________
+Recive      ->
+crea        ->
+Devuelve    ->
+__________________________________
+
+
+Funciones Auxiliares:
+function cardStackGenerator()
+{
+    /*
+    Genera una pila aleatoria con 10 azules y 20 rojas
+    se manda al front la cantidad total de cartas
+    */
+} 
+
+function shuffle(stack_cartas){/*Shuffle de cartas*/}
