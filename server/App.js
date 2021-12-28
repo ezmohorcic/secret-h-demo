@@ -14,7 +14,34 @@ const FASC=""; //rol fascista
 const LIB="";//rol liberal
 const CANT_LIBS="";//cantidad de liberales max
 const CANT_FASC="";//cantidad de fascistas max
+
+
 dataBase=[];
+/* 
+////dataBase plantilla\\\\
+{
+    jugadores:                          //array de jugadores en el id
+        {
+            username:                   //nombre del jugador
+            pos:                        //posicion en mesa
+            rol:                        //rol en el juego
+        }
+    cant_jugadores                      //cantidad de jugadores 
+    stack_cartas                        //el stack de cartas que faltan usar 
+    stack_descartados                   //cartas que fueron descartadas por pm y chancellor
+    blue                                //cantidad de leyes liberales pasadas
+    red                                 //cantidad de leyes fascistas pasadas
+    pm_pos                              //posicion del pm del turno
+    chancellor                          //obj entero de quien es el chacellor del turno
+    passed                              //gobiernos fallados antes de pasar ley obligatoriamente
+    votos:
+        {
+            positivo                    //valor total de los votos (positivo el gobierno pasa)
+            total                       //cantidad de votos recibidos
+        }
+}
+*/
+
 //app.use(express.static('front'));
 
 app.get('/', (req, res)=> 
