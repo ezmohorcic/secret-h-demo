@@ -2,59 +2,254 @@ SERVER
 
 socket.io:
 __________________________________
-Recive      -> io.on("connection"=>{}
+
+
+
+Recive      -> io.on("connection"=>{} //llega que un nuevo cliente entro en la url
 crea        ->
 {
     socket.username = "Anon"
-    socket.position= baseDeDatos[id].jugadores.push({username:socket.username,position:position}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partidas
+    socket.position= baseDeDatos[req.params.id].jugadores.push({username:socket.username,position:position}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
 }
-Devuelve    -> io.sockets.emit('new_player', {position: socket.position, username: socket.username})
+Devuelve    -> io.sockets.emit('new_player', dataBase[req.params.id].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+
+
+
 __________________________________
-Recive      -> socket.on("changed_username",data=>{})
-cambia      -> socket.username=data.username
-Devuelve    -> io.sockets.emit('change_username_on_position', {position: socket.position, username: socket.username})
+
+
+
+Recive      -> socket.on("changed_username",data=>{}) //desde el front, recibe el server que alguien quiere cambiar su nombre
+cambia      -> 
+{
+    socket.username=data.username
+    dataBase[req.params.id].jugadores[data.pos].username=data.username;
+}
+Devuelve    -> io.sockets.emit('change_username_on_position', {position: socket.position, username: socket.username}) //envia nuevo nombre del usuario en esa posicion
+
+
+
 __________________________________
-Recive      -> socket.on("init_game",data=>{})
+
+
+
+Recive      -> socket.on("init_game",data=>{}) //llega desde el front de pos=0 evento de iniciar partreq.params.ida
+hace        ->
+{
+    initGame();
+    dataBase[req.params.id].stack_cartas=cardStackGenerator()
+}
+Devuelve    -> io.sockets.emit('init_game',dataBase[req.params.id].jugadores) //evento para iniciar el juego en todos los front
+
+
+
+__________________________________
+
+
+
+Recive      -> socket.on("selected_chancellor",data=>{}) //el primer ministro escogio chancellor y se inicia votacion
 crea        ->
-Devuelve    -> io.sockets.emit('init_game',{cards:cardStackGenerator()})
+{
+    dataBase[req.params.id].chancellor=data.chancellor //data.chancellor = obj{username,position}
+}
+Devuelve    -> io.sockets.emit("init_vote",{chancellor:data.chancellor}) //evento para que en todos los front aparezca para votar si/no
+
+
 __________________________________
-Recive      -> socket.on("voted_gov",data=>{})
+
+
+
+Recive      -> socket.on("voted_gov",data=>{})  //este cliente voto si/no sobre el gobierno
 hace        -> 
-{//asumo por ahora que lo guardo en un array posicion es el id del juego
-    if(data.vote){baseDeDatos[id].votos.positivo++}
-    else{baseDeDatos[id].votos.positivo--}
-    baseDeDatos[id].votos.total++
-    if(baseDeDatos[id].votos.total==baseDeDatos[id].cant_jugadores)
+{//asumo por ahora que lo guardo en un array posicion es el req.params.id del juego
+    if(data.vote){baseDeDatos[req.params.id].votos.positivo++} //se suma el voto (que es un bool)
+    else{baseDeDatos[req.params.id].votos.positivo--}
+    baseDeDatos[req.params.id].votos.total++
+    if(baseDeDatos[req.params.id].votos.total==baseDeDatos[req.params.id].cant_jugadores) //si es el jugador final que voto
     {
-        if(baseDeDatos[id].votos.positivos>=0){io.sockets.emit('duo_won')}
+        if(baseDeDatos[req.params.id].votos.positivos>=0) //si hay mas del 50% de votos positivos, devuelve a todos que el gobierno es exitoso, si el cliente es el pm, accede a 3 cartas
+        {
+            var winner = determine_winner()//por si al ganar este duo, ganan los fascistas
+            if(winner!=false) //si hay un ganador 
+            {
+                if(winner==BLUE){io.socket.emit("blue_wins");}
+                else{io.socket.emit("red_wins");}
+            }
+            var trio_cartas=[];
+            for(var i=0;i<3;i++){trio_cartas.push(dataBase[req.params.id].stack_cartas.pop())} //obtengo las 3 cartas que se le envia al pm
+            io.sockets.emit("duo_won",{pm_pos:dataBase[req.params.id].pm_pos,trio_cartas:trio_cartas})}//se envia pm_pos para que el front del pm acceda al trio de cartas
         else
         {
-            var passed_law=false;
-            dataBase[id].passed++;
-            if(database[id].passed==CANT_PASSED_MAX)
+            var passed_law=false;  //saber si tiene que pasar o no una ley, para que el front consulte en el evento enviado
+            dataBase[req.params.id].passed++;
+            if(database[req.params.id].passed==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
             {
                 passed_law=true;
-                dataBase[id].passed=0;    
+                dataBase[req.params.id].passed=0;    
             }
-            io.socket.emit('duo_lost',{passed_law:passed_law});     
+            io.socket.emit("duo_lost",{passed_law:passed_law,law:dataBase[req.params.id].stack_cartas});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+            nextTurn();
+            io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos}) //se envia a todos el nuevo pm con este evento 
         }
     }
 }
-Devuelve    -> 
-__________________________________
-Recive      ->
-crea        ->
-Devuelve    ->
+
+
+
 __________________________________
 
+
+
+Recive      -> socket.on("pm_desition",data=>{}) //desde el cliente que es el pm actual, decreq.params.idio que descartar
+hace        -> 
+{
+    dataBase[req.params.id].stack_descartados.push(data.descartada); //se guarda en la pila de descartados para remezclar mas adelante
+    
+}
+Devuelve  ->io.socket.emit("chancellor_turn",{duo_cartas:data.duo_cartas,chancellor:dataBase[req.params.id].chancellor.position}) //evento para todos que le toca al chancellor votar
+
+
+
+__________________________________
+
+
+
+Recive      -> socket.on("chancellor_desition",data=>{}) //desde el cliente del chancellor actual, decreq.params.idio que descartar
+hace        -> 
+{
+    dataBase[req.params.id].stack_descartados.push(data.descartada);
+    lawCounter(data.selected);
+    var winner = determine_winner(); //si ganan fascistas por cantreq.params.idad de leyes rojas o liberales por cantreq.params.idad de leyes azules
+    if(winner!=false) //si hay un ganador 
+    {
+        if(winner==BLUE){io.socket.emit("blue_wins");}
+        else{io.socket.emit("red_wins");}
+    } 
+}
+Devuelve  -> 
+{
+    io.socket.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
+    nextTurn();
+    var stats_stack=statStack();
+    io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos}) //se envia a todos el nuevo pm con este evento 
+}
+__________________________________
+
+
+
+Recive      -> 
+hace        -> 
+Devuelve  ->
+
+
+__________________________________
+
+
+
+statics:
+CANT_PASSED_MAX //cantreq.params.idad de gobiernos pasados maxima 
+BLUE //ley liberal
+RED //ley fascista
+WINS_BLUE //cantidad para que liberales ganen
+WINS_RED //cantidad para que fascistas ganen
+MIN_RED_H //minima cantidad de leyes rojas + Hitle cansiller 
+H //rol hitler
+FASC //rol fascista
+LIB //rol liberal
+CANT_LIBS //cantidad de liberales
+CANT_FASC //cantidad de fascistas
 
 Funciones Auxiliares:
 function cardStackGenerator()
 {
     /*
     Genera una pila aleatoria con 10 azules y 20 rojas
-    se manda al front la cantidad total de cartas
+    se manda al front la cantreq.params.idad total de cartas
     */
 } 
 
 function shuffle(stack_cartas){/*Shuffle de cartas*/}
+
+function determine_winner()
+{
+    if(dataBase[req.params.id].blue==WINS_BLUE){return BLUE}
+    else if(dataBase[req.params.id].red==WINS_RED){return RED}
+    else if(dataBase[req.params.id].red==WINS_RED && dataBase[req.params.id].chancellor.rol==H){return RED}
+    else{return false}
+}
+
+function nextTurn()
+{
+    dataBase[req.params.id].pm_pos++   //pasa al siguiente jugador para ser pm
+    if(dataBase[req.params.id].pm_pos>dataBase[req.params.id].cant_jugadores){dataBase[req.params.id].pm_pos=0;} //y si se pasa, vuelve al principio
+    dataBase[req.params.id].chancellor={}; //se borra el chancellor
+}
+
+function lawCounter(selected)
+{
+    if(selected==BLUE){dataBase[req.params.id].blue++}
+    else{dataBase[req.params.id].red++}
+}
+
+function statStack()
+{
+    return {
+        blue:dataBase[req.params.id].blue;
+        red:dataBase[req.params.id].red;
+        cant_left:dataBase[req.params.id].stack_cartas.legth;
+    }
+}
+
+function initGame()
+{
+    var hechos=[];
+    var counterLibs=0;
+    var counterfasc=0;
+    var hit=0;
+    dataBase[req.params.id].jugadores.foreach(element =>
+    {
+        var rol=generateRol(counterLibs,counterfasc,hit);
+        element.rol=rol;
+    })
+}
+
+function generateRol(counterLibs,counterfasc,hit)
+{
+    var rand=Math.floor(Math.random()*2)
+    if(rand == 0) //toca hitler
+    {
+        if(hit==0)
+        {
+            H++;
+            return H;
+        }
+        else{return generateRol(counterLibs,counterfasc,hit);}
+    }
+    else if(rand == 1) //toca lib
+    {
+        
+    }
+}
+
+////dataBase plantilla\\\\
+{
+    jugadores: //array de jugadores en el id
+        {
+            username:  //nombre del jugador
+            pos:    //posicion en mesa
+            rol:    //rol en el juego
+        }
+    cant_jugadores //cantidad de jugadores 
+    stack_cartas //el stack de cartas que faltan usar 
+    stack_descartados //cartas que fueron descartadas por pm y chancellor
+    blue //cantidad de leyes liberales pasadas
+    red //cantidad de leyes fascistas pasadas
+    pm_pos //posicion del pm del turno
+    chancellor //obj entero de quien es el chacellor del turno
+    passed    //gobiernos fallados antes de pasar ley obligatoriamente
+    votos:
+        {
+            positivo //valor total de los votos (positivo el gobierno pasa)
+            total    //cantidad de votos recibidos
+        }
+}
