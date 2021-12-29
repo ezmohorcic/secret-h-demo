@@ -3,17 +3,17 @@ const socketio = require('socket.io');
 const app = express();
 
 //statics:
-const CANT_PASSED_MAX=""; //cantreq.params.idad de gobiernos pasados maxima 
-const BLUE=""; //ley liberal
-const RED=""; //ley fascista
-const WINS_BLUE=""; //cantidad para que liberales ganen
-const WINS_RED=""; //cantidad para que fascistas ganen
-const MIN_RED_H=""; //minima cantidad de leyes rojas + Hitle cansiller 
-const H=""; //rol hitler
-const FASC=""; //rol fascista
-const LIB="";//rol liberal
-const CANT_LIBS="";//cantidad de liberales max
-const CANT_FASC="";//cantidad de fascistas max
+const CANT_PASSED_MAX=4; //cantreq.params.idad de gobiernos pasados maxima 
+const BLUE="blue"; //ley liberal
+const RED="red"; //ley fascista
+const WINS_BLUE=5; //cantidad para que liberales ganen
+const WINS_RED=5; //cantidad para que fascistas ganen
+const MIN_RED_H=3; //minima cantidad de leyes rojas + Hitle cansiller 
+const H=0; //rol hitler
+const FASC=1; //rol fascista
+const LIB=2;//rol liberal
+const CANT_LIBS=3;//cantidad de liberales max
+const CANT_FASC=1;//cantidad de fascistas max
 
 var obj=
 {
@@ -79,8 +79,9 @@ io.on('connection', socket =>
         socket.username = "Anon";
         socket.position = dataBase[0].jugadores.length;
         dataBase[0].cant_jugadores++;
-        dataBase[0].jugadores.push({username:socket.username,position:socket.position}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
+        dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
         io.sockets.emit('new_player', dataBase[0].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+        io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id})
     
         socket.on("changed_username",data=>
         { //desde el front, recibe el server que alguien quiere cambiar su nombre
@@ -101,6 +102,13 @@ io.on('connection', socket =>
             for(var i=0;i<dataBase[0].jugadores.length;i++){dataBase[0].jugadores[i].position=i;}
             io.sockets.emit("player_left",dataBase[0].jugadores);
         });
+
+        socket.on("init_game",data=>
+        {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
+            initGame();
+            var stats= statStack();
+            io.sockets.emit('init_game',{jugadores:dataBase[req.params.id].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
+        }) 
 })
 
     /*socket.on("init_game",data=>
@@ -217,7 +225,7 @@ function statStack()
         cant_left:dataBase[req.params.id].stack_cartas.legth,
         cant_descart:dataBase[req.params.id].stack_descartados.length,
     }
-}
+}*/
 
 function initGame()
 {
@@ -274,4 +282,3 @@ function generateRol(counters)
         }
     }
 }
-*/

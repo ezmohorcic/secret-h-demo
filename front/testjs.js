@@ -3,6 +3,8 @@ var socket = io();
 var ulLista= document.getElementById("ulLista");
 var enviarNombre = document.getElementById("enviarNombre");
 var nuevoNombre = document.getElementById("nuevoNombre")
+var player_data;
+
 enviarNombre.addEventListener("click",function()
 {
     if(nuevoNombre.value)
@@ -12,6 +14,8 @@ enviarNombre.addEventListener("click",function()
         nuevoNombre.value="";
     }
 });
+
+socket.on("your_data",function(msg){player_data = msg;})
 
 socket.on("change_username_on_position",function(msg)
 {
