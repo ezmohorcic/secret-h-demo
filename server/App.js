@@ -86,8 +86,12 @@ io.on('connection', socket =>
         { //desde el front, recibe el server que alguien quiere cambiar su nombre
             console.log("changed_username")
             socket.username=data.username
-            //dataBase[req.params.id].jugadores[data.pos].username=data.username;
-            io.sockets.emit('change_username_on_position', {position: socket.position, username: socket.username}) //envia nuevo nombre del usuario en esa posicion
+            dataBase[0].jugadores[socket.position].username=data.username;
+            var out={
+                position: socket.position,
+                username: socket.username
+            }
+            io.sockets.emit('change_username_on_position', out) //envia nuevo nombre del usuario en esa posicion
         })
 
         socket.on("disconnecting",data=>
@@ -99,14 +103,7 @@ io.on('connection', socket =>
         });
 })
 
-    /*socket.on("changed_username",data=>
-    { //desde el front, recibe el server que alguien quiere cambiar su nombre
-        socket.username=data.username
-        dataBase[req.params.id].jugadores[data.pos].username=data.username;
-        io.sockets.emit('change_username_on_position', {position: socket.position, username: socket.username}) //envia nuevo nombre del usuario en esa posicion
-    })
-
-    socket.on("init_game",data=>
+    /*socket.on("init_game",data=>
     {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
         initGame();
         var stats= statStack();

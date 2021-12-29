@@ -7,7 +7,7 @@ enviarNombre.addEventListener("click",function()
 {
     if(nuevoNombre.value)
     {
-        socket.emit("changed_username",nuevoNombre.value);
+        socket.emit("changed_username",{username:nuevoNombre.value});
         console.log("changed_username " + nuevoNombre.value)
         nuevoNombre.value="";
     }
@@ -16,20 +16,15 @@ enviarNombre.addEventListener("click",function()
 socket.on("change_username_on_position",function(msg)
 {
     var li=document.getElementById("ulLista").firstChild;
-    for(var i=0;i<msg.position;i++){li=li.nextSibling;}
+    var i=0;
+    for(i=0;i<msg.position;i++){li=li.nextSibling;}
     li.innerText=msg.username;
     
 })
 
-socket.on("new_player",function(msg)
-{
-    renderPlayers(msg);
-})
+socket.on("new_player",function(msg){renderPlayers(msg);})
 
-socket.on("player_left",function(msg)
-{
-    renderPlayers(msg);
-})
+socket.on("player_left",function(msg){renderPlayers(msg);})
 
 function renderPlayers(msg)
 {
