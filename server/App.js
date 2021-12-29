@@ -15,8 +15,24 @@ const LIB="";//rol liberal
 const CANT_LIBS="";//cantidad de liberales max
 const CANT_FASC="";//cantidad de fascistas max
 
-
-dataBase=[];
+var obj=
+{
+    jugadores:[],
+    cant_jugadores:0,
+    stack_cartas:[],
+    stack_descartados:[],
+    blue:0,
+    red:0,
+    pm_pos:0,
+    chancellor:{},
+    passed:0,
+    votos:
+        {
+            positivos:0,
+            total:0
+        }
+}
+dataBase=[obj];
 /* 
 ////dataBase plantilla\\\\
 {
@@ -42,34 +58,48 @@ dataBase=[];
 }
 */
 
-//app.use(express.static('front'));
+app.set('view engine', 'ejs')
+app.use(express.static('../front/'))
 
-app.get('/', (req, res)=> 
+app.get("/",(req,res)=>
 {
-    //res.render('index');
+    
+    res.render("index")
 })
-
-app.get("/:id",(req,res)=>
-{
-
-})
-
 const server = app.listen(process.env.PORT || 3000, () => {
     console.log("server is running");
 })
 
 const io = socketio(server)
 
+
 io.on('connection', socket => 
 {
-    console.log("New user connected");
-    socket.username = "Anon";
-    socket.position = dataBase[req.params.id].jugadores.length;
-    dataBase[req.params.id].cant_jugadores++;
-    dataBase[req.params.id].jugadores.push({username:socket.username,position:socket.position}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
-    io.sockets.emit('new_player', dataBase[req.params.id].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+        console.log("New user connected");
+        socket.username = "Anon";
+        socket.position = dataBase[0].jugadores.length;
+        dataBase[0].cant_jugadores++;
+        dataBase[0].jugadores.push({username:socket.username,position:socket.position}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
+        io.sockets.emit('new_player', dataBase[0].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+    
+        socket.on("changed_username",data=>
+        { //desde el front, recibe el server que alguien quiere cambiar su nombre
+            console.log("changed_username")
+            socket.username=data.username
+            //dataBase[req.params.id].jugadores[data.pos].username=data.username;
+            io.sockets.emit('change_username_on_position', {position: socket.position, username: socket.username}) //envia nuevo nombre del usuario en esa posicion
+        })
 
-    socket.on("changed_username",data=>
+        socket.on("disconnecting",data=>
+        {
+            var flag=false;
+            dataBase[0].jugadores.filter(jugador => jugador!=socket.username)
+            for(var i=0;i<dataBase[0].jugadores.length;i++){dataBase[0].jugadores[i].position=i;}
+            io.socket.emit("player_left",dataBase[0].jugadores);
+        });
+})
+
+    /*socket.on("changed_username",data=>
     { //desde el front, recibe el server que alguien quiere cambiar su nombre
         socket.username=data.username
         dataBase[req.params.id].jugadores[data.pos].username=data.username;
@@ -146,23 +176,22 @@ io.on('connection', socket =>
         nextTurn();
         var stats_stack=statStack();
         io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
-    }) 
-})
+    }) */
 
 
 
 //Funciones Auxiliares:
-function cardStackGenerator()
+/*function cardStackGenerator()
 {
-    /*
-    Genera una pila aleatoria con 10 azules y 20 rojas
-    se manda al front la cantreq.params.idad total de cartas
-    */
-} 
+    
+    //Genera una pila aleatoria con 10 azules y 20 rojas
+    //se manda al front la cantreq.params.idad total de cartas
+    
+} */
 
-function shuffle(stack_cartas){/*Shuffle de cartas*/}
+/*function shuffle(stack_cartas){}*/
 
-function determine_winner()
+/*function determine_winner()
 {
     if(dataBase[req.params.id].blue==WINS_BLUE){return BLUE}
     else if(dataBase[req.params.id].red==WINS_RED){return RED}
@@ -248,3 +277,4 @@ function generateRol(counters)
         }
     }
 }
+*/
