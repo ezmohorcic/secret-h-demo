@@ -23,10 +23,21 @@ socket.on("change_username_on_position",function(msg)
 
 socket.on("new_player",function(msg)
 {
+    renderPlayers(msg);
+})
+
+socket.on("player_left",function(msg)
+{
+    renderPlayers(msg);
+})
+
+function renderPlayers(msg)
+{
     ulLista.innerHTML='';
+    console.log(msg)
     msg.forEach(element => {
         var newLi=document.createElement("LI");
         newLi.innerText=element.username;
         ulLista.appendChild(newLi);
     });
-})
+}

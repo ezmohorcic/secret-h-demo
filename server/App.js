@@ -93,9 +93,9 @@ io.on('connection', socket =>
         socket.on("disconnecting",data=>
         {
             var flag=false;
-            dataBase[0].jugadores.filter(jugador => jugador!=socket.username)
+            dataBase[0].jugadores=dataBase[0].jugadores.filter(jugador => jugador.position!=socket.position)
             for(var i=0;i<dataBase[0].jugadores.length;i++){dataBase[0].jugadores[i].position=i;}
-            io.socket.emit("player_left",dataBase[0].jugadores);
+            io.sockets.emit("player_left",dataBase[0].jugadores);
         });
 })
 
