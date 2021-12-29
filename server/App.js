@@ -19,12 +19,13 @@ var obj=
 {
     jugadores:[],
     cant_jugadores:0,
-    stack_cartas:[],
+    stack_cartas:null,
     stack_descartados:[],
     blue:0,
     red:0,
     pm_pos:0,
     chancellor:{},
+    pm:{},
     passed:0,
     votos:
         {
@@ -49,6 +50,7 @@ dataBase=[obj];
     red                                 //cantidad de leyes fascistas pasadas
     pm_pos                              //posicion del pm del turno
     chancellor                          //obj entero de quien es el chacellor del turno
+    pm
     passed                              //gobiernos fallados antes de pasar ley obligatoriamente
     votos:
         {
@@ -81,17 +83,14 @@ io.on('connection', socket =>
         dataBase[0].cant_jugadores++;
         dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
         io.sockets.emit('new_player', dataBase[0].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
-        io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id})
+        io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id}) //le envia la informacion propia del jugador a su front
     
         socket.on("changed_username",data=>
         { //desde el front, recibe el server que alguien quiere cambiar su nombre
             console.log("changed_username")
             socket.username=data.username
             dataBase[0].jugadores[socket.position].username=data.username;
-            var out={
-                position: socket.position,
-                username: socket.username
-            }
+            var out={position: socket.position,username: socket.username}
             io.sockets.emit('change_username_on_position', out) //envia nuevo nombre del usuario en esa posicion
         })
 
@@ -107,8 +106,17 @@ io.on('connection', socket =>
         {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
             initGame();
             var stats= statStack();
-            io.sockets.emit('init_game',{jugadores:dataBase[req.params.id].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
-        }) 
+            console.log(stats)
+            io.sockets.emit('init_game_client',stats) //evento para iniciar el juego en todos los front
+            io.to(socket.id).emit("asigned_pm"); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
+        })
+        
+        socket.on("selected_chancellor",data=>
+        {//el primer ministro escogio chancellor y se inicia votacion
+            dataBase[0].chancellor=data.chancellor //data.chancellor = obj{username,position}
+            io.sockets.emit("init_vote",{chancellor:data.chancellor}) //evento para que en todos los front aparezca para votar si/no
+            io.to(dataBase[0].chancellor.socketId).emit("you_chancellor");
+        })
 })
 
     /*socket.on("init_game",data=>
@@ -133,32 +141,33 @@ io.on('connection', socket =>
         if(dataBase[req.params.id].votos.total==dataBase[req.params.id].cant_jugadores) //si es el jugador final que voto
         {   
             if(dataBase[req.params.id].votos.positivos>=0) //si hay mas del 50% de votos positivos, devuelve a todos que el gobierno es exitoso, si el cliente es el pm, accede a 3 cartas
-        {
-            var winner = determine_winner()//por si al ganar este duo, ganan los fascistas
-            if(winner!=false) //si hay un ganador 
             {
-                if(winner==BLUE){io.socket.emit("blue_wins");}
-                else{io.socket.emit("red_wins");}
-            }
-            var trio_cartas=[];
-            for(var i=0;i<3;i++){trio_cartas.push(dataBase[req.params.id].stack_cartas.pop())} //obtengo las 3 cartas que se le envia al pm
-            resetVotos(); //resetea los valores de los votos
-            io.sockets.emit("duo_won",{pm_pos:dataBase[req.params.id].pm_pos,trio_cartas:trio_cartas})}//se envia pm_pos para que el front del pm acceda al trio de cartas
-        else
-        {
-            var passed_law=false;  //saber si tiene que pasar o no una ley, para que el front consulte en el evento enviado
-            dataBase[req.params.id].passed++;
-            if(database[req.params.id].passed==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
+                var winner = determine_winner()//por si al ganar este duo, ganan los fascistas
+                if(winner!=false) //si hay un ganador 
+                {
+                    if(winner==BLUE){io.socket.emit("blue_wins");}
+                    else{io.socket.emit("red_wins");}
+                }
+                var trio_cartas=[];
+                for(var i=0;i<3;i++){trio_cartas.push(dataBase[req.params.id].stack_cartas.pop())} //obtengo las 3 cartas que se le envia al pm
+                resetVotos(); //resetea los valores de los votos
+                io.sockets.emit("duo_won",{pm_pos:dataBase[req.params.id].pm_pos,trio_cartas:trio_cartas})}//se envia pm_pos para que el front del pm acceda al trio de cartas
+                
+            else
             {
-                passed_law=true;
-                dataBase[req.params.id].passed=0;    
+                var passed_law=false;  //saber si tiene que pasar o no una ley, para que el front consulte en el evento enviado
+                dataBase[req.params.id].passed++;
+                if(database[req.params.id].passed==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
+                {
+                    passed_law=true;
+                    dataBase[req.params.id].passed=0;    
+                }   
+                io.socket.emit("duo_lost",{passed_law:passed_law,law:dataBase[req.params.id].stack_cartas});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                resetVotos(); //resetea los valores de los votos
+                nextTurn();
+                io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos}) //se envia a todos el nuevo pm con este evento 
             }
-            io.socket.emit("duo_lost",{passed_law:passed_law,law:dataBase[req.params.id].stack_cartas});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
-            resetVotos(); //resetea los valores de los votos
-            nextTurn();
-            io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos}) //se envia a todos el nuevo pm con este evento 
         }
-            }
     }) 
 
     socket.on("pm_desition",data=>
@@ -181,18 +190,17 @@ io.on('connection', socket =>
         nextTurn();
         var stats_stack=statStack();
         io.socket.emit("next_turn",{next_pm:dataBase[req.params.id].pm_pos,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
+        io.to(dataBase[req.params.id].jugadores[dataBase[req.params.id].pm_pos].socketId).emit("asigned_pm",)
     }) */
 
 
 
 //Funciones Auxiliares:
-/*function cardStackGenerator()
+function cardStackGenerator()
 {
+    return([BLUE,RED,BLUE,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,RED,RED,RED,RED,BLUE,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE,RED,RED,RED,RED])
     
-    //Genera una pila aleatoria con 10 azules y 20 rojas
-    //se manda al front la cantreq.params.idad total de cartas
-    
-} */
+} 
 
 /*function shuffle(stack_cartas){}*/
 
@@ -202,12 +210,12 @@ io.on('connection', socket =>
     else if(dataBase[req.params.id].red==WINS_RED){return RED}
     else if(dataBase[req.params.id].red==WINS_RED && dataBase[req.params.id].chancellor.rol==H){return RED}
     else{return false}
-}
+}*/
 
 function nextTurn()
 {
-    dataBase[req.params.id].pm_pos++   //pasa al siguiente jugador para ser pm
-    if(dataBase[req.params.id].pm_pos>dataBase[req.params.id].cant_jugadores){dataBase[req.params.id].pm_pos=0;} //y si se pasa, vuelve al principio
+    if(dataBase[0].pm.position==dataBase[0].jugadores.length-1){dataBase[0].pm=dataBase[0].jugadores[0]}  //pasa al siguiente jugador para ser pm
+    else{dataBase[0].pm=dataBase[0].jugadores[dataBase[0].pm.position+1]}
     dataBase[req.params.id].chancellor={}; //se borra el chancellor
 }
 
@@ -220,35 +228,38 @@ function lawCounter(selected)
 function statStack()
 {
     return {
-        blue:dataBase[req.params.id].blue,
-        red:dataBase[req.params.id].red,
-        cant_left:dataBase[req.params.id].stack_cartas.legth,
-        cant_descart:dataBase[req.params.id].stack_descartados.length,
+        blue:dataBase[0].blue,
+        red:dataBase[0].red,
+        cant_left:dataBase[0].stack_cartas.length,
+        cant_descart:dataBase[0].stack_descartados.length,
+        pm_pos:dataBase[0].pm.position
     }
-}*/
+}
 
 function initGame()
 {
     var counters={counterLibs:0,counterfasc:0,hit:0}
-    dataBase[req.params.id].jugadores.foreach(element =>
+    dataBase[0].jugadores.forEach(element =>
     {
         var rol=generateRol(counters);
         element.rol=rol;
     })
-    dataBase[req.params.id].pm_pos=0;
-    dataBase[req.params.id].stack_cartas=cardStackGenerator();
-    dataBase[req.params.id].stack_descartados=[];
-    dataBase[req.params.id].blue=0;
-    dataBase[req.params.id].red=0;
-    dataBase[req.params.id].chancellor={};
-    dataBase[req.params.id].passed=0;
+    dataBase[0].pm_pos=0;
+    dataBase[0].stack_cartas=cardStackGenerator();
+    console.log(dataBase[0].stack_cartas);
+    dataBase[0].stack_descartados=[];
+    dataBase[0].blue=0;
+    dataBase[0].red=0;
+    dataBase[0].chancellor={};
+    dataBase[0].pm=dataBase[0].jugadores[0];
+    dataBase[0].passed=0;
     resetVotos();
 }
 
 function resetVotos()
 {
-    dataBase[req.params.id].votos.positivos=0;
-    dataBase[req.params.id].votos.total=0;
+    dataBase[0].votos.positivos=0;
+    dataBase[0].votos.total=0;
 }
 
 function generateRol(counters)
