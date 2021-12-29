@@ -47,17 +47,41 @@ socket.on("new_player",function(msg){renderPlayers(msg);})
 
 socket.on("player_left",function(msg){renderPlayers(msg);})
 
-socket.on("init_game_client",function(msg){console.log(msg)})
+socket.on("init_game_client",function(msg)
+{
+    all_players=msg.jugadores;
+    var contStats=document.createElement("DIV");
+    contStats.id="contStats";
+    var blueCounter=document.createElement("P");
+    blueCounter.id="blueCounter";
+    blueCounter.innerText="Blue pasadas: "+ msg.stats.blue;
+    var redCounter=document.createElement("P");
+    redCounter.innerText="Red pasadas: "+msg.stats.red;
+    redCounter.id="redCounter";
+    var cantCartas=document.createElement("P");
+    cantCartas.id="cantCartas";
+    cantCartas.innerText="cartas en el mazo: " + msg.stats.cant_left;
+    var cantDescarte=document.createElement("P");
+    cantDescarte.innerText="cartas descartadas: " + msg.stats.cant_descart;
+    contStats.appendChild(blueCounter);
+    contStats.appendChild(redCounter);
+    contStats.appendChild(cantCartas);
+    contStats.appendChild(cantDescarte);
+    document.body.append(contStats);
+    
+})
 
 socket.on("asigned_pm",function(){console.log("soy pm")})
 
 function renderPlayers(msg)
 {
     ulLista.innerHTML='';
-    console.log(msg)
+    var i=0;
     msg.forEach(element => {
         var newLi=document.createElement("LI");
         newLi.innerText=element.username;
+        newLi.id="player"+i.toString();
+        i++;
         ulLista.appendChild(newLi);
     });
     all_players=msg;

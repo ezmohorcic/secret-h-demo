@@ -107,7 +107,7 @@ io.on('connection', socket =>
             initGame();
             var stats= statStack();
             console.log(stats)
-            io.sockets.emit('init_game_client',stats) //evento para iniciar el juego en todos los front
+            io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
             io.to(socket.id).emit("asigned_pm"); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
         })
         
