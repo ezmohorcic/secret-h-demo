@@ -11,6 +11,8 @@ var stats_turno;
 var preChancellor=null;
 //----------------
 
+
+//Acciones-----------
 var enviarNombre = document.getElementById("enviarNombre");
 enviarNombre.addEventListener("click",function()
 {
@@ -86,6 +88,7 @@ socket.on("asigned_pm",function()
     {
         if(preChancellor)
         {
+            console.log("enviando prechancellor")
             socket.emit("selected_chancellor",preChancellor)
         }
     })
@@ -109,8 +112,15 @@ socket.on("asigned_pm",function()
             });
         }
     });
+    document.body.appendChild(chancellor_select_container);
 })
 
+socket.on("init_vote",function(msg)
+{
+    
+});
+
+//Funciones Auxiliares-------------
 function renderPlayers(msg)
 {
     ulLista.innerHTML='';
