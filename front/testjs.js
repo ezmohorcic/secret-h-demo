@@ -111,7 +111,7 @@ socket.on("asigned_pm",function()
             {
                 preChancellor=element;
                 document.getElementById("chancellorPreselected").innerText="Chancellor preseleccionado: " + element.username;
-                document.getElementById("chancellorSelectContainer").style.display="none";
+                document.getElementById("chancellorSelectContainer").remove();
             });
         }
     });
@@ -129,7 +129,7 @@ socket.on("init_vote",function(msg)
     voteyes.addEventListener("click",function()
     {
         socket.emit("voted_gov",true);
-        document.getElementById("voteContainer").style.display="none";
+        document.getElementById("voteContainer").remove()
     });
 
     var voteno = document.createElement("BUTTON");
@@ -138,7 +138,7 @@ socket.on("init_vote",function(msg)
     voteno.addEventListener("click",function()
     {
         socket.emit("voted_gov",false);
-        document.getElementById("voteContainer").style.display="none";
+        document.getElementById("voteContainer").remove();
     });
 
     vote_container.appendChild(voteyes);
@@ -146,6 +146,24 @@ socket.on("init_vote",function(msg)
     document.body.appendChild(vote_container);
 });
 
+socket.on("pm_desition_client",function(msg)
+{
+    var cartas_container=document.createElement("DIV");
+    cartas_container.id="cartasContainer";
+    msg.cartas.forEach(element => {
+        var newCarta = document.createElement("BUTTON");
+        newCarta.className = "carta";
+        newCarta.innerText=element;
+        newCarta.addEventListener("click",function()
+        {
+            socket.emit("pm_desition");
+            document.getElementById("cartasContainer").remove();
+        });
+        cartas_container.appendChild(newCarta);
+    });
+
+    document.body.appendChild(cartas_container);
+})
 //Funciones Auxiliares-------------
 function renderPlayers(msg)
 {
@@ -179,7 +197,7 @@ function soyCero(msg)
                 {
                     socket.emit("init_game",{});
                     game_on=true;            //para saber que el juego esta en proceso
-                    document.getElementById("inicioJuego").style.display="none";
+                    document.getElementById("inicioJuego").remove();
                 }
                 else{alert("Faltan owo-jugadores")}
             }

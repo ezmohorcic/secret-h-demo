@@ -176,28 +176,36 @@ io.on('connection', socket =>
                 var trio_cartas=[];
                 for(var i=0;i<3;i++){trio_cartas.push(dataBase[0].stack_cartas.pop())} //obtengo las 3 cartas que se le envia al pm
                 resetVotos(); //resetea los valores de los votos
-                io.to(dataBase[0].pm.socketId).emit("pm_desition",{trio_cartas:trio_cartas})
+                io.to(dataBase[0].pm.socketId).emit("pm_desition_client",{cartas:trio_cartas})
                 io.socket.emit("duo_won");
             }
             else
             {
                 var passed_law=false;  //saber si tiene que pasar o no una ley, para que el front consulte en el evento enviado
+                var law_to_send=null;
                 dataBase[0].passed++;
                 if(database[0].passed==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
                 {
                     passed_law=true;
                     dataBase[0].passed=0;    
+                    law_to_send=dataBase[0].pop();
                 }   
-                io.socket.emit("duo_lost",{passed_law:passed_law,law:dataBase[0].stack_cartas});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                io.socket.emit("duo_lost",{passed_law:passed_law,law:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                 resetVotos(); //resetea los valores de los votos
                 nextTurn();
                 io.socket.emit("next_turn",{next_pm:dataBase[0].pm_pos}) //se envia a todos el nuevo pm con este evento 
-                io.to(dataBase[0].pm.socketId).emit("asigned_pm")
+                io.to(dataBase[0].pm.socketId).emit("asigned_pm");
             }
         }
     }) 
 
+    socket.on("pm_desition",data=>
+    {//desde el cliente que es el pm actual, decreq.params.idio que descartar
+        dataBase[req.params.id].stack_descartados.push(data.descartada); //se guarda en la pila de descartados para remezclar mas adelante
+        io.socket.emit("chancellor_turn",{duo_cartas:data.duo_cartas,chancellor:dataBase[req.params.id].chancellor.position}) //evento para todos que le toca al chancellor votar
+    }) 
 
+    
 })
 
     /*
