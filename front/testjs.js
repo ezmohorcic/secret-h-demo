@@ -1,11 +1,17 @@
 //import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 var socket = io();
 var ulLista= document.getElementById("ulLista");
-var enviarNombre = document.getElementById("enviarNombre");
-var nuevoNombre = document.getElementById("nuevoNombre")
+
+var nuevoNombre = document.getElementById("nuevoNombre");
+
+//posibles estados
 var player_data;
 var all_players;
 var stats_turno;
+var preChancellor=null;
+//----------------
+
+var enviarNombre = document.getElementById("enviarNombre");
 enviarNombre.addEventListener("click",function()
 {
     if(nuevoNombre.value)
@@ -67,7 +73,43 @@ socket.on("init_game_client",function(msg)
     
 })
 
-socket.on("asigned_pm",function(){console.log("soy pm")})
+socket.on("asigned_pm",function()
+{
+    console.log("soy pm");
+    var chancellor_select_container=document.createElement("DIV"); //div de seleccion chacellor
+    chancellor_select_container.id="chancellorSelectContainer";
+
+    var botonEnvio=document.createElement("BUTTON");    //boton para enviar 
+    botonEnvio.id="botonEnvioChancellor";
+    chancellor_select_container.appendChild(botonEnvio);
+    botonEnvio.addEventListener("click",function()
+    {
+        if(preChancellor)
+        {
+            socket.emit("selected_chancellor",preChancellor)
+        }
+    })
+
+    var seleccion=document.createElement("P");  //muestra de seleccion
+    seleccion.id="chancellorPreselected";
+    seleccion.innerText="Chancellor preseleccionado:"
+    chancellor_select_container.appendChild(seleccion);
+
+    all_players.forEach(element => 
+    {
+        if(element.position!=player_data.position)
+        {
+            var newButton=document.createElement("BUTTON");
+            newButton.id="pos"+element.position;
+            chancellor_select_container.appendChild(newButton);
+            newButton.addEventListener("click",function()
+            {
+                preChancellor=element;
+                document.getElementById("chancellorPreselected").innerText="Chancellor preseleccionado: " + element.username;
+            });
+        }
+    });
+})
 
 function renderPlayers(msg)
 {
@@ -94,7 +136,7 @@ function soyCero(msg)
         botonInicio.addEventListener("click",function()
         {
             console.log("mando init a server ")
-            if(all_players.length>=2){socket.emit("init_game",{});}                                //HARDCODEADO PARA TESTEOS DEBERIA CAMBIARSE A 5!
+            if(all_players.length>=2){socket.emit("init_game",{});}    //HARDCODEADO PARA TESTEOS DEBERIA CAMBIARSE A 5!
             else{alert("Faltan owo-jugadores")}
         })
     }

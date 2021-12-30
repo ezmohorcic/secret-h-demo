@@ -78,6 +78,7 @@ dataBase=[obj];
     disconnecting: un cliente se desconecta
     init_game: inicio del juego
     selected_chancellor: el server recibe quien es el posible chancellor para retransmitir
+    voted_gov: el cliente hizo su voto
 */
 
 
