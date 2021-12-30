@@ -9,11 +9,11 @@ const RED="red"; //ley fascista
 const WINS_BLUE=5; //cantidad para que liberales ganen
 const WINS_RED=5; //cantidad para que fascistas ganen
 const MIN_RED_H=3; //minima cantidad de leyes rojas + Hitle cansiller 
-const H=0; //rol hitler
-const FASC=1; //rol fascista
-const LIB=2;//rol liberal
-const CANT_LIBS=3;//cantidad de liberales max
-const CANT_FASC=1;//cantidad de fascistas max
+const H="hitler"; //rol hitler
+const FASC="fascista"; //rol fascista
+const LIB="liberal";//rol liberal
+const CANT_LIBS=1;//cantidad de jugadores liberales max
+const CANT_FASC=1;//cantidad de jugadores fascistas max
 
 var obj=
 {
@@ -41,6 +41,7 @@ dataBase=[obj];
         {
             username:                   //nombre del jugador
             pos:                        //posicion en mesa
+            socketId                    //id del socket del jugador
             rol:                        //rol en el juego
         }
     cant_jugadores                      //cantidad de jugadores 
@@ -59,6 +60,26 @@ dataBase=[obj];
         }
 }
 */
+/*  //ordenadas por orden de aparicion en codigo
+
+    ACCIONES DESDE EL SERVER AL CLIENTE:
+    new_player: avisa a todos los clientes de un nuevo jugador 
+    your_data: le envia a al nuevo cliente la data necesaria para logica de front
+    change_username_on_position: retransmision del nuevo nombre de un jugador a todos
+    new_position: se le envia al cliente particular que al jugador se lo movio de asiento 
+    player_left: Se envia a todos los clientes una nueva lista de clientes conectados con los datos 
+    init_game_client: se le envia a los clientes los stats del mazo, asi como quien es el pm, etc.
+    asigned_pm: se le envia al cliente correspondiente que es el pm para el turno, asi activa interfaz de eleccion de chancellor
+    you_chancellor: avisa al jugador que se selecciono como chancellor que es el
+    init_vote: server avisa que se debe activar la interfaz de votacion 
+
+    ACCIONES DEL CLIENTE AL SERVER:
+    changed_username: el cliente pide un cambio de nombre, el servidor lo almacena y retransmite a todos 
+    disconnecting: un cliente se desconecta
+    init_game: inicio del juego
+    selected_chancellor: el server recibe quien es el posible chancellor para retransmitir
+*/
+
 
 app.set('view engine', 'ejs')
 app.use(express.static('../front/'))
@@ -77,46 +98,54 @@ const io = socketio(server)
 
 io.on('connection', socket => 
 {
-        console.log("New user connected");
-        socket.username = "Anon";
-        socket.position = dataBase[0].jugadores.length;
-        dataBase[0].cant_jugadores++;
-        dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
-        io.sockets.emit('new_player', dataBase[0].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
-        io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id}) //le envia la informacion propia del jugador a su front
-    
-        socket.on("changed_username",data=>
-        { //desde el front, recibe el server que alguien quiere cambiar su nombre
-            console.log("changed_username")
-            socket.username=data.username
-            dataBase[0].jugadores[socket.position].username=data.username;
-            var out={position: socket.position,username: socket.username}
-            io.sockets.emit('change_username_on_position', out) //envia nuevo nombre del usuario en esa posicion
-        })
+    console.log("New user connected");
+    socket.username = "Anon";
+    socket.position = dataBase[0].jugadores.length;
+    dataBase[0].cant_jugadores++;
+    dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
+    io.sockets.emit('new_player', dataBase[0].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+    io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id}) //le envia la informacion propia del jugador a su front
 
-        socket.on("disconnecting",data=>
+    socket.on("changed_username",data=>
+    { //desde el front, recibe el server que alguien quiere cambiar su nombre
+        console.log("changed_username")
+        socket.username=data.username
+        dataBase[0].jugadores[socket.position].username=data.username;
+        var out={position: socket.position,username: socket.username}
+        io.sockets.emit('change_username_on_position', out) //envia nuevo nombre del usuario en esa posicion
+    })
+
+    socket.on("disconnecting",data=>
+    {
+        var flag=false;
+        dataBase[0].jugadores=dataBase[0].jugadores.filter(jugador => jugador.position!=socket.position)    //se remueve al jugador que se esta yendo 
+        console.log(dataBase[0].jugadores)
+        dataBase[0].cant_jugadores--;
+        for(var i=0;i<dataBase[0].jugadores.length;i++)     
         {
-            var flag=false;
-            dataBase[0].jugadores=dataBase[0].jugadores.filter(jugador => jugador.position!=socket.position)
-            for(var i=0;i<dataBase[0].jugadores.length;i++){dataBase[0].jugadores[i].position=i;}
-            io.sockets.emit("player_left",dataBase[0].jugadores);
-        });
+            dataBase[0].jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
+            if(i>=socket.position){io.to( dataBase[0].jugadores[i].socketId).emit("new_position",{position: dataBase[0].jugadores[i].position})} //a cada jugador que se movio se le manda su nueva posicion
+        }
+        io.sockets.emit("player_left",dataBase[0].jugadores);
 
-        socket.on("init_game",data=>
-        {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
-            initGame();
-            var stats= statStack();
-            console.log(stats)
-            io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
-            io.to(socket.id).emit("asigned_pm"); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
-        })
+    });
+
+    socket.on("init_game",data=>
+    {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
+        initGame();
+        var stats= statStack();
+        console.log(stats)
+        io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
+        io.to(socket.id).emit("asigned_pm"); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
+    })
+    
+    socket.on("selected_chancellor",data=>
+    {//el primer ministro escogio chancellor y se inicia votacion
+        dataBase[0].chancellor=data.chancellor //data.chancellor = obj{username,position}
+        io.to(dataBase[0].chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
+        io.sockets.emit("init_vote",{chancellor:data.chancellor}) //evento para que en todos los front aparezca para votar si/no
         
-        socket.on("selected_chancellor",data=>
-        {//el primer ministro escogio chancellor y se inicia votacion
-            dataBase[0].chancellor=data.chancellor //data.chancellor = obj{username,position}
-            io.sockets.emit("init_vote",{chancellor:data.chancellor}) //evento para que en todos los front aparezca para votar si/no
-            io.to(dataBase[0].chancellor.socketId).emit("you_chancellor");
-        })
+    })
 })
 
     /*socket.on("init_game",data=>
@@ -202,15 +231,15 @@ function cardStackGenerator()
     
 } 
 
-/*function shuffle(stack_cartas){}*/
+function shuffle(stack_cartas){return dataBase[0].stack_descartados}
 
-/*function determine_winner()
+function determine_winner()
 {
     if(dataBase[req.params.id].blue==WINS_BLUE){return BLUE}
     else if(dataBase[req.params.id].red==WINS_RED){return RED}
     else if(dataBase[req.params.id].red==WINS_RED && dataBase[req.params.id].chancellor.rol==H){return RED}
     else{return false}
-}*/
+}
 
 function nextTurn()
 {
@@ -238,12 +267,14 @@ function statStack()
 
 function initGame()
 {
-    var counters={counterLibs:0,counterfasc:0,hit:0}
-    dataBase[0].jugadores.forEach(element =>
+    //var counters={counterLibs:0,counterfasc:0,hit:0}
+    var hechos=[];
+    generateRol(hechos);
+    /*dataBase[0].jugadores.forEach(element =>
     {
         var rol=generateRol(counters);
         element.rol=rol;
-    })
+    })*/
     dataBase[0].pm_pos=0;
     dataBase[0].stack_cartas=cardStackGenerator();
     console.log(dataBase[0].stack_cartas);
@@ -262,34 +293,49 @@ function resetVotos()
     dataBase[0].votos.total=0;
 }
 
-function generateRol(counters)
-{
-    var rand=Math.floor(Math.random()*2)
-    if(rand == 0) //toca hitler
+function generateRol(hechos)
+{   //EN ESTE CASO DE DEMO PARA 2, NO PUEDO TESTEAR, TESTEARE MAS TARDE, AHORA HARDCODEO
+    dataBase[0].jugadores[0].rol=LIB;
+    dataBase[0].jugadores[1].rol=H;
+    var i=0;
+    /*while(i<CANT_FASC)    //EN TESTEOS VOY A USAR HITLER Y LIBS NOMAS PORQUE TENGO SOLO 2 
     {
-        if(counters.hit==0)
+        var rand=Math.floor(Math.random()*(dataBase[0].jugadores.length-1));
+        console.log(rand)
+        console.log(dataBase[0].jugadores)
+        console.log(dataBase[0].jugadores[rand])
+        if(!hechos.includes(rand))
         {
-            counters.hit++;
-            return H;
+            dataBase[0].jugadores[rand].rol=FASC
+            i++;
+            hechos.push(rand);
         }
-        else{return generateRol(counters);}
-    }
-    else if(rand == 1) //toca lib
+    }*/
+    i=0;
+    /*while(i<CANT_LIBS)
     {
-        if(counters.counterLibs==CANT_LIBS){return generateRol(counters);}
-        else
+        var rand=Math.floor(Math.random()*(dataBase[0].jugadores.length-1));
+        console.log(rand)
+        console.log(dataBase[0].jugadores)
+        console.log(dataBase[0].jugadores[rand])
+        if(!hechos.includes(rand))
         {
-            counters.counterLibs++;
-            return BLUE;
+            dataBase[0].jugadores[rand].rol=LIB;
+            i++;
+            hechos.push(rand);
         }
-    }
-    else if(rand == 2)//toca fascista
+    }*/
+    /*while(i<1)
     {
-        if(counters.counterfasc==CANT_FASC){return generateRol(counnters);}
-        else
+        var rand=Math.floor(Math.random()*(dataBase[0].jugadores.length-1));
+        console.log(rand)
+        console.log(dataBase[0].jugadores)
+        console.log(dataBase[0].jugadores[rand])
+        if(!hechos.includes(rand))
         {
-            counters.counterfasc++;
-            return RED;
+            dataBase[0].jugadores[rand].rol=H;
+            i++;
+            hechos.push(rand);
         }
-    }
+    }*/
 }

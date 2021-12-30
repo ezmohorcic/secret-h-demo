@@ -20,18 +20,14 @@ socket.on("your_data",function(msg)
 {
     console.log("your_data")
     player_data = msg;
-    if(msg.position==0)
-    {
-        console.log("soy 0")
-        var botonInicio= document.createElement("BUTTON");
-        botonInicio.value="doy inicio";
-        document.body.appendChild(botonInicio);
-        botonInicio.addEventListener("click",function()
-        {
-            console.log("mando init a server ")
-            socket.emit("init_game",{});
-        })
-    }
+    soyCero(msg);
+})
+
+socket.on("new_position",function(msg)
+{
+    player_data.position=msg.position;
+    soyCero(msg);
+    
 })
 
 socket.on("change_username_on_position",function(msg)
@@ -85,4 +81,21 @@ function renderPlayers(msg)
         ulLista.appendChild(newLi);
     });
     all_players=msg;
+}
+
+function soyCero(msg)
+{
+    if(msg.position==0)
+    {
+        console.log("soy 0")
+        var botonInicio= document.createElement("BUTTON");
+        botonInicio.value="doy inicio";
+        document.body.appendChild(botonInicio);
+        botonInicio.addEventListener("click",function()
+        {
+            console.log("mando init a server ")
+            if(all_players.length>=2){socket.emit("init_game",{});}                                //HARDCODEADO PARA TESTEOS DEBERIA CAMBIARSE A 5!
+            else{alert("Faltan owo-jugadores")}
+        })
+    }
 }
