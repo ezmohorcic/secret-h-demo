@@ -1,3 +1,5 @@
+const mssql = require("mssql");
+
 //import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 var socket = io();
 var ulLista= document.getElementById("ulLista");
@@ -10,6 +12,7 @@ var all_players;
 var stats_turno;
 var preChancellor=null;
 var game_on=false;
+var cartas_devueltas;
 //----------------
 
 
@@ -156,7 +159,7 @@ socket.on("pm_desition_client",function(msg)
         newCarta.innerText=element;
         newCarta.addEventListener("click",function()
         {
-            socket.emit("pm_desition");
+            socket.emit("pm_desition",{descartada:element,cartas:msg.cartas.splice(msg.cartas.indexOf(element),1)});
             document.getElementById("cartasContainer").remove();
         });
         cartas_container.appendChild(newCarta);

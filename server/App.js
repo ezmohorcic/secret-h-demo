@@ -201,11 +201,26 @@ io.on('connection', socket =>
 
     socket.on("pm_desition",data=>
     {//desde el cliente que es el pm actual, decreq.params.idio que descartar
-        dataBase[req.params.id].stack_descartados.push(data.descartada); //se guarda en la pila de descartados para remezclar mas adelante
-        io.socket.emit("chancellor_turn",{duo_cartas:data.duo_cartas,chancellor:dataBase[req.params.id].chancellor.position}) //evento para todos que le toca al chancellor votar
+        dataBase[0].stack_descartados.push(data.descartada); //se guarda en la pila de descartados para remezclar mas adelante
+        io.to(dataBase[0].chancellor.socketId).emit("chancellor_turn",{cartas:data.cartas}) //evento para todos que le toca al chancellor votar
     }) 
 
-    
+    socket.on("chancellor_desition",data=>//desde el cliente del chancellor actual, decreq.params.idio que descartar
+    {
+        dataBase[0].stack_descartados.push(data.descartada);
+        lawCounter(data.selected);
+        var winner = determine_winner(); //si ganan fascistas por cantreq.params.idad de leyes rojas o liberales por cantreq.params.idad de leyes azules
+        if(winner!=false) //si hay un ganador 
+        {
+            if(winner==BLUE){io.socket.emit("blue_wins");}
+            else{io.socket.emit("red_wins");}
+        } 
+        io.socket.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
+        nextTurn();
+        var stats_stack=statStack();
+        io.socket.emit("next_turn",{next_pm:dataBase[0].pm_pos}) //se envia a todos el nuevo pm con este evento 
+        io.to(dataBase[0].jugadores[dataBase[0].pm_pos].socketId).emit("asigned_pm")
+    }) 
 })
 
     /*
