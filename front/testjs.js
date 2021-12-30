@@ -1,4 +1,4 @@
-const mssql = require("mssql");
+//const mssql = require("mssql");
 
 //import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 var socket = io();
@@ -87,6 +87,7 @@ socket.on("asigned_pm",function()
 
     var botonEnvio=document.createElement("BUTTON");    //boton para enviar 
     botonEnvio.id="botonEnvioChancellor";
+    botonEnvio.innerText="Te elijo a ti!";
     chancellor_select_container.appendChild(botonEnvio);
     botonEnvio.addEventListener("click",function()
     {
@@ -94,6 +95,7 @@ socket.on("asigned_pm",function()
         {
             console.log("enviando prechancellor")
             socket.emit("selected_chancellor",preChancellor)
+            document.getElementById("chancellorSelectContainer").remove();
         }
     })
 
@@ -114,7 +116,6 @@ socket.on("asigned_pm",function()
             {
                 preChancellor=element;
                 document.getElementById("chancellorPreselected").innerText="Chancellor preseleccionado: " + element.username;
-                document.getElementById("chancellorSelectContainer").remove();
             });
         }
     });
@@ -167,6 +168,26 @@ socket.on("pm_desition_client",function(msg)
 
     document.body.appendChild(cartas_container);
 })
+
+socket.on("chancellor_turn",function(msg)
+{
+    var cartas_container=document.createElement("DIV");
+    cartas_container.id="cartasContainer";
+    msg.cartas.forEach(element => {
+        var newCarta = document.createElement("BUTTON");
+        newCarta.className = "carta";
+        newCarta.innerText=element;
+        newCarta.addEventListener("click",function()
+        {
+            socket.emit("chancellor_desition",{descartada:element,selected:msg.cartas[0]});
+            document.getElementById("cartasContainer").remove();
+        });
+        cartas_container.appendChild(newCarta);
+    });
+
+    document.body.appendChild(cartas_container);
+})
+
 //Funciones Auxiliares-------------
 function renderPlayers(msg)
 {

@@ -170,14 +170,14 @@ io.on('connection', socket =>
                 var winner = determine_winner()//por si al ganar este duo, ganan los fascistas
                 if(winner!=false) //si hay un ganador 
                 {
-                    if(winner==BLUE){io.socket.emit("blue_wins");}
-                    else{io.socket.emit("red_wins");}
+                    if(winner==BLUE){io.sockets.emit("blue_wins");}
+                    else{io.sockets.emit("red_wins");}
                 }
                 var trio_cartas=[];
                 for(var i=0;i<3;i++){trio_cartas.push(dataBase[0].stack_cartas.pop())} //obtengo las 3 cartas que se le envia al pm
                 resetVotos(); //resetea los valores de los votos
                 io.to(dataBase[0].pm.socketId).emit("pm_desition_client",{cartas:trio_cartas})
-                io.socket.emit("duo_won");
+                io.sockets.emit("duo_won");
             }
             else
             {
@@ -190,10 +190,10 @@ io.on('connection', socket =>
                     dataBase[0].passed=0;    
                     law_to_send=dataBase[0].pop();
                 }   
-                io.socket.emit("duo_lost",{passed_law:passed_law,law:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                io.sockets.emit("duo_lost",{passed_law:passed_law,law:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                 resetVotos(); //resetea los valores de los votos
                 nextTurn();
-                io.socket.emit("next_turn",{next_pm:dataBase[0].pm_pos}) //se envia a todos el nuevo pm con este evento 
+                io.sockets.emit("next_turn",{next_pm:dataBase[0].pm_pos}) //se envia a todos el nuevo pm con este evento 
                 io.to(dataBase[0].pm.socketId).emit("asigned_pm");
             }
         }
@@ -212,13 +212,13 @@ io.on('connection', socket =>
         var winner = determine_winner(); //si ganan fascistas por cantreq.params.idad de leyes rojas o liberales por cantreq.params.idad de leyes azules
         if(winner!=false) //si hay un ganador 
         {
-            if(winner==BLUE){io.socket.emit("blue_wins");}
-            else{io.socket.emit("red_wins");}
+            if(winner==BLUE){io.sockets.emit("blue_wins");}
+            else{io.sockets.emit("red_wins");}
         } 
-        io.socket.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
+        io.sockets.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
         nextTurn();
         var stats_stack=statStack();
-        io.socket.emit("next_turn",{next_pm:dataBase[0].pm_pos}) //se envia a todos el nuevo pm con este evento 
+        io.sockets.emit("next_turn",{next_pm:dataBase[0].pm_pos}) //se envia a todos el nuevo pm con este evento 
         io.to(dataBase[0].jugadores[dataBase[0].pm_pos].socketId).emit("asigned_pm")
     }) 
 })
@@ -298,9 +298,9 @@ function shuffle(stack_cartas){return dataBase[0].stack_descartados}
 
 function determine_winner()
 {
-    if(dataBase[req.params.id].blue==WINS_BLUE){return BLUE}
-    else if(dataBase[req.params.id].red==WINS_RED){return RED}
-    else if(dataBase[req.params.id].red==WINS_RED && dataBase[req.params.id].chancellor.rol==H){return RED}
+    if(dataBase[0].blue==WINS_BLUE){return BLUE}
+    else if(dataBase[0].red==WINS_RED){return RED}
+    else if(dataBase[0].red==WINS_RED && dataBase[0].chancellor.rol==H){return RED}
     else{return false}
 }
 
@@ -308,13 +308,13 @@ function nextTurn()
 {
     if(dataBase[0].pm.position==dataBase[0].jugadores.length-1){dataBase[0].pm=dataBase[0].jugadores[0]}  //pasa al siguiente jugador para ser pm
     else{dataBase[0].pm=dataBase[0].jugadores[dataBase[0].pm.position+1]}
-    dataBase[req.params.id].chancellor={}; //se borra el chancellor
+    dataBase[0].chancellor={}; //se borra el chancellor
 }
 
 function lawCounter(selected)
 {
-    if(selected==BLUE){dataBase[req.params.id].blue++}
-    else{dataBase[req.params.id].red++}
+    if(selected==BLUE){dataBase[0].blue++}
+    else{dataBase[0].red++}
 }
 
 function statStack()
