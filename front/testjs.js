@@ -9,6 +9,7 @@ var player_data;
 var all_players;
 var stats_turno;
 var preChancellor=null;
+var game_on=false;
 //----------------
 
 
@@ -104,11 +105,13 @@ socket.on("asigned_pm",function()
         {
             var newButton=document.createElement("BUTTON");
             newButton.id="pos"+element.position;
+            newButton.innerText=element.username;
             chancellor_select_container.appendChild(newButton);
             newButton.addEventListener("click",function()
             {
                 preChancellor=element;
                 document.getElementById("chancellorPreselected").innerText="Chancellor preseleccionado: " + element.username;
+                document.getElementById("chancellorSelectContainer").style.display="none";
             });
         }
     });
@@ -117,7 +120,30 @@ socket.on("asigned_pm",function()
 
 socket.on("init_vote",function(msg)
 {
-    
+    var vote_container=document.createElement("DIV");
+    vote_container.id="voteContainer";
+
+    var voteyes = document.createElement("BUTTON");
+    voteyes.id="voteYes";
+    voteyes.innerText="JA!";
+    voteyes.addEventListener("click",function()
+    {
+        socket.emit("voted_gov",true);
+        document.getElementById("voteContainer").style.display="none";
+    });
+
+    var voteno = document.createElement("BUTTON");
+    voteno.id="voteNo";
+    voteno.innerText="NEIN!";
+    voteno.addEventListener("click",function()
+    {
+        socket.emit("voted_gov",false);
+        document.getElementById("voteContainer").style.display="none";
+    });
+
+    vote_container.appendChild(voteyes);
+    vote_container.appendChild(voteno);
+    document.body.appendChild(vote_container);
 });
 
 //Funciones Auxiliares-------------
@@ -141,13 +167,22 @@ function soyCero(msg)
     {
         console.log("soy 0")
         var botonInicio= document.createElement("BUTTON");
-        botonInicio.value="doy inicio";
+        botonInicio.id="inicioJuego";
+        botonInicio.innerText="doy inicio";
         document.body.appendChild(botonInicio);
         botonInicio.addEventListener("click",function()
         {
-            console.log("mando init a server ")
-            if(all_players.length>=2){socket.emit("init_game",{});}    //HARDCODEADO PARA TESTEOS DEBERIA CAMBIARSE A 5!
-            else{alert("Faltan owo-jugadores")}
+            if(!game_on)
+            {
+                console.log("mando init a server")
+                if(all_players.length>=2)    //HARDCODEADO PARA TESTEOS DEBERIA CAMBIARSE A 5!
+                {
+                    socket.emit("init_game",{});
+                    game_on=true;            //para saber que el juego esta en proceso
+                    document.getElementById("inicioJuego").style.display="none";
+                }
+                else{alert("Faltan owo-jugadores")}
+            }
         })
     }
 }
