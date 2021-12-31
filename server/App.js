@@ -7,13 +7,18 @@ const CANT_PASSED_MAX=2; //cantreq.params.idad de gobiernos pasados maxima
 const BLUE="blue"; //ley liberal
 const RED="red"; //ley fascista
 const WINS_BLUE=5; //cantidad para que liberales ganen
-const WINS_RED=5; //cantidad para que fascistas ganen
+const WINS_RED=6; //cantidad para que fascistas ganen
 const MIN_RED_H=3; //minima cantidad de leyes rojas + Hitle cansiller 
 const H="hitler"; //rol hitler
 const FASC="fascista"; //rol fascista
 const LIB="liberal";//rol liberal
 const CANT_LIBS=1;//cantidad de jugadores liberales max
 const CANT_FASC=1;//cantidad de jugadores fascistas max
+const EXAMINE_DECK="examine_deck";
+const KILL_PLAYER="kill";
+const EXAMINE_PLAYER="examine_player";
+const PICK_CANDIDATE="pick_candidate";
+
 
 var obj=
 {
@@ -93,8 +98,8 @@ EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
     chancellor_turn,{cartas:}:                                                |   se le avisa al cliente chancellor que es su turno de decidir, se le envia las 2 cartas
     law_done,{selected:}:                                                     |   Se envia la ley que fue elegida por pm+chancellor
     your_rol,rol:                                                             |   Se envia el rol del jugador
-    know_fasc:
-    know_h:
+    know_fasc:                                                                |   Se envia a los fascistas quienes son y quien es hitler, tambien hitler puede que reciba si hay menos de 7 jugadores
+    know_h:                                                                   |
 
 EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 
@@ -209,15 +214,20 @@ io.on('connection', socket =>
                 {
                     passed_law=true;
                     dataBase[0].skipped=0;    
-                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)}
+                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)} 
                     law_to_send=dataBase[0].stack_cartas.pop();
-                }   
-                io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
-                resetVotos(); //resetea los valores de los votos
-                nextTurn();
-                var stats_stack=statStack();
-                io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
-                io.to(dataBase[0].pm.socketId).emit("asigned_pm");
+                    lawCounter(law_to_send);
+                    powerTurn(law_to_send);
+                }
+                else
+                {   
+                    io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                    resetVotos(); //resetea los valores de los votos
+                    nextTurn();
+                    var stats_stack=statStack();
+                    io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
+                    io.to(dataBase[0].pm.socketId).emit("asigned_pm");
+                }
             }
         }
     }) 
@@ -232,6 +242,7 @@ io.on('connection', socket =>
     {
         dataBase[0].stack_descartados.push(data.descartada);
         lawCounter(data.selected);
+        if(data.selected==RED){determinePower();}
         var winner = determine_winner("just_decided"); //si ganan fascistas por cantidad de leyes rojas o liberales por cantidad de leyes azules
         if(winner!=false) //si hay un ganador 
         {
@@ -240,14 +251,51 @@ io.on('connection', socket =>
         } 
         io.sockets.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
         nextTurn();
+        powerTurn(data);
+       
+
+    })
+    
+    socket.on(KILL_PLAYER,data=>
+    {
+        dataBase[0].jugadores[data.position].estado="dead";
+        io.to(data.socketId).emit("assasinated");
+
         var stats_stack=statStack();
-        console.log(stats_stack);
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
         io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
-    }) 
+    });
+
+    socket.on(PICK_CANDIDATE,data=>
+    {
+        dataBase[0].pm=dataBase[0].jugadores[data.position];
+        var stats_stack=statStack();
+        io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
+    });
 })
 
 //Funciones Auxiliares:
+function powerTurn()
+{
+    if(data.selected==RED)
+    {
+        if(!determinePower())
+        {
+            var stats_stack=statStack();
+            io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
+            io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
+        }
+    
+    }
+    else
+    {
+        var stats_stack=statStack();
+        io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
+    }
+}
+
 function cardStackGenerator()
 {
     dataBase[0].stack_cartas=shuffle([BLUE,RED,BLUE,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,RED,RED,RED,RED,BLUE,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE,RED,RED,RED,RED])
@@ -307,9 +355,43 @@ function statStack()
     }
 }
 
-function determinePower()
+function determinePower(comm=null)
 {
+    var reciever;
+    if(comm=="skipped"){reciever=dataBase[0].last_elected[0];}
+    else {reciever=dataBase[0].pm;}
 
+    var client_command=dataBase[0].board["position_"+dataBase[0].red];
+
+    switch (client_command) 
+    {
+        case EXAMINE_DECK:
+            var trio_cartas=[];
+            for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
+            {
+                if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)}
+                trio_cartas.push(dataBase[0].stack_cartas.pop())
+            }
+            io.to(reciever.socketId).emit(EXAMINE_DECK,trio_cartas);
+            trio_cartas.forEach(element=>{dataBase[0].stack_cartas.push(element)})
+        return false;
+
+        case KILL_PLAYER:
+            io.to(reciever.socketId).emit(KILL_PLAYER);
+        return true;
+
+        case EXAMINE_PLAYER:
+            io.to(reciever.socketId).emit(EXAMINE_PLAYER);
+        return false;
+
+        case PICK_CANDIDATE:
+            io.to(reciever.socketId).emit(PICK_CANDIDATE);
+        return true;
+    
+        default:
+        return false
+    }
+    /*EXAMINE_DECK KILL_PLAYER EXAMINE_PLAYER PICK_CANDIDATE*/
 }
 
 function initGame()
@@ -333,6 +415,27 @@ function initGame()
 
 function generateBoard()
 {
+    if(dataBase[0].jugadores<7)
+    {
+        dataBase[0].board.position_3=EXAMINE_DECK;
+        dataBase[0].board.position_4=KILL_PLAYER;
+        dataBase[0].board.position_5=KILL_PLAYER;
+    }
+    else if(dataBase[0].jugadores<9)
+    {
+        dataBase[0].board.position_2=EXAMINE_PLAYER;
+        dataBase[0].board.position_3=PICK_CANDIDATE;
+        dataBase[0].board.position_4=KILL_PLAYER;
+        dataBase[0].board.position_5=KILL_PLAYER;
+    }
+    else
+    {
+        dataBase[0].board.position_1=EXAMINE_PLAYER;
+        dataBase[0].board.position_2=EXAMINE_PLAYER;
+        dataBase[0].board.position_3=PICK_CANDIDATE;
+        dataBase[0].board.position_4=KILL_PLAYER;
+        dataBase[0].board.position_5=KILL_PLAYER;
+    }
 
 
 }
