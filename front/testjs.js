@@ -9,8 +9,12 @@ var nuevoNombre = document.getElementById("nuevoNombre");
 //posibles estados
 var player_data;
 var all_players;
+
 var stats_turno;
+
 var preChancellor=null;
+var pm=null;
+
 var game_on=false;
 var cartas_devueltas;
 //----------------
@@ -57,6 +61,7 @@ socket.on("player_left",function(msg){renderPlayers(msg);})
 
 socket.on("init_game_client",function(msg)
 {
+    pm=msg.jugadores[0];
     all_players=msg.jugadores;
     var contStats=document.createElement("DIV");
     contStats.id="contStats";
@@ -132,7 +137,7 @@ socket.on("init_vote",function(msg)
     voteyes.innerText="JA!";
     voteyes.addEventListener("click",function()
     {
-        socket.emit("voted_gov",true);
+        socket.emit("voted_gov",{vote:true});
         document.getElementById("voteContainer").remove()
     });
 
@@ -141,7 +146,7 @@ socket.on("init_vote",function(msg)
     voteno.innerText="NEIN!";
     voteno.addEventListener("click",function()
     {
-        socket.emit("voted_gov",false);
+        socket.emit("voted_gov",{vote:false});
         document.getElementById("voteContainer").remove();
     });
 
@@ -160,7 +165,8 @@ socket.on("pm_desition_client",function(msg)
         newCarta.innerText=element;
         newCarta.addEventListener("click",function()
         {
-            socket.emit("pm_desition",{descartada:element,cartas:msg.cartas.splice(msg.cartas.indexOf(element),1)});
+            msg.cartas.splice(msg.cartas.indexOf(element),1);
+            socket.emit("pm_desition",{descartada:element,cartas:msg.cartas});
             document.getElementById("cartasContainer").remove();
         });
         cartas_container.appendChild(newCarta);
@@ -173,12 +179,14 @@ socket.on("chancellor_turn",function(msg)
 {
     var cartas_container=document.createElement("DIV");
     cartas_container.id="cartasContainer";
+    console.log(msg.cartas)
     msg.cartas.forEach(element => {
         var newCarta = document.createElement("BUTTON");
         newCarta.className = "carta";
         newCarta.innerText=element;
         newCarta.addEventListener("click",function()
         {
+            console.log("mandando decision de chancellor")
             socket.emit("chancellor_desition",{descartada:element,selected:msg.cartas[0]});
             document.getElementById("cartasContainer").remove();
         });
@@ -188,6 +196,12 @@ socket.on("chancellor_turn",function(msg)
     document.body.appendChild(cartas_container);
 })
 
+
+socket.on("next_turn",function(msg)
+{
+    preChancellor=null;
+    pm=msg.next_pm;
+});
 //Funciones Auxiliares-------------
 function renderPlayers(msg)
 {
