@@ -65,31 +65,41 @@ socket.on("new_player",function(msg){renderPlayers(msg);})
 
 socket.on("player_left",function(msg){renderPlayers(msg);})
 
+socket.on("your_rol",function(msg){player_data.rol=msg})
+
 socket.on("init_game_client",function(msg)
 {
-    console.log(msg.stats)
     stats_turno=msg.stats;
     pm=msg.jugadores[0];
     all_players=msg.jugadores;
     var contStats=document.createElement("DIV");
     contStats.id="contStats";
+
+    var rolDisplay=document.createElement("P");
+    rolDisplay.id="rolDisplay";
+    rolDisplay.innerText=player_data.rol;
+
     var blueCounter=document.createElement("P");
     blueCounter.id="blueCounter";
     blueCounter.innerText="Blue pasadas: "+ msg.stats.blue;
+
     var redCounter=document.createElement("P");
     redCounter.innerText="Red pasadas: "+msg.stats.red;
     redCounter.id="redCounter";
+
     var cantCartas=document.createElement("P");
     cantCartas.id="cantCartas";
     cantCartas.innerText="cartas en el mazo: " + msg.stats.cant_left;
+
     var cantDescarte=document.createElement("P");
     cantDescarte.innerText="cartas descartadas: " + msg.stats.cant_descart;
+
+    contStats.appendChild(rolDisplay);
     contStats.appendChild(blueCounter);
     contStats.appendChild(redCounter);
     contStats.appendChild(cantCartas);
     contStats.appendChild(cantDescarte);
     document.body.append(contStats);
-    
 })
 
 socket.on("asigned_pm",function()
@@ -137,30 +147,35 @@ socket.on("asigned_pm",function()
 
 socket.on("init_vote",function(msg)
 {
-    var vote_container=document.createElement("DIV");
-    vote_container.id="voteContainer";
+    if(player_data.estado!="muerto")
+        var vote_container=document.createElement("DIV");
+        vote_container.id="voteContainer";
 
-    var voteyes = document.createElement("BUTTON");
-    voteyes.id="voteYes";
-    voteyes.innerText="JA!";
-    voteyes.addEventListener("click",function()
-    {
-        socket.emit("voted_gov",{vote:true});
-        document.getElementById("voteContainer").remove()
-    });
+        var voteyes = document.createElement("BUTTON");
+        voteyes.id="voteYes";
+        voteyes.innerText="JA!";
+        voteyes.addEventListener("click",function()
+        {
+            var vote_container=document.createElement("DIV");
+        vote_container.id="voteContainer";
 
-    var voteno = document.createElement("BUTTON");
-    voteno.id="voteNo";
-    voteno.innerText="NEIN!";
-    voteno.addEventListener("click",function()
-    {
-        socket.emit("voted_gov",{vote:false});
-        document.getElementById("voteContainer").remove();
-    });
+        var voteyes = document.createElement("BUTTON");
+        votesocket.emit("voted_gov",{vote:true});
+            document.getElementById("voteContainer").remove()
+        });
 
-    vote_container.appendChild(voteyes);
-    vote_container.appendChild(voteno);
-    document.body.appendChild(vote_container);
+        var voteno = document.createElement("BUTTON");
+        voteno.id="voteNo";
+        voteno.innerText="NEIN!";
+        voteno.addEventListener("click",function()
+        {
+            socket.emit("voted_gov",{vote:false});
+            document.getElementById("voteContainer").remove();
+        });
+
+        vote_container.appendChild(voteyes);
+        vote_container.appendChild(voteno);
+        document.body.appendChild(vote_container);
 });
 
 socket.on("pm_desition_client",function(msg)
@@ -226,6 +241,22 @@ socket.on("duo_lost",function(msg)
     console.log("duo_lost")
     console.log(stats_turno)
     if(msg.passed_law){agregarLeyPasada(msg);}
+});
+
+socket.on("red_wins",function(msg)
+{
+    var won_container=document.createElement("DIV");
+    won_container.id="wonContainer";
+    won_container.innerText="RED WINS!";
+    document.body.appendChild(won_container);
+});
+
+socket.on("blue_wins",function(msg)
+{
+    var won_container=document.createElement("DIV");
+    won_container.id="wonContainer";
+    won_container.innerText="BLUE WINS!";
+    document.body.appendChild(won_container);
 });
 //Funciones Auxiliares-------------
 function renderPlayers(msg)

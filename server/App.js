@@ -43,6 +43,7 @@ dataBase=[obj];
             pos:                        //posicion en mesa
             socketId                    //id del socket del jugador
             rol:                        //rol en el juego
+            estado:                     //vivo o muerto
         }
     cant_jugadores                      //cantidad de jugadores 
     stack_cartas                        //el stack de cartas que faltan usar 
@@ -52,7 +53,11 @@ dataBase=[obj];
     pm_pos                              //posicion del pm del turno
     chancellor                          //obj entero de quien es el chacellor del turno
     pm
-    skipped                              //gobiernos fallados antes de pasar ley obligatoriamente
+    skipped                             //gobiernos fallados antes de pasar ley obligatoriamente
+    board:
+        {
+            position_N:                 //se le agrega el tipo de poder como value, N siendo el numero de ley RED que se instauro
+        }
     votos:
         {
             positivo                    //valor total de los votos (positivo el gobierno pasa)
@@ -69,7 +74,7 @@ EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
     change_username_on_position,socket.position:                              |   retransmision del nuevo nombre de un jugador a todos
     new_position,{position:}:                                                 |   se le envia al cliente particular que al jugador se lo movio de asiento 
     player_left,database[].jugadores:                                         |   Se envia a todos los clientes una nueva lista de clientes conectados con los datos 
-    init_game_client{jugadores:dataBase[].jugadores,stats:statStack()}:      |   se le envia a los clientes los stats del mazo, asi como quien es el pm, etc.
+    init_game_client{jugadores:dataBase[].jugadores,stats:statStack()}:       |   se le envia a los clientes los stats del mazo, asi como quien es el pm, etc.
     asigned_pm:                                                               |   se le envia al cliente correspondiente que es el pm para el turno, asi activa interfaz de eleccion de chancellor
     you_chancellor:                                                           |   avisa al jugador que se selecciono como chancellor que es el
     init_vote,{chancelor:}:                                                   |   server avisa que se debe activar la interfaz de votacion 
@@ -81,11 +86,8 @@ EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
     pm_desition_client,{cartas:}:                                             |   Se envia al cliente que es pm las 3 cartas para que decida
     chancellor_turn,{cartas:}:                                                |   se le avisa al cliente chancellor que es su turno de decidir, se le envia las 2 cartas
     law_done,{selected:}:                                                     |   Se envia la ley que fue elegida por pm+chancellor
-                                                                              |
-                                                                              |
-                                                                              |
-                                                                              |
-                                                                              |
+    your_rol,rol:                                                             |   Se envia el rol del jugador
+
 EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 
     changed_username:                                                         |   el cliente pide un cambio de nombre, el servidor lo almacena y retransmite a todos 
@@ -93,13 +95,8 @@ EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
     init_game:                                                                |   inicio del juego
     selected_chancellor:                                                      |   el server recibe quien es el posible chancellor para retransmitir
     voted_gov:                                                                |   el cliente hizo su voto
-    pm_desition:                                                              |
-    chancellor_desition:                                                      |
-                                                                              |
-                                                                              |
-                                                                              |
-                                                                              |
-                                                                              |
+    pm_desition:                                                              |   pm hizo su descarte y envio las 3 cartas
+    chancellor_desition:                                                      |   descarte y decision final del chancellor
 */
 
 
@@ -124,9 +121,9 @@ io.on('connection', socket =>
     socket.username = "Anon";
     socket.position = dataBase[0].jugadores.length;
     dataBase[0].cant_jugadores++;
-    dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
+    dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo"}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
     io.sockets.emit('new_player', dataBase[0].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
-    io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id}) //le envia la informacion propia del jugador a su front
+    io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo"}) //le envia la informacion propia del jugador a su front
 
     socket.on("changed_username",data=>
     {  //desde el front, recibe el server que alguien quiere cambiar su nombre
@@ -154,6 +151,7 @@ io.on('connection', socket =>
     {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
         initGame();
         var stats= statStack();
+        dataBase[0].jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element.rol)})
         io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
         io.to(socket.id).emit("asigned_pm"); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
     });
@@ -176,7 +174,7 @@ io.on('connection', socket =>
         {   
             if(dataBase[0].votos.positivos>=0) //si hay mas del 50% de votos positivos, devuelve a todos que el gobierno es exitoso, si el cliente es el pm, accede a 3 cartas
             {
-                var winner = determine_winner()//por si al ganar este duo, ganan los fascistas
+                var winner = determine_winner("h_chancellor")//por si al ganar este duo, ganan los fascistas
                 if(winner!=false) //si hay un ganador 
                 {
                     if(winner==BLUE){io.sockets.emit("blue_wins");}
@@ -224,7 +222,7 @@ io.on('connection', socket =>
     {
         dataBase[0].stack_descartados.push(data.descartada);
         lawCounter(data.selected);
-        var winner = determine_winner(); //si ganan fascistas por cantreq.params.idad de leyes rojas o liberales por cantreq.params.idad de leyes azules
+        var winner = determine_winner("just_decided"); //si ganan fascistas por cantidad de leyes rojas o liberales por cantidad de leyes azules
         if(winner!=false) //si hay un ganador 
         {
             if(winner==BLUE){io.sockets.emit("blue_wins");}
@@ -248,11 +246,12 @@ function cardStackGenerator()
 
 function shuffle(){return dataBase[0].stack_descartados}
 
-function determine_winner()
+function determine_winner(comm)
 {
+
     if(dataBase[0].blue==WINS_BLUE){return BLUE}
     else if(dataBase[0].red==WINS_RED){return RED}
-    else if(dataBase[0].red==WINS_RED && dataBase[0].chancellor.rol==H){return RED}
+    else if(dataBase[0].red>=MIN_RED_H && dataBase[0].chancellor.rol==H && comm=="h_chancellor"){return RED}
     else{return false}
 }
 
@@ -281,10 +280,17 @@ function statStack()
     }
 }
 
+function determinePower()
+{
+
+}
+
 function initGame()
 {
     var hechos=[];
     generateRol(hechos);
+    generateBoard();
+    dataBase[0].cant_jugadores=dataBase[0].jugadores.length;
     dataBase[0].pm_pos=0;
     dataBase[0].stack_cartas=cardStackGenerator();
     dataBase[0].stack_descartados=[];
@@ -293,7 +299,14 @@ function initGame()
     dataBase[0].chancellor={};
     dataBase[0].pm=dataBase[0].jugadores[0];
     dataBase[0].passed=0;
+    dataBase[0].jugadores.forEach(element =>
+    {element.estado=="alive";});
     resetVotos();
+}
+
+function generateBoard()
+{
+
 }
 
 function resetVotos()
