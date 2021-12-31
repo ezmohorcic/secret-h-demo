@@ -3,7 +3,7 @@ const socketio = require('socket.io');
 const app = express();
 
 //statics:
-const CANT_PASSED_MAX=4; //cantreq.params.idad de gobiernos pasados maxima 
+const CANT_PASSED_MAX=2; //cantreq.params.idad de gobiernos pasados maxima 
 const BLUE="blue"; //ley liberal
 const RED="red"; //ley fascista
 const WINS_BLUE=5; //cantidad para que liberales ganen
@@ -69,7 +69,7 @@ EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
     change_username_on_position,socket.position:                              |   retransmision del nuevo nombre de un jugador a todos
     new_position,{position:}:                                                 |   se le envia al cliente particular que al jugador se lo movio de asiento 
     player_left,database[].jugadores:                                         |   Se envia a todos los clientes una nueva lista de clientes conectados con los datos 
-    init_game_client{jugadores:dataBase[].jugadores,stats:statStacks()}:      |   se le envia a los clientes los stats del mazo, asi como quien es el pm, etc.
+    init_game_client{jugadores:dataBase[].jugadores,stats:statStack()}:      |   se le envia a los clientes los stats del mazo, asi como quien es el pm, etc.
     asigned_pm:                                                               |   se le envia al cliente correspondiente que es el pm para el turno, asi activa interfaz de eleccion de chancellor
     you_chancellor:                                                           |   avisa al jugador que se selecciono como chancellor que es el
     init_vote,{chancelor:}:                                                   |   server avisa que se debe activar la interfaz de votacion 
@@ -169,7 +169,6 @@ io.on('connection', socket =>
     socket.on("voted_gov",data=>
     { //este cliente voto si/no sobre el gobierno
         //asumo por ahora que lo guardo en un array posicion es el req.params.id del juego
-        console.log(data.vote)
         if(data.vote){dataBase[0].votos.positivos++} //se suma el voto (que es un bool)
         else{dataBase[0].votos.positivos--}
         dataBase[0].votos.total++
@@ -184,7 +183,11 @@ io.on('connection', socket =>
                     else{io.sockets.emit("red_wins");}
                 }
                 var trio_cartas=[];
-                for(var i=0;i<3;i++){trio_cartas.push(dataBase[0].stack_cartas.pop())} //obtengo las 3 cartas que se le envia al pm
+                for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
+                {
+                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle()}
+                    trio_cartas.push(dataBase[0].stack_cartas.pop())
+                }
                 resetVotos(); //resetea los valores de los votos
                 io.to(dataBase[0].pm.socketId).emit("pm_desition_client",{cartas:trio_cartas})
                 io.sockets.emit("duo_won");
@@ -198,12 +201,14 @@ io.on('connection', socket =>
                 {
                     passed_law=true;
                     dataBase[0].skipped=0;    
-                    law_to_send=dataBase[0].pop();
+                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle()}
+                    law_to_send=dataBase[0].stack_cartas.pop();
                 }   
-                io.sockets.emit("duo_lost",{passed_law:passed_law,law:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                 resetVotos(); //resetea los valores de los votos
                 nextTurn();
-                io.sockets.emit("next_turn",{next_pm:dataBase[0].pm}) //se envia a todos el nuevo pm con este evento 
+                var stats_stack=statStack();
+                io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
                 io.to(dataBase[0].pm.socketId).emit("asigned_pm");
             }
         }
@@ -227,8 +232,8 @@ io.on('connection', socket =>
         } 
         io.sockets.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
         nextTurn();
-        if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle()};
         var stats_stack=statStack();
+        console.log(stats_stack);
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
         io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
     }) 

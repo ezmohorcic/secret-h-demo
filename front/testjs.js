@@ -1,5 +1,11 @@
 //const mssql = require("mssql");
 
+const BLUE="blue"; //ley liberal
+const RED="red"; //ley fascista
+const H="hitler"; //rol hitler
+const FASC="fascista"; //rol fascista
+const LIB="liberal";//rol liberal
+
 //import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 var socket = io();
 var ulLista= document.getElementById("ulLista");
@@ -61,6 +67,8 @@ socket.on("player_left",function(msg){renderPlayers(msg);})
 
 socket.on("init_game_client",function(msg)
 {
+    console.log(msg.stats)
+    stats_turno=msg.stats;
     pm=msg.jugadores[0];
     all_players=msg.jugadores;
     var contStats=document.createElement("DIV");
@@ -187,7 +195,8 @@ socket.on("chancellor_turn",function(msg)
         newCarta.addEventListener("click",function()
         {
             console.log("mandando decision de chancellor")
-            socket.emit("chancellor_desition",{descartada:element,selected:msg.cartas[0]});
+            msg.cartas.splice(msg.cartas.indexOf(element),1);
+            socket.emit("chancellor_desition",{descartada:element,selected:msg.cartas});
             document.getElementById("cartasContainer").remove();
         });
         cartas_container.appendChild(newCarta);
@@ -199,8 +208,24 @@ socket.on("chancellor_turn",function(msg)
 
 socket.on("next_turn",function(msg)
 {
+    console.log(msg.stats)
     preChancellor=null;
     pm=msg.next_pm;
+    stats_turno=msg.stats;
+});
+
+socket.on("law_done",function(msg)
+{
+    console.log("law_done")
+    console.log(msg.selected)
+    agregarLeyPasada(msg);
+});
+
+socket.on("duo_lost",function(msg)
+{
+    console.log("duo_lost")
+    console.log(stats_turno)
+    if(msg.passed_law){agregarLeyPasada(msg);}
 });
 //Funciones Auxiliares-------------
 function renderPlayers(msg)
@@ -241,4 +266,11 @@ function soyCero(msg)
             }
         })
     }
+}
+
+function agregarLeyPasada(msg)
+{
+    console.log(stats_turno)
+    if(msg.selected==BLUE){document.getElementById("blueCounter").innerText="Blue pasadas:" + (stats_turno.blue+1)}
+    else{document.getElementById("redCounter").innerText="Red pasadas:" + (stats_turno.red+1)}
 }
