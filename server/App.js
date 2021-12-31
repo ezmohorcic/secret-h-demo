@@ -26,7 +26,7 @@ var obj=
     pm_pos:0,
     chancellor:{},
     pm:{},
-    passed:0,
+    skipped:0,
     votos:
         {
             positivos:0,
@@ -52,7 +52,7 @@ dataBase=[obj];
     pm_pos                              //posicion del pm del turno
     chancellor                          //obj entero de quien es el chacellor del turno
     pm
-    passed                              //gobiernos fallados antes de pasar ley obligatoriamente
+    skipped                              //gobiernos fallados antes de pasar ley obligatoriamente
     votos:
         {
             positivo                    //valor total de los votos (positivo el gobierno pasa)
@@ -62,7 +62,7 @@ dataBase=[obj];
 */
 /*  //ordenadas por orden de aparicion en codigo
 
-ACCIONES DESDE EL SERVER AL CLIENTE: *accion,carga que envia*
+EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
 
     new_player,database[].jugadores:                                          |   avisa a todos los clientes de un nuevo jugador, envia toda la lista de jugadores
     your_data,{username:,position:,socketId:}:                                |   le envia a al nuevo cliente la data necesaria para logica de front
@@ -78,15 +78,28 @@ ACCIONES DESDE EL SERVER AL CLIENTE: *accion,carga que envia*
     duo_won:                                                                  |   la votacion fue a favor de la dupla pm-chancellor
     duo_lost:                                                                 |   la votacion fue en contra de la dupla pm-chancellor
     next_turn:                                                                |   se llama al siguiente turno
-
-ACCIONES DEL CLIENTE AL SERVER:*accion,carga que envia*
+    pm_desition_client,{cartas:}:                                             |   Se envia al cliente que es pm las 3 cartas para que decida
+    chancellor_turn,{cartas:}:                                                |   se le avisa al cliente chancellor que es su turno de decidir, se le envia las 2 cartas
+    law_done,{selected:}:                                                     |   Se envia la ley que fue elegida por pm+chancellor
+                                                                              |
+                                                                              |
+                                                                              |
+                                                                              |
+                                                                              |
+EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 
     changed_username:                                                         |   el cliente pide un cambio de nombre, el servidor lo almacena y retransmite a todos 
     disconnecting:                                                            |   un cliente se desconecta
     init_game:                                                                |   inicio del juego
     selected_chancellor:                                                      |   el server recibe quien es el posible chancellor para retransmitir
     voted_gov:                                                                |   el cliente hizo su voto
-    
+    pm_desition:                                                              |
+    chancellor_desition:                                                      |
+                                                                              |
+                                                                              |
+                                                                              |
+                                                                              |
+                                                                              |
 */
 
 
@@ -180,11 +193,11 @@ io.on('connection', socket =>
             {
                 var passed_law=false;  //saber si tiene que pasar o no una ley, para que el front consulte en el evento enviado
                 var law_to_send=null;
-                dataBase[0].passed++;
-                if(dataBase[0].passed==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
+                dataBase[0].skipped++;
+                if(dataBase[0].skipped==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
                 {
                     passed_law=true;
-                    dataBase[0].passed=0;    
+                    dataBase[0].skipped=0;    
                     law_to_send=dataBase[0].pop();
                 }   
                 io.sockets.emit("duo_lost",{passed_law:passed_law,law:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
@@ -258,7 +271,8 @@ function statStack()
         red:dataBase[0].red,
         cant_left:dataBase[0].stack_cartas.length,
         cant_descart:dataBase[0].stack_descartados.length,
-        pm_pos:dataBase[0].pm.position
+        pm_pos:dataBase[0].pm.position,
+        skipped_turns:dataBase[0].skipped,
     }
 }
 
