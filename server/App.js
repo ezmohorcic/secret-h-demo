@@ -27,6 +27,10 @@ var obj=
     chancellor:{},
     pm:{},
     skipped:0,
+    fasc_players:[],
+    h_player:{},
+    board:{},
+    last_elected:{},
     votos:
         {
             positivos:0,
@@ -54,6 +58,8 @@ dataBase=[obj];
     chancellor                          //obj entero de quien es el chacellor del turno
     pm
     skipped                             //gobiernos fallados antes de pasar ley obligatoriamente
+    fasc_players                        //fascistas
+    h_player                            //hitler
     board:
         {
             position_N:                 //se le agrega el tipo de poder como value, N siendo el numero de ley RED que se instauro
@@ -87,6 +93,8 @@ EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
     chancellor_turn,{cartas:}:                                                |   se le avisa al cliente chancellor que es su turno de decidir, se le envia las 2 cartas
     law_done,{selected:}:                                                     |   Se envia la ley que fue elegida por pm+chancellor
     your_rol,rol:                                                             |   Se envia el rol del jugador
+    know_fasc:
+    know_h:
 
 EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 
@@ -152,6 +160,8 @@ io.on('connection', socket =>
         initGame();
         var stats= statStack();
         dataBase[0].jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element.rol)})
+        dataBase[0].fasc_players.forEach(element =>{io.to(element.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players,h_player:dataBase[0].h_player})});
+        if(dataBase[0].jugadores.length<7){io.to(dataBase[0].h_player.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players})}
         io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
         io.to(socket.id).emit("asigned_pm"); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
     });
@@ -183,7 +193,7 @@ io.on('connection', socket =>
                 var trio_cartas=[];
                 for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
                 {
-                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle()}
+                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)}
                     trio_cartas.push(dataBase[0].stack_cartas.pop())
                 }
                 resetVotos(); //resetea los valores de los votos
@@ -199,7 +209,7 @@ io.on('connection', socket =>
                 {
                     passed_law=true;
                     dataBase[0].skipped=0;    
-                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle()}
+                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)}
                     law_to_send=dataBase[0].stack_cartas.pop();
                 }   
                 io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
@@ -240,11 +250,27 @@ io.on('connection', socket =>
 //Funciones Auxiliares:
 function cardStackGenerator()
 {
-    return([BLUE,RED,BLUE,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,RED,RED,RED,RED,BLUE,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE,RED,RED,RED,RED])
+    dataBase[0].stack_cartas=shuffle([BLUE,RED,BLUE,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,RED,RED,RED,RED,BLUE,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE,RED,RED,RED,RED])
     
 } 
 
-function shuffle(){return dataBase[0].stack_descartados}
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+}
 
 function determine_winner(comm)
 {
@@ -277,6 +303,7 @@ function statStack()
         cant_descart:dataBase[0].stack_descartados.length,
         pm_pos:dataBase[0].pm.position,
         skipped_turns:dataBase[0].skipped,
+        last_elected:[dataBase[0].pm,dataBase[0].chancellor]
     }
 }
 
@@ -307,6 +334,7 @@ function initGame()
 function generateBoard()
 {
 
+
 }
 
 function resetVotos()
@@ -317,12 +345,28 @@ function resetVotos()
 
 function generateRol(hechos)
 {   //EN ESTE CASO DE DEMO PARA 2, NO PUEDO TESTEAR, TESTEARE MAS TARDE, AHORA HARDCODEO
+    //CANT_FASC, CANT_LIBS
     dataBase[0].jugadores[0].rol=LIB;
     dataBase[0].jugadores[1].rol=H;
+    /*if(dataBase[0].jugadores<7)
+    {
+        CANT_LIBS=dataBase[0].jugadores-2
+        CANT_FASC=1;
+    }
+    else if(dataBase[0].jugadores<9)
+    {
+        CANT_LIBS=dataBase[0].jugadores-3
+        CANT_FASC=2;
+    }
+    else
+    {
+        CANT_LIBS=dataBase[0].jugadores-4
+        CANT_FASC=3;
+    }*/
     var i=0;
     /*while(i<CANT_FASC)    //EN TESTEOS VOY A USAR HITLER Y LIBS NOMAS PORQUE TENGO SOLO 2 
     {
-        var rand=Math.floor(Math.random()*(dataBase[0].jugadores.length-1));
+        var rand=Math.floor(Math.random()*(dataBase[0].jugadores.length));
         console.log(rand)
         console.log(dataBase[0].jugadores)
         console.log(dataBase[0].jugadores[rand])
@@ -331,6 +375,12 @@ function generateRol(hechos)
             dataBase[0].jugadores[rand].rol=FASC
             i++;
             hechos.push(rand);
+            dataBase[0].fasc_players.push(dataBase[0].jugadores[rand]);
+        }
+        else if(!hechos.includes(0))
+        {
+            dataBase[0].jugadores[0]=FASC
+            dataBase[0].fasc_players.push(dataBase[0].jugadores[0]);
         }
     }*/
     i=0;
@@ -346,6 +396,7 @@ function generateRol(hechos)
             i++;
             hechos.push(rand);
         }
+        else if(!hechos.includes(0)){dataBase[0].jugadores[0]=LIB}
     }*/
     /*while(i<1)
     {
@@ -358,6 +409,12 @@ function generateRol(hechos)
             dataBase[0].jugadores[rand].rol=H;
             i++;
             hechos.push(rand);
+            dataBase[0].h_player=dataBase[0].jugadores[rand];
+        }
+        else if(!hechos.includes(0))
+        {
+            dataBase[0].jugadores[0]=H
+            dataBase[0].h_player=dataBase[0].jugadores[0];
         }
     }*/
 }

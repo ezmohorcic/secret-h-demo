@@ -182,17 +182,21 @@ socket.on("pm_desition_client",function(msg)
 {
     var cartas_container=document.createElement("DIV");
     cartas_container.id="cartasContainer";
-    msg.cartas.forEach(element => {
-        var newCarta = document.createElement("BUTTON");
-        newCarta.className = "carta";
-        newCarta.innerText=element;
-        newCarta.addEventListener("click",function()
-        {
-            msg.cartas.splice(msg.cartas.indexOf(element),1);
-            socket.emit("pm_desition",{descartada:element,cartas:msg.cartas});
-            document.getElementById("cartasContainer").remove();
-        });
-        cartas_container.appendChild(newCarta);
+    msg.cartas.forEach(element => 
+    {
+        //if(!stats_turno.last_elected(element))
+        //{
+            var newCarta = document.createElement("BUTTON");
+            newCarta.className = "carta";
+            newCarta.innerText=element;
+            newCarta.addEventListener("click",function()
+            {
+                msg.cartas.splice(msg.cartas.indexOf(element),1);
+                socket.emit("pm_desition",{descartada:element,cartas:msg.cartas});
+                document.getElementById("cartasContainer").remove();
+            });
+            cartas_container.appendChild(newCarta);
+        //}
     });
 
     document.body.appendChild(cartas_container);
