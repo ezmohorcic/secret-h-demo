@@ -328,6 +328,6 @@ function soyCero(msg)
 function agregarLeyPasada(msg)
 {
     console.log(stats_turno)
-    if(msg.selected==BLUE){document.getElementById("blueCounter").innerText="Blue pasadas:" + (stats_turno.blue+1)}
-    else{document.getElementById("redCounter").innerText="Red pasadas:" + (stats_turno.red)}
+    if(msg.selected==BLUE){document.getElementById("blueCounter").innerText="Blue pasadas:" + (msg.counter)}
+    else{document.getElementById("redCounter").innerText="Red pasadas:" + (msg.counter)}
 }

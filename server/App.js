@@ -219,11 +219,11 @@ io.on('connection', socket =>
                     if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)} 
                     law_to_send=dataBase[0].stack_cartas.pop();
                     lawCounter({selected:law_to_send});
-                    io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                    io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send,counter:dataBase[0][law_to_send]});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                     resetVotos(); //resetea los valores de los votos
                     nextTurn();
                     console.log(law_to_send);
-                    powerTurn({selected:law_to_send},"skipped");
+                    powerTurn({selected:law_to_send});
                 }
                 else
                 {   
@@ -248,19 +248,18 @@ io.on('connection', socket =>
     {
         dataBase[0].stack_descartados.push(data.descartada);
         lawCounter(data.selected);
+        dataBase[0].last_elected=[dataBase[0].pm,dataBase[0].chancellor]; //guardo los ultimos elegidos
         var winner = determine_winner("just_decided"); //si ganan fascistas por cantidad de leyes rojas o liberales por cantidad de leyes azules
         if(winner!=false) //si hay un ganador 
         {
             if(winner==BLUE){io.sockets.emit("blue_wins");}
             else{io.sockets.emit("red_wins");}
         } 
-        io.sockets.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
+        io.sockets.emit("law_done",{selected:data.selected,counter:dataBase[0][data.selected]}) //evento a todos para que vean que ley se paso
         console.log("chancellor_desition")
         console.log(socket.position)
         nextTurn();
-        powerTurn(data,"decided");
-       
-
+        powerTurn(data);
     })
     
     socket.on(KILL_PLAYER,data=>
@@ -285,14 +284,14 @@ io.on('connection', socket =>
 })
 
 //Funciones Auxiliares:
-function powerTurn(data,comm)
+function powerTurn(data)
 {
     console.log("entre a power turn");
     console.log(dataBase[0].last_elected[0]);
     if(data.selected==RED)
     {
         console.log("es ley roja");
-        if(!determinePower(comm))
+        if(!determinePower())
         {
             console.log("no es ley bloqueante")
             var stats_stack=statStack();
@@ -364,15 +363,13 @@ function statStack()
         cant_descart:dataBase[0].stack_descartados.length,
         pm_pos:dataBase[0].pm.position,
         skipped_turns:dataBase[0].skipped,
-        last_elected:[dataBase[0].pm,dataBase[0].chancellor]
+        //last_elected:[dataBase[0].pm,dataBase[0].chancellor]
     }
 }
 
-function determinePower(comm=null)
+function determinePower()
 {
-    var reciever;
-    if(comm=="skipped"){reciever=dataBase[0].last_elected[0];}
-    else {reciever=dataBase[0].pm;}
+    var reciever=dataBase[0].last_elected[0];
     console.log("determinePower")
     console.log(reciever);
     var client_command=dataBase[0].board["position_"+dataBase[0].red];
