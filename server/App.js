@@ -466,21 +466,14 @@ function generateRol(hechos)
     //CANT_FASC, CANT_LIBS
     dataBase[0].jugadores[0].rol=LIB;
     dataBase[0].jugadores[1].rol=H;
-    /*if(dataBase[0].jugadores<7)
-    {
-        CANT_LIBS=dataBase[0].jugadores-2
-        CANT_FASC=1;
-    }
-    else if(dataBase[0].jugadores<9)
-    {
-        CANT_LIBS=dataBase[0].jugadores-3
-        CANT_FASC=2;
-    }
-    else
-    {
-        CANT_LIBS=dataBase[0].jugadores-4
-        CANT_FASC=3;
-    }*/
+    var raw;
+    if(dataBase[0].jugadores==5){raw=shuffle([H,FASC,LIB,LIB,LIB]);}
+    else if(dataBase[0].jugadores==6){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB]);}
+    else if(dataBase[0].jugadores==7){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC]);}
+    else if(dataBase[0].jugadores==8){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,LIB]);;}
+    else if(dataBase[0].jugadores==9){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,FASC,LIB]);}
+    else if(dataBase[0].jugadores==10){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,FASC,LIB,LIB]);}
+    for(var j=0;j<dataBase[0].jugadores.length;j++){dataBase[0].jugadores[j].rol=raw[j];}
     var i=0;
     /*while(i<CANT_FASC)    //EN TESTEOS VOY A USAR HITLER Y LIBS NOMAS PORQUE TENGO SOLO 2 
     {
