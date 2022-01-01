@@ -157,10 +157,8 @@ socket.on("init_vote",function(msg)
         voteyes.addEventListener("click",function()
         {
             var vote_container=document.createElement("DIV");
-        vote_container.id="voteContainer";
-
-        var voteyes = document.createElement("BUTTON");
-        votesocket.emit("voted_gov",{vote:true});
+            vote_container.id="voteContainer";
+            socket.emit("voted_gov",{vote:true});
             document.getElementById("voteContainer").remove()
         });
 
@@ -262,6 +260,30 @@ socket.on("blue_wins",function(msg)
     won_container.innerText="BLUE WINS!";
     document.body.appendChild(won_container);
 });
+
+socket.on("kill",function(msg)
+{
+    console.log("debias matar")
+    socket.emit("kill",{})
+})
+
+socket.on("pick_candidate",function(msg)
+{
+    console.log("llama a tu sobrinon")
+    socket.emit("pick_candidate",{})
+});
+
+socket.on("examine_deck",function(msg)
+{
+    console.log("y la baraja...")
+    socket.emit("examine_deck",{})
+});
+
+socket.on("examine_player",function(msg)
+{
+    console.log("y vos quien sos?")
+    socket.emit("examine_player",{})
+});
 //Funciones Auxiliares-------------
 function renderPlayers(msg)
 {
@@ -307,5 +329,5 @@ function agregarLeyPasada(msg)
 {
     console.log(stats_turno)
     if(msg.selected==BLUE){document.getElementById("blueCounter").innerText="Blue pasadas:" + (stats_turno.blue+1)}
-    else{document.getElementById("redCounter").innerText="Red pasadas:" + (stats_turno.red+1)}
+    else{document.getElementById("redCounter").innerText="Red pasadas:" + (stats_turno.red)}
 }

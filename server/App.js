@@ -207,17 +207,23 @@ io.on('connection', socket =>
             }
             else
             {
+                console.log("no se paso gobierno");
                 var passed_law=false;  //saber si tiene que pasar o no una ley, para que el front consulte en el evento enviado
                 var law_to_send=null;
                 dataBase[0].skipped++;
                 if(dataBase[0].skipped==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
                 {
+                    console.log("ley obligatoria");
                     passed_law=true;
                     dataBase[0].skipped=0;    
                     if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)} 
                     law_to_send=dataBase[0].stack_cartas.pop();
-                    lawCounter(law_to_send);
-                    powerTurn(law_to_send);
+                    lawCounter({selected:law_to_send});
+                    io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                    resetVotos(); //resetea los valores de los votos
+                    nextTurn();
+                    console.log(law_to_send);
+                    powerTurn({selected:law_to_send},"skipped");
                 }
                 else
                 {   
@@ -242,7 +248,6 @@ io.on('connection', socket =>
     {
         dataBase[0].stack_descartados.push(data.descartada);
         lawCounter(data.selected);
-        if(data.selected==RED){determinePower();}
         var winner = determine_winner("just_decided"); //si ganan fascistas por cantidad de leyes rojas o liberales por cantidad de leyes azules
         if(winner!=false) //si hay un ganador 
         {
@@ -250,16 +255,19 @@ io.on('connection', socket =>
             else{io.sockets.emit("red_wins");}
         } 
         io.sockets.emit("law_done",{selected:data.selected}) //evento a todos para que vean que ley se paso
+        console.log("chancellor_desition")
+        console.log(socket.position)
         nextTurn();
-        powerTurn(data);
+        powerTurn(data,"decided");
        
 
     })
     
     socket.on(KILL_PLAYER,data=>
     {
-        dataBase[0].jugadores[data.position].estado="dead";
-        io.to(data.socketId).emit("assasinated");
+        console.log("jaja matar");
+        /*dataBase[0].jugadores[data.position].estado="dead";
+        io.to(data.socketId).emit("assasinated");*/
 
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
@@ -268,7 +276,8 @@ io.on('connection', socket =>
 
     socket.on(PICK_CANDIDATE,data=>
     {
-        dataBase[0].pm=dataBase[0].jugadores[data.position];
+        console.log("podemos meter a mi sobrino en ese puesto");
+       /* dataBase[0].pm=dataBase[0].jugadores[data.position];*/
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
         io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
@@ -276,12 +285,16 @@ io.on('connection', socket =>
 })
 
 //Funciones Auxiliares:
-function powerTurn()
+function powerTurn(data,comm)
 {
+    console.log("entre a power turn");
+    console.log(dataBase[0].last_elected[0]);
     if(data.selected==RED)
     {
-        if(!determinePower())
+        console.log("es ley roja");
+        if(!determinePower(comm))
         {
+            console.log("no es ley bloqueante")
             var stats_stack=statStack();
             io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
             io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
@@ -289,7 +302,8 @@ function powerTurn()
     
     }
     else
-    {
+    {   
+        console.log("no es ley roja");
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
         io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
@@ -299,7 +313,6 @@ function powerTurn()
 function cardStackGenerator()
 {
     dataBase[0].stack_cartas=shuffle([BLUE,RED,BLUE,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,RED,RED,RED,RED,BLUE,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE,RED,RED,RED,RED])
-    
 } 
 
 function shuffle(array) {
@@ -360,7 +373,8 @@ function determinePower(comm=null)
     var reciever;
     if(comm=="skipped"){reciever=dataBase[0].last_elected[0];}
     else {reciever=dataBase[0].pm;}
-
+    console.log("determinePower")
+    console.log(reciever);
     var client_command=dataBase[0].board["position_"+dataBase[0].red];
 
     switch (client_command) 
@@ -389,6 +403,7 @@ function determinePower(comm=null)
         return true;
     
         default:
+            console.log("no era turno con poder")
         return false
     }
     /*EXAMINE_DECK KILL_PLAYER EXAMINE_PLAYER PICK_CANDIDATE*/
@@ -401,13 +416,14 @@ function initGame()
     generateBoard();
     dataBase[0].cant_jugadores=dataBase[0].jugadores.length;
     dataBase[0].pm_pos=0;
-    dataBase[0].stack_cartas=cardStackGenerator();
+    cardStackGenerator();
     dataBase[0].stack_descartados=[];
     dataBase[0].blue=0;
     dataBase[0].red=0;
     dataBase[0].chancellor={};
     dataBase[0].pm=dataBase[0].jugadores[0];
     dataBase[0].passed=0;
+    dataBase[0].last_elected=[dataBase[0].jugadores[0]],
     dataBase[0].jugadores.forEach(element =>
     {element.estado=="alive";});
     resetVotos();
@@ -415,13 +431,13 @@ function initGame()
 
 function generateBoard()
 {
-    if(dataBase[0].jugadores<7)
+    if(dataBase[0].jugadores.length<7)
     {
         dataBase[0].board.position_3=EXAMINE_DECK;
         dataBase[0].board.position_4=KILL_PLAYER;
         dataBase[0].board.position_5=KILL_PLAYER;
     }
-    else if(dataBase[0].jugadores<9)
+    else if(dataBase[0].jugadores.length<9)
     {
         dataBase[0].board.position_2=EXAMINE_PLAYER;
         dataBase[0].board.position_3=PICK_CANDIDATE;
