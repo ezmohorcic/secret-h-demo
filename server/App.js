@@ -36,6 +36,7 @@ var obj=
     h_player:{},
     board:{},
     last_elected:{},
+    mod_total=0,
     votos:
         {
             positivos:0,
@@ -98,8 +99,7 @@ EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
     chancellor_turn,{cartas:}:                                                |   se le avisa al cliente chancellor que es su turno de decidir, se le envia las 2 cartas
     law_done,{selected:}:                                                     |   Se envia la ley que fue elegida por pm+chancellor
     your_rol,rol:                                                             |   Se envia el rol del jugador
-    know_fasc:                                                                |   Se envia a los fascistas quienes son y quien es hitler, tambien hitler puede que reciba si hay menos de 7 jugadores
-    know_h:                                                                   |
+    know_fasc,fasc_players,h_player:                                          |   Se envia a los fascistas quienes son y quien es hitler, tambien hitler puede que reciba si hay menos de 7 jugadores
 
 EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 
@@ -164,9 +164,9 @@ io.on('connection', socket =>
     {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
         initGame();
         var stats= statStack();
-        dataBase[0].jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element.rol)})
-        dataBase[0].fasc_players.forEach(element =>{io.to(element.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players,h_player:dataBase[0].h_player})});
-        if(dataBase[0].jugadores.length<7){io.to(dataBase[0].h_player.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players})}
+        dataBase[0].jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element.rol)}) //A cada cliente se le envia su rol de juego
+        dataBase[0].fasc_players.forEach(element =>{io.to(element.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players,h_player:dataBase[0].h_player})}); //cada fascista conoce al resto y a Hitler
+        if(dataBase[0].jugadores.length<7){io.to(dataBase[0].h_player.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players})}  //hitler puede necesitar saber quien es el fascista, depende de cantidad de jugadores
         io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
         io.to(socket.id).emit("asigned_pm"); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
     });
@@ -185,7 +185,7 @@ io.on('connection', socket =>
         if(data.vote){dataBase[0].votos.positivos++} //se suma el voto (que es un bool)
         else{dataBase[0].votos.positivos--}
         dataBase[0].votos.total++
-        if(dataBase[0].votos.total==dataBase[0].cant_jugadores) //si es el jugador final que voto
+        if(dataBase[0].votos.total==dataBase[0].cant_jugadores - mod_total) //si es el jugador final que voto
         {   
             if(dataBase[0].votos.positivos>=0) //si hay mas del 50% de votos positivos, devuelve a todos que el gobierno es exitoso, si el cliente es el pm, accede a 3 cartas
             {
@@ -216,14 +216,14 @@ io.on('connection', socket =>
                     console.log("ley obligatoria");
                     passed_law=true;
                     dataBase[0].skipped=0;    
-                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)} 
+                    if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)} //se obtienen las cartas
                     law_to_send=dataBase[0].stack_cartas.pop();
-                    lawCounter({selected:law_to_send});
+                    lawCounter({selected:law_to_send}); //se suma la ley al contador
                     io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send,counter:dataBase[0][law_to_send]});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                     resetVotos(); //resetea los valores de los votos
-                    nextTurn();
+                    nextTurn(); //genera el siguiente pm
                     console.log(law_to_send);
-                    powerTurn({selected:law_to_send});
+                    powerTurn({selected:law_to_send}); //se envia al analisis de poder al pm
                 }
                 else
                 {   
@@ -259,14 +259,16 @@ io.on('connection', socket =>
         console.log("chancellor_desition")
         console.log(socket.position)
         nextTurn();
-        powerTurn(data);
+        powerTurn(data);    //se envia al analisis de poder al pm
     })
     
     socket.on(KILL_PLAYER,data=>
     {
         console.log("jaja matar");
         /*dataBase[0].jugadores[data.position].estado="dead";
-        io.to(data.socketId).emit("assasinated");*/
+        io.to(data.socketId).emit("assasinated");
+        dataBase[0].mod_total++;
+        */
 
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
@@ -291,7 +293,7 @@ function powerTurn(data)
     if(data.selected==RED)
     {
         console.log("es ley roja");
-        if(!determinePower())
+        if(!determinePower()) //determina si la ley tiene un poder que para que el juego continue, el pm necesita enviar info
         {
             console.log("no es ley bloqueante")
             var stats_stack=statStack();
@@ -300,7 +302,7 @@ function powerTurn(data)
         }
     
     }
-    else
+    else    //La carta no es roja
     {   
         console.log("no es ley roja");
         var stats_stack=statStack();
@@ -363,7 +365,6 @@ function statStack()
         cant_descart:dataBase[0].stack_descartados.length,
         pm_pos:dataBase[0].pm.position,
         skipped_turns:dataBase[0].skipped,
-        //last_elected:[dataBase[0].pm,dataBase[0].chancellor]
     }
 }
 
@@ -376,7 +377,7 @@ function determinePower()
 
     switch (client_command) 
     {
-        case EXAMINE_DECK:
+        case EXAMINE_DECK:  
             var trio_cartas=[];
             for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
             {
@@ -421,6 +422,7 @@ function initGame()
     dataBase[0].pm=dataBase[0].jugadores[0];
     dataBase[0].passed=0;
     dataBase[0].last_elected=[dataBase[0].jugadores[0]],
+    dataBase[0].mod_total=0;
     dataBase[0].jugadores.forEach(element =>
     {element.estado=="alive";});
     resetVotos();
