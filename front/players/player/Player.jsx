@@ -1,12 +1,12 @@
 import React from 'react';
 
-function Vote()
+function Player()
 {
     return(
-        <div id="VoteContainer">
+        <div id='player'>
             
         </div>
     )
 }
 
-export default Vote;
+export default Player;
