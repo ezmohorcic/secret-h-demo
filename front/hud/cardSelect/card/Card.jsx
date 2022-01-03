@@ -3,10 +3,10 @@ import React from 'React';
 function Card(props)
 {
     return(
-        <div className='CardShell' id={props.vote}>
-            <button className='buttonDiscard' onClick={props.onSelectCard()}>
-                <div className='voteTextShell'>
-                    <p>{voteP}</p>
+        <div className='CardShell' id= {"card"+props.numberCard}>
+            <button className='buttonDiscard' onClick={props.onSelectCard(props.numberCard,props.arrCartas)}>
+                <div className='cardContentShell'>
+                    <p>{props.content}</p>
                 </div>
             </button>
         </div>

@@ -3,25 +3,27 @@ import Card from "./card/Card.jsx";
 
 function CardSelect(props)
 {
-    function onSelectCard()
+    var disp="block";
+
+    function onSelectCard(numberCard,arrCartas)
     {
-        props.cartas.splice(msg.cartas[props.numberCard],1);
-        socket.emit("pm_desition",{descartada:element,cartas:props.cartas});
+        arrCartas.splice(arrCartas[numberCard],1);
+        socket.emit("pm_desition",{descartada:element,cartas:arrCartas});
+        disp="none";
     }
 
-    var Cards= props.cartasTomadas.map((element,index)=>
+    var cards= props.cartasTomadas.map((element,index,arr)=>
     {
         return(
             <Card
-                
+                arrCartas={arr}
+                numberCard={index}
+                content={element}
+                onSelectCard={onSelectCard}
             />
         )
     });
-    return(
-        <div id='CardSelectContainer'>
-            
-        </div>
-    )
+    return(<div id='CardSelectContainer' style={disp}>{cards}</div>)
 }
 
 export default CardSelect;
