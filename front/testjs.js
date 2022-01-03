@@ -222,7 +222,6 @@ socket.on("chancellor_turn",function(msg)
     document.body.appendChild(cartas_container);
 })
 
-
 socket.on("next_turn",function(msg)
 {
     console.log(msg.stats)

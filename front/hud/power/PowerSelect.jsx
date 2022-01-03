@@ -7,4 +7,4 @@ function PowerSelect()
     )
 }
 
-export default PowerSelect ;
+export default PowerSelect;
