@@ -20,7 +20,7 @@ function KillSelect(props)
     });
 
     return(
-        <div id='KillSelect' style={disp}>
+        <div id='KillSelectContainer' style={disp}>
             {arrShow}
         </div>
     )

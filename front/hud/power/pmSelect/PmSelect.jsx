@@ -20,7 +20,7 @@ function PmSelect(props)
     });
 
     return(
-        <div id='rolRevealContainer' style={disp}>
+        <div id='pmSelectContainer' style={disp}>
             {arrShow}
         </div>
     )

@@ -6,7 +6,7 @@ function DeckExam(props)
     var deckTippedOff= props.tippedOff.map((element)=>{return(<div className='tippedCard'><p>{element}</p></div>)});
 
     return(
-        <div id='DeckExam' style={disp}>
+        <div id='DeckExamContainer' style={disp}>
             {deckTippedOff}
             <button onClick={disp="none"}></button>
         </div>
