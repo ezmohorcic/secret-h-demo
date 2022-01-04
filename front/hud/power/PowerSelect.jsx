@@ -17,6 +17,6 @@ function PowerSelect(props)
             {powerType}
         </div>
     )
-}
+}7
 
 export default PowerSelect;

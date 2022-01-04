@@ -3,12 +3,12 @@ import ChCandidate from ".../selectCh/chCandidate/ChCandidate.jsx";
 
 function PlayerExam(props)
 {
-    var disp="block";
+    const [disp,setDisp]=useState("block");
 
     function showRol(player)
     {
         //aca agregar hook de cambio de estado del jugador que pickee
-        disp="none";
+        setDisp("none");
     }
 
     var arrShow = props.all_players.map((element)=>
@@ -20,7 +20,7 @@ function PlayerExam(props)
     });
 
     return(
-        <div id='rolRevealContainer' style={disp}>
+        <div id='rolRevealContainer' style={display=disp}>
             {arrShow}
         </div>
     )

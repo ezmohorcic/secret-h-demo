@@ -3,13 +3,14 @@ import Card from "./card/Card.jsx";
 
 function CardSelect(props)
 {
-    var disp="block";
+    const [disp,setDisp]=useState("block");
 
     function onSelectCard(numberCard,arrCartas)
     {
         arrCartas.splice(arrCartas[numberCard],1);
         socket.emit("pm_desition",{descartada:element,cartas:arrCartas});
-        disp="none";
+        setDisp("none");
+        
     }
 
     var cards= props.cartasTomadas.map((element,index,arr)=>

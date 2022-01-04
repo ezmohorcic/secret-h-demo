@@ -2,13 +2,13 @@ import React from 'React';
 
 function DeckExam(props)
 {
-    var disp="block";
+    const [disp,setDisp]=useState("block");
     var deckTippedOff= props.tippedOff.map((element)=>{return(<div className='tippedCard'><p>{element}</p></div>)});
 
     return(
-        <div id='DeckExamContainer' style={disp}>
+        <div id='DeckExamContainer' style={display=disp}>
             {deckTippedOff}
-            <button onClick={disp="none"}></button>
+            <button onClick={setDisp("none")}></button>
         </div>
     )
 }

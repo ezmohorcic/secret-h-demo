@@ -3,12 +3,12 @@ import ChCandidate from ".../selectCh/chCandidate/ChCandidate.jsx";
 
 function KillSelect(props)
 {
-    var disp="block";
+    const [disp,setDisp]=useState("block")
 
     function sendDeath(player)
     {
         socket.emit("kill",{player})
-        disp="none";
+        setDisp("none");
     }
 
     var arrShow = props.all_players.map((element)=>
@@ -20,7 +20,7 @@ function KillSelect(props)
     });
 
     return(
-        <div id='KillSelectContainer' style={disp}>
+        <div id='KillSelectContainer' style={display=disp}>
             {arrShow}
         </div>
     )

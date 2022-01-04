@@ -3,12 +3,12 @@ import ChCandidate from ".../selectCh/chCandidate/ChCandidate.jsx";
 
 function PmSelect(props)
 {
-    var disp="block";
+    const [disp,setDisp]=useState("block");
 
     function selectedPm(player)
     {
         socket.emit("pick_candidate",player);
-        disp="none";
+        setDisp("none");
     }
 
     var arrShow = props.all_players.map((element)=>
@@ -20,7 +20,7 @@ function PmSelect(props)
     });
 
     return(
-        <div id='pmSelectContainer' style={disp}>
+        <div id='pmSelectContainer' style={display=disp}>
             {arrShow}
         </div>
     )

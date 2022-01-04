@@ -1,16 +1,14 @@
 import React from 'React';
 import ChCandidate from "./chCandidate/ChCandidate.jsx";
 
-function SelectCh()
+function SelectCh(props)
 {
     const [selected,setSelected]= useState({username:""})
-    const 
-    var disp="block";
-    var selected={username:""};
+    const [disp,setDisp]=useState("block");
     function preSelectCh(player)
     {
-        setSelected(player)
-        disp="none";
+        setSelected(player);
+        setDisp("none");
     }
 
     var arrShow = props.all_players.map((element)=>
