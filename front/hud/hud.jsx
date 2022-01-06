@@ -8,9 +8,9 @@ function Hud(props)
 {
     return(
         <div id="HudContainer"> 
-            <div className="hudShell"><CardSelect setCardDisp={props.setCardDisp} cartasTomadas={props.cartasTomadas}/></div>
-            <div className="hudShell"><PowerSelect all_players={props.all_players}/></div>
-            <div className="hudShell"><SelectCh setViewSelectedCh={props.setViewSelectedCh} all_players={props.all_players}/></div>
+            <div className="hudShell"><CardSelect emitCards={props.emitCards} cardDisp={props.cardDisp} setCardDisp={props.setCardDisp} cartasTomadas={props.cartasTomadas}/></div>
+            <div className="hudShell"><PowerSelect powerPayload={props.powerPayload} power={props.power} tippedOff={props.tippedOff} all_players={props.all_players}/></div>
+            <div className="hudShell"><SelectCh stats_turno={props.stats_turno} ViewSelectedCh={props.ViewSelectedCh} setViewSelectedCh={props.setViewSelectedCh} all_players={props.all_players}/></div>
             <div className="hudShell"><VoteSelect voteDisp={props.voteDisp} setVoteDisp={props.setVoteDisp}/></div>    
         </div>
     )

@@ -36,7 +36,7 @@ var obj=
     h_player:{},
     board:{},
     last_elected:{},
-    mod_total=0,
+    mod_total:0,
     votos:
         {
             positivos:0,
@@ -120,9 +120,9 @@ app.use(express.static('../front/'))
 
 app.get("/",(req,res)=>
 {
-    
     res.render("index")
 })
+
 const server = app.listen(process.env.PORT || 3000, () => {
     console.log("server is running");
 })

@@ -8,8 +8,8 @@ function CardSelect(props)
     function onSelectCard(numberCard,arrCartas)
     {
         arrCartas.splice(arrCartas[numberCard],1);
-        socket.emit("pm_desition",{descartada:element,cartas:arrCartas});
-        setDisp("none");
+        socket.emit(props.emitCards,{descartada:element,cartas:arrCartas});
+        props.cardDisp("none");
         
     }
 

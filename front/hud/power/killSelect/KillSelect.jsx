@@ -13,10 +13,12 @@ function KillSelect(props)
 
     var arrShow = props.all_players.map((element)=>
     {
-        <ChCandidate
+        return(
+            <ChCandidate
             playerInfo={element}
             onSelect={sendDeath}
-        />
+            />
+        )
     });
 
     return(

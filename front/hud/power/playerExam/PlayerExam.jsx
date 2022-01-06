@@ -13,10 +13,12 @@ function PlayerExam(props)
 
     var arrShow = props.all_players.map((element)=>
     {
-        <ChCandidate
+        return(
+            <ChCandidate
             playerInfo={element}
             onSelect={showRol}
-        />
+            />
+        )
     });
 
     return(
