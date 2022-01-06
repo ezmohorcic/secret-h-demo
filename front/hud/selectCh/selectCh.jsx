@@ -1,4 +1,5 @@
-import React from 'React';
+import React from 'react';
+import { Socket } from 'socket.io';
 import ChCandidate from "./chCandidate/ChCandidate.jsx";
 
 function SelectCh(props)
@@ -11,6 +12,7 @@ function SelectCh(props)
         props.setViewSelectedCh("none");
         setSelected({username:""});
     }
+    function sendCh(){socket.emit("selected_chancellor",selected)}
 
     var arrShow = props.all_players.map((element)=>
     {
@@ -26,8 +28,9 @@ function SelectCh(props)
     });
 
     return(
-        <div id='SelectChContainer' style={disp}>
+        <div id='SelectChContainer' style={{display:props.ViewSelectedCh}}>
             <p>seleccionado: {selected.username}</p>
+            <button onClick={sendCh()}></button>
             {arrShow}
         </div>
     )

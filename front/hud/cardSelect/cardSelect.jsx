@@ -9,7 +9,7 @@ function CardSelect(props)
     {
         arrCartas.splice(arrCartas[numberCard],1);
         socket.emit(props.emitCards,{descartada:element,cartas:arrCartas});
-        props.cardDisp("none");
+        props.setCardDisp("none");
         
     }
 
@@ -24,7 +24,7 @@ function CardSelect(props)
             />
         )
     });
-    return(<div id='CardSelectContainer' style={disp}>{cards}</div>)
+    return(<div id='CardSelectContainer' style={{display:props.cardDisp}}>{cards}</div>)
 }
 
 export default CardSelect;

@@ -1,5 +1,5 @@
-import React from 'React';
-import ChCandidate from ".../selectCh/chCandidate/ChCandidate.jsx";
+import React from 'react';
+import ChCandidate from "../../selectCh/chCandidate/ChCandidate.jsx";
 
 function KillSelect(props)
 {

@@ -1,7 +1,7 @@
 module.exports = {
     mode:'development',
     entry: [
-      './front/index.js'
+      './front/Indexjs.js'
     ],
     devtool:'inline-source-map',
     output: {

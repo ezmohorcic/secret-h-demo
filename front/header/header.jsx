@@ -1,10 +1,15 @@
 import React from 'react';
 
-function Header()
+function Header(props)
 {
+    function onInicio()
+    {
+        props.setSoyCero("none");
+        socket.emit("init_game",{});
+    }
     return(
-        <div id="headerContainer">
-            
+        <div id="headerContainer" style={{display:props.soyCero}}>
+            <button onClick={onInicio()}>iniciar</button>
         </div>
     )
 }
