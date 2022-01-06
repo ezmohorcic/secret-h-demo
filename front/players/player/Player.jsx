@@ -1,11 +1,12 @@
 import React from 'react';
 
-function Player()
+function Player(props)
 {
     return(
-        <div id='player'>
-            
-        </div>
+        <li id={'player'+props.player.position}>
+            <p className='username'>{props.player.username}</p>
+            <p className='rol'>{props.player.rol}</p>
+        </li>
     )
 }
 

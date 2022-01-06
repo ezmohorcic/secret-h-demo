@@ -22,7 +22,7 @@ var preChancellor=null;
 var pm=null;
 
 var game_on=false;
-var cartas_devueltas;
+//var cartas_devueltas;
 //----------------
 
 
@@ -59,7 +59,7 @@ socket.on("change_username_on_position",function(msg)
     for(i=0;i<msg.position;i++){li=li.nextSibling;}
     li.innerText=msg.username;
     
-})
+});
 
 socket.on("new_player",function(msg){renderPlayers(msg);})
 
@@ -100,7 +100,7 @@ socket.on("init_game_client",function(msg)
     contStats.appendChild(cantCartas);
     contStats.appendChild(cantDescarte);
     document.body.append(contStats);
-})
+});
 
 socket.on("asigned_pm",function()
 {
@@ -143,7 +143,7 @@ socket.on("asigned_pm",function()
         }
     });
     document.body.appendChild(chancellor_select_container);
-})
+});
 
 socket.on("init_vote",function(msg)
 {
@@ -198,7 +198,7 @@ socket.on("pm_desition_client",function(msg)
     });
 
     document.body.appendChild(cartas_container);
-})
+});
 
 socket.on("chancellor_turn",function(msg)
 {
@@ -220,7 +220,7 @@ socket.on("chancellor_turn",function(msg)
     });
 
     document.body.appendChild(cartas_container);
-})
+});
 
 socket.on("next_turn",function(msg)
 {
