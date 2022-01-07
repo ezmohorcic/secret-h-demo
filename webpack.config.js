@@ -5,8 +5,9 @@ module.exports = {
     ],
     devtool:'inline-source-map',
     output: {
-      path: __dirname + '/dist',
-      filename: 'bundle.js'
+      path: __dirname + '/newFront',
+      filename: 'bundle.js',
+      publicPath: 'https://localhost:3000/bundle.js'
     },
     module: {
       rules: [
