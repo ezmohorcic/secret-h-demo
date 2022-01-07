@@ -20,9 +20,13 @@ function App()
     const [player_data,setPlayer_data]=useState({});
     const [soyCeroView,setSoyCeroView]=useState({display:"none"})
     const [stats_turno,setStats_turno]=useState({});
-    
+    const [blue,setBlue]=useState(0);
+    const [red,setRed]=useState(0);
+
     useEffect(()=>
     {
+        socket.on("connect_error", (err) => {console.log(`connect_error due to ${err.message}`)});
+        
         socket.on("your_data",function(msg)
         {
             setPlayer_data(msg);
@@ -70,9 +74,17 @@ function App()
             setStats_turno(temp);
         });
 
-        socket.on("connect_error", (err) => {console.log(`connect_error due to ${err.message}`)});
+        socket.on("law_done",function(msg)
+        {
+            msg.selected==BLUE ? setBlue(msg.counter):setRed(mg.counter);
+        });
     
-        
+        socket.on("asigned_pm",function(msg)
+        {
+            console.log("soy pm");
+            setViewSelectedCh("block");
+            
+        });
     
     
     
@@ -88,7 +100,7 @@ function App()
             <SocketContext.Provider value={socket}>
                 <Header soyCeroView={soyCeroView} setSoyCeroView={setSoyCeroView} player_data={player_data}/>
                 <Players all_players={all_players}/>
-                <Stats stats_turno={stats_turno}/>
+                <Stats blue={blue} red={red} stats_turno={stats_turno}/>
             </SocketContext.Provider>           
         </div>
     )

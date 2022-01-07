@@ -4,8 +4,8 @@ const app = express();
 
 //statics:
 const CANT_PASSED_MAX=2; //cantreq.params.idad de gobiernos pasados maxima 
-const BLUE="blue"; //ley liberal
-const RED="red"; //ley fascista
+export const BLUE="blue"; //ley liberal
+export const RED="red"; //ley fascista
 const WINS_BLUE=5; //cantidad para que liberales ganen
 const WINS_RED=6; //cantidad para que fascistas ganen
 const MIN_RED_H=3; //minima cantidad de leyes rojas + Hitle cansiller 
