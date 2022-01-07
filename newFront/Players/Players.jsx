@@ -1,9 +1,18 @@
 import React from "react";
+import Player from "./Player/Player.jsx";
 
-function Players()
+function Players(props)
 {
+    var players=props.all_players.map(element=>
+        {
+            return(<Player player={element}/>)
+        });
     return(
-        <div>players</div>
+        <div id="playersContainer">
+            <ul id='playersUl'>
+                {players}
+            </ul>
+        </div>
     )
 }
 

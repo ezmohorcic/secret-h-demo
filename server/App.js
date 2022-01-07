@@ -136,7 +136,7 @@ io.on('connection', socket =>
     socket.username = "Anon";
     socket.position = dataBase[0].jugadores.length;
     dataBase[0].cant_jugadores++;
-    dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo"}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
+    dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
     io.sockets.emit('new_player', dataBase[0].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
     io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo"}) //le envia la informacion propia del jugador a su front
 
@@ -144,8 +144,8 @@ io.on('connection', socket =>
     {  //desde el front, recibe el server que alguien quiere cambiar su nombre
         socket.username=data.username
         dataBase[0].jugadores[socket.position].username=data.username;
-        var out={position: socket.position,username: socket.username}
-        io.sockets.emit('change_username_on_position', out) //envia nuevo nombre del usuario en esa posicion
+        //var out={position: socket.position,username: socket.username}
+        io.sockets.emit('change_username_on_position', dataBase[0].jugadores) //envia nuevo nombre del usuario en esa posicion
     })
 
     socket.on("disconnecting",data=>
