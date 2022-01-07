@@ -12,6 +12,9 @@ function Players(props)
             <ul id='playersUl'>
                 {players}
             </ul>
+            <div id="pmContainer">
+                
+            </div>
         </div>
     )
 }
