@@ -171,7 +171,7 @@ io.on('connection', socket =>
         /*dataBase[0].fasc_players.forEach(element =>{io.to(element.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players,h_player:dataBase[0].h_player})}); //cada fascista conoce al resto y a Hitler
         if(dataBase[0].jugadores.length<7){io.to(dataBase[0].h_player.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players})}*/  //hitler puede necesitar saber quien es el fascista, depende de cantidad de jugadores
         io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
-        io.to(socket.id).emit("asigned_pm"); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
+        io.to(socket.id).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:socket.position}); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
     });
     
     socket.on("selected_chancellor",data=>
@@ -235,7 +235,7 @@ io.on('connection', socket =>
                     nextTurn();
                     var stats_stack=statStack();
                     io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
-                    io.to(dataBase[0].pm.socketId).emit("asigned_pm");
+                    io.to(dataBase[0].pm.socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
                 }
             }
         }
@@ -275,7 +275,7 @@ io.on('connection', socket =>
 
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
     });
 
     socket.on(PICK_CANDIDATE,data=>
@@ -284,7 +284,7 @@ io.on('connection', socket =>
        /* dataBase[0].pm=dataBase[0].jugadores[data.position];*/
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
     });
 
 })
@@ -302,7 +302,7 @@ function powerTurn(data)
             console.log("no es ley bloqueante")
             var stats_stack=statStack();
             io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-            io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
+            io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
         }
     
     }
@@ -311,7 +311,7 @@ function powerTurn(data)
         console.log("no es ley roja");
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
     }
 }
 
@@ -471,8 +471,8 @@ function generateRol(hechos)
     //CANT_FASC, CANT_LIBS
     /*dataBase[0].jugadores[0].rol=LIB;
     dataBase[0].jugadores[1].rol=H;*/
-    var raw;
-    if(dataBase[0].jugadores==5){raw=shuffle([H,FASC,LIB,LIB,LIB]);}
+    var raw=[];
+    if(dataBase[0].jugadores<=5){raw=shuffle([H,FASC,LIB,LIB,LIB]);}
     else if(dataBase[0].jugadores==6){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB]);}
     else if(dataBase[0].jugadores==7){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC]);}
     else if(dataBase[0].jugadores==8){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,LIB]);;}

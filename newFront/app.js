@@ -3,6 +3,7 @@ import { io, Socket, socketio } from 'socket.io-client';
 import Header from "./Header/Header.jsx";
 import Players from "./Players/Players.jsx"
 import Stats from "./Stats/Stats.jsx"
+import Hud from "./Hud/Hud.jsx"
 import SelectCh from "./Hud/SelectCh/SelectCh.jsx";
 import Vote from "./Hud/Vote/Vote.jsx";
 
@@ -35,8 +36,8 @@ function App()
     const [blue,setBlue]=useState(0);
     const [red,setRed]=useState(0);
     //---
-    const [voteDisp,setVoteDisp]=useState({display:"none"});
-    const [viewSelectedCh,setViewSelectedCh]=useState({display:"none"})
+    //const [voteDisp,setVoteDisp]=useState({display:"none"});
+    //const [viewSelectedCh,setViewSelectedCh]=useState({display:"none"})
     //---
 
     useEffect(()=>
@@ -80,7 +81,7 @@ function App()
 
         socket.on("init_game_client",function(msg)
         {
-            setStats_turno(temp);
+            setStats_turno(msg.stats);
             setSoyCeroView({display:"none"});
             setAll_players(msg.jugadores);
         });
@@ -89,19 +90,6 @@ function App()
         {
             msg.selected==BLUE ? setBlue(msg.counter):setRed(mg.counter);
         });
-    
-        socket.on("asigned_pm",function(msg)
-        {
-            console.log("soy pm");
-            setViewSelectedCh({display:"block"});
-            
-        });
-    
-        
-    
-    
-    
-    
     
     },[socket]);
 
@@ -112,13 +100,14 @@ function App()
                 <Header soyCeroView={soyCeroView} setSoyCeroView={setSoyCeroView} player_data={player_data}/>
                 <Players knownRols={knownRols} player_data={player_data} all_players={all_players}/>
                 <Stats blue={blue} red={red} stats_turno={stats_turno}/>
-                <div id="HudContainer">
-                    <div className="hudShell"><Vote voteDisp={voteDisp} setVoteDisp={setVoteDisp}/></div>  
-                    <div className="hudShell"><SelectCh last_elected={stats_turno.last_elected} viewSelectedCh={viewSelectedCh} setViewSelectedCh={setViewSelectedCh} all_players={all_players}/></div>
-                </div>
+                <Hud/>
             </SocketContext.Provider>           
         </div>
     )
 }
 
 export default App;
+
+//<div className="hudShell"><Vote voteDisp={voteDisp} setVoteDisp={setVoteDisp}/></div>
+// <div className="hudShell"><SelectCh last_elected={stats_turno.last_elected} viewSelectedCh={viewSelectedCh} setViewSelectedCh={setViewSelectedCh} all_players={all_players}/></div>  
+//

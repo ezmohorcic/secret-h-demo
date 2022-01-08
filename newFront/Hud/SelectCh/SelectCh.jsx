@@ -1,25 +1,29 @@
-import React from 'react';
-import { SocketContext } from "../../app";
+import React,{useContext, useState} from 'react';
+import { SocketContext } from "../../app.js";
+import ChCandidate from "./ChCandidate.jsx"
 
 function SelectCh(props)
 {
     const socket = useContext(SocketContext);
     const [selected,setSelected]=useState({});
 
-    let sendCh= function(element)
+    const sendCh= function()
     {
-        socket.emit("selected_chancellor",{element});
+        console.log(selected);
+        socket.emit("selected_chancellor",selected);
+        props.setViewSelectedCh(false,[],[])
     }
 
     var chCandidates= props.all_players.map(element=>
         {
-            <ChCandidate element={element} setSelected={setSelected}/>
+            if(!props.last_elected.includes(element) && props.position!=element.position)return(<ChCandidate element={element} setSelected={setSelected}/>)
         });
 
     return(
         <div id='SelectChContainer'>
-            <p>Seleccionado: {selected}</p>
+            <p>Seleccionado: {selected.username}</p>
             <button onClick={sendCh}>Enviar!</button>
+            <div id='candidatesShell'>{chCandidates}</div>
         </div>
     )
 }

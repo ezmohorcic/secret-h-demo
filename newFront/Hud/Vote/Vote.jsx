@@ -1,15 +1,18 @@
-import React from 'react';
+import React,{useContext, useEffect, useState} from 'react';
+import { SocketContext } from "../../app.js";
 
 function Vote(props)
 {
-    function onVote(comm)
+    const socket = useContext(SocketContext);
+    const [voteDisp,setVoteDisp]=useState({display:"none"}); 
+    const onVote= function(comm)
     {
         socket.emit("voted_gov",{vote:comm});
-        props.setVoteDisp("none");
+        setVoteDisp({display:"none"});
     }
-    
+
     return(
-        <div id="VoteContainer" style={props.voteDisp}>
+        <div id="VoteContainer" style={voteDisp}>
             <div className="voteCard">
                 <Vote vote={false} onVote={onVote(false)}/>
             </div>
