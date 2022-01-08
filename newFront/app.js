@@ -60,12 +60,6 @@ function App()
             setAll_players(msg);
         });
 
-        socket.on("player_left", function(msg)
-        {
-            console.log("player_left")
-            setAll_players(msg);
-            msg.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
-        });
 
         socket.on("your_rol",function(msg)
         {
