@@ -3,9 +3,15 @@ import { io, Socket, socketio } from 'socket.io-client';
 import Header from "./Header/Header.jsx";
 import Players from "./Players/Players.jsx"
 import Stats from "./Stats/Stats.jsx"
+import SelectCh from "./Hud/SelectCh/SelectCh.jsx";
+import Vote from "./Hud/Vote/Vote.jsx";
 
 const BLUE="blue"; //ley liberal
 const RED="red"; //ley fascista
+const H="hitler"; //rol hitler
+const FASC="fascista"; //rol fascista
+const LIB="liberal";//rol liberal
+
 const socket = io.connect('http://localhost:3000/')
 export const SocketContext = React.createContext()
 
@@ -18,13 +24,20 @@ function App()
       setSocket(newSocket);
       return () => newSocket.close();
     }, [setSocket]);*/
-
+    //---
     const [all_players,setAll_players]=useState([]);
     const [player_data,setPlayer_data]=useState({});
+    //---
     const [soyCeroView,setSoyCeroView]=useState({display:"none"})
+    //---
     const [stats_turno,setStats_turno]=useState({});
+    const [knownRols,setKnownRols]=useState([]);
     const [blue,setBlue]=useState(0);
     const [red,setRed]=useState(0);
+    //---
+    const [voteDisp,setVoteDisp]=useState({display:"none"});
+    const [viewSelectedCh,setViewSelectedCh]=useState({display:"none"})
+    //---
 
     useEffect(()=>
     {
@@ -59,18 +72,17 @@ function App()
             console.log(msg)
             setAll_players(msg);
         });
-
-
+  
         socket.on("your_rol",function(msg)
         {
-            var temp=player_data;
-            temp.rol=msg;
-            setPlayer_data(temp);
+            setPlayer_data(msg);
         });
 
         socket.on("init_game_client",function(msg)
         {
             setStats_turno(temp);
+            setSoyCeroView({display:"none"});
+            setAll_players(msg.jugadores);
         });
 
         socket.on("law_done",function(msg)
@@ -81,11 +93,11 @@ function App()
         socket.on("asigned_pm",function(msg)
         {
             console.log("soy pm");
-            setViewSelectedCh("block");
+            setViewSelectedCh({display:"block"});
             
         });
     
-    
+        
     
     
     
@@ -98,8 +110,12 @@ function App()
             <h1>REACT</h1>
             <SocketContext.Provider value={socket}>
                 <Header soyCeroView={soyCeroView} setSoyCeroView={setSoyCeroView} player_data={player_data}/>
-                <Players all_players={all_players}/>
+                <Players knownRols={knownRols} player_data={player_data} all_players={all_players}/>
                 <Stats blue={blue} red={red} stats_turno={stats_turno}/>
+                <div id="HudContainer">
+                    <div className="hudShell"><Vote voteDisp={voteDisp} setVoteDisp={setVoteDisp}/></div>  
+                    <div className="hudShell"><SelectCh last_elected={stats_turno.last_elected} viewSelectedCh={viewSelectedCh} setViewSelectedCh={setViewSelectedCh} all_players={all_players}/></div>
+                </div>
             </SocketContext.Provider>           
         </div>
     )

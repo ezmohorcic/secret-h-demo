@@ -167,7 +167,7 @@ io.on('connection', socket =>
     {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
         initGame();
         var stats= statStack();
-        dataBase[0].jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element.rol)}) //A cada cliente se le envia su rol de juego
+        dataBase[0].jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element)}) //A cada cliente se le envia su rol de juego
         /*dataBase[0].fasc_players.forEach(element =>{io.to(element.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players,h_player:dataBase[0].h_player})}); //cada fascista conoce al resto y a Hitler
         if(dataBase[0].jugadores.length<7){io.to(dataBase[0].h_player.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players})}*/  //hitler puede necesitar saber quien es el fascista, depende de cantidad de jugadores
         io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
@@ -369,6 +369,7 @@ function statStack()
         cant_descart:dataBase[0].stack_descartados.length,
         pm_pos:dataBase[0].pm.position,
         skipped_turns:dataBase[0].skipped,
+        last_elected:dataBase[0].last_elected
     }
 }
 

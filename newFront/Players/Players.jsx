@@ -5,7 +5,7 @@ function Players(props)
 {
     var players=props.all_players.map(element=>
         {
-            return(<Player player={element}/>)
+            return(<Player knownRols={props.knownRols} your_rol={props.player_data.rol} player={element}/>)
         });
     return(
         <div id="playersContainer">
