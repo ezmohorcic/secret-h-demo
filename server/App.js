@@ -4,8 +4,8 @@ const app = express();
 
 //statics:
 const CANT_PASSED_MAX=2; //cantreq.params.idad de gobiernos pasados maxima 
-export const BLUE="blue"; //ley liberal
-export const RED="red"; //ley fascista
+const BLUE="blue"; //ley liberal
+const RED="red"; //ley fascista
 const WINS_BLUE=5; //cantidad para que liberales ganen
 const WINS_RED=6; //cantidad para que fascistas ganen
 const MIN_RED_H=3; //minima cantidad de leyes rojas + Hitle cansiller 
@@ -150,15 +150,16 @@ io.on('connection', socket =>
 
     socket.on("disconnecting",data=>
     {
+        console.log("disconnecting")
         var flag=false;
         dataBase[0].jugadores=dataBase[0].jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
         dataBase[0].cant_jugadores--;
         for(var i=0;i<dataBase[0].jugadores.length;i++)     
         {
             dataBase[0].jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
-            if(i>=socket.position){io.to( dataBase[0].jugadores[i].socketId).emit("new_position",{position: dataBase[0].jugadores[i].position})} //a cada jugador que se movio se le manda su nueva posicion
+            io.to( dataBase[0].jugadores[i].socketId).emit("new_position",{position: dataBase[0].jugadores[i], players:dataBase[0].jugadores}) //a cada jugador que se movio se le manda su nueva posicion
         }
-        io.sockets.emit("player_left",dataBase[0].jugadores);
+        //io.sockets.emit("player_left",dataBase[0].jugadores);
 
     });
 

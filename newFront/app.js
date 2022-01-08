@@ -4,8 +4,11 @@ import Header from "./Header/Header.jsx";
 import Players from "./Players/Players.jsx"
 import Stats from "./Stats/Stats.jsx"
 
+const BLUE="blue"; //ley liberal
+const RED="red"; //ley fascista
 const socket = io.connect('http://localhost:3000/')
 export const SocketContext = React.createContext()
+
 function App() 
 {
     /*const [socket, setSocket] = useState(null);
@@ -26,7 +29,7 @@ function App()
     useEffect(()=>
     {
         socket.on("connect_error", (err) => {console.log(`connect_error due to ${err.message}`)});
-        
+
         socket.on("your_data",function(msg)
         {
             setPlayer_data(msg);
@@ -35,10 +38,12 @@ function App()
 
         socket.on("new_position",function(msg)
         {
-            let newPosition=player_data;
-            newPosition.position=msg;
-            setPlayer_data(newPosition);
-            msg==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
+            console.log("new_position")
+            console.log(msg.position)
+            console.log(msg.players)
+            setPlayer_data(msg.position);
+            setAll_players(msg.players);
+            msg.position.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
         });
 
         socket.on("new_player",function(msg)
@@ -46,7 +51,6 @@ function App()
             console.log("new_player")
             console.log(msg)
             setAll_players(msg);
-            console.log(all_players)
         });
 
         socket.on("change_username_on_position",function(msg)
@@ -58,6 +62,7 @@ function App()
 
         socket.on("player_left", function(msg)
         {
+            console.log("player_left")
             setAll_players(msg);
             msg.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
         });
