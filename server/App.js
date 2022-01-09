@@ -315,6 +315,45 @@ function powerTurn(data)
     }
 }
 
+function determinePower()
+{
+    var reciever=dataBase[0].last_elected[0];
+    console.log("determinePower")
+    console.log(reciever);
+    var client_command=dataBase[0].board["position_"+dataBase[0].red];
+
+    switch (client_command) 
+    {
+        case EXAMINE_DECK:  
+            var trio_cartas=[];
+            for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
+            {
+                if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)}
+                trio_cartas.push(dataBase[0].stack_cartas.pop())
+            }
+            io.to(reciever.socketId).emit(EXAMINE_DECK,trio_cartas);
+            trio_cartas.forEach(element=>{dataBase[0].stack_cartas.push(element)})
+        return false;
+
+        case KILL_PLAYER:
+            io.to(reciever.socketId).emit(KILL_PLAYER);
+        return true;
+
+        case EXAMINE_PLAYER:
+            io.to(reciever.socketId).emit(EXAMINE_PLAYER);
+        return false;
+
+        case PICK_CANDIDATE:
+            io.to(reciever.socketId).emit(PICK_CANDIDATE);
+        return true;
+    
+        default:
+            console.log("no era turno con poder")
+        return false
+    }
+    /*EXAMINE_DECK KILL_PLAYER EXAMINE_PLAYER PICK_CANDIDATE*/
+}
+
 function cardStackGenerator()
 {
     dataBase[0].stack_cartas=shuffle([BLUE,RED,BLUE,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,RED,RED,RED,RED,BLUE,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE,RED,RED,RED,RED])
@@ -371,45 +410,6 @@ function statStack()
         skipped_turns:dataBase[0].skipped,
         last_elected:dataBase[0].last_elected
     }
-}
-
-function determinePower()
-{
-    var reciever=dataBase[0].last_elected[0];
-    console.log("determinePower")
-    console.log(reciever);
-    var client_command=dataBase[0].board["position_"+dataBase[0].red];
-
-    switch (client_command) 
-    {
-        case EXAMINE_DECK:  
-            var trio_cartas=[];
-            for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
-            {
-                if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)}
-                trio_cartas.push(dataBase[0].stack_cartas.pop())
-            }
-            io.to(reciever.socketId).emit(EXAMINE_DECK,trio_cartas);
-            trio_cartas.forEach(element=>{dataBase[0].stack_cartas.push(element)})
-        return false;
-
-        case KILL_PLAYER:
-            io.to(reciever.socketId).emit(KILL_PLAYER);
-        return true;
-
-        case EXAMINE_PLAYER:
-            io.to(reciever.socketId).emit(EXAMINE_PLAYER);
-        return false;
-
-        case PICK_CANDIDATE:
-            io.to(reciever.socketId).emit(PICK_CANDIDATE);
-        return true;
-    
-        default:
-            console.log("no era turno con poder")
-        return false
-    }
-    /*EXAMINE_DECK KILL_PLAYER EXAMINE_PLAYER PICK_CANDIDATE*/
 }
 
 function initGame()

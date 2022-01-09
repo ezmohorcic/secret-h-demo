@@ -1,7 +1,7 @@
 import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../app";
 import CardSelect from "./cardSelect/CardSelect.jsx";
-//import PowerSelect from "./power/PowerSelect.jsx";
+import PowerSelect from "./PowerSelect/PowerSelect.jsx";
 import SelectCh from "./SelectCh/SelectCh.jsx";
 import Vote from "./Vote/Vote.jsx";
 
@@ -10,7 +10,8 @@ function Hud()
     const socket = useContext(SocketContext);
     const [voteD,setVoteD]=useState(false);
     const [viewSelectedCh,setViewSelectedCh]=useState([false,[],[],[]]);
-    const [viewCardSelect,setViewCardSelect]=useState([false,[]])
+    const [viewCardSelect,setViewCardSelect]=useState([false,[]]);
+    /*const [viewPowerSelect,setViewPowerSelect]=useState([false,])*/
 
     useEffect(()=>
     {
@@ -40,11 +41,16 @@ function Hud()
     let viewVote= function(){if(voteD) return(<div className="hudShell"><Vote setVoteD={setVoteD}/></div>)};
     let viewSelectionCh= function(){if(viewSelectedCh[0]) return(<div className="hudShell"><SelectCh setViewSelectedCh={setViewSelectedCh} last_elected={viewSelectedCh[1]} position={viewSelectedCh[3]} all_players={viewSelectedCh[2]}/></div>)}
     let viewCardSelection= function(){if(viewCardSelect[0]) return <div className="hudShell"><CardSelect setViewCardSelect={setViewCardSelect} cards={viewCardSelect[1]} emiting={viewCardSelect[2]}/></div>}
+    //let viewPowerSelection = function(){if(viewPowerSelect[0]) return <div className="hudShell"><PowerSelect setViewPowerSelect={setViewPowerSelect}  /></div>}
+    //{viewPowerSelection()}
+
     return(
         <div id="HudContainer">
             {viewVote()}
             {viewSelectionCh()}
             {viewCardSelection()}
+            <PowerSelect/>
+
         </div>
     )
 }

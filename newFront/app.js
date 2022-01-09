@@ -52,9 +52,6 @@ function App()
 
         socket.on("new_position",function(msg)
         {
-            console.log("new_position")
-            console.log(msg.position)
-            console.log(msg.players)
             setPlayer_data(msg.position);
             setAll_players(msg.players);
             msg.position.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
@@ -62,15 +59,11 @@ function App()
 
         socket.on("new_player",function(msg)
         {
-            console.log("new_player")
-            console.log(msg)
             setAll_players(msg);
         });
 
         socket.on("change_username_on_position",function(msg)
         {
-            console.log(all_players)
-            console.log(msg)
             setAll_players(msg);
         });
   
