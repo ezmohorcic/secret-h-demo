@@ -4,20 +4,27 @@ import { SocketContext } from "../../app.js";
 function Vote(props)
 {
     const socket = useContext(SocketContext);
-    const [voteDisp,setVoteDisp]=useState({display:"none"}); 
-    const onVote= function(comm)
+    //const [voteDisp,setVoteDisp]=useState({display:"none"}); 
+    const onVoteYes= function()
     {
-        socket.emit("voted_gov",{vote:comm});
-        setVoteDisp({display:"none"});
+        console.log("onVoteYes")
+        socket.emit("voted_gov",{vote:true});
+        props.setVoteD(false);
+    }
+    const onVoteNo= function()
+    {
+        console.log("onVoteNo")
+        socket.emit("voted_gov",{vote:false});
+        props.setVoteD(false);
     }
 
     return(
-        <div id="VoteContainer" style={voteDisp}>
+        <div id="VoteContainer">
             <div className="voteCard">
-                <Vote vote={false} onVote={onVote(false)}/>
+                <button id='voteNo' onClick={onVoteNo}>NEIN!</button>
             </div>
             <div className="voteCard">
-                <Vote vote={true} onVote={onVote(true)}/>
+                <button id='voteYes' onClick={onVoteYes}>JA!</button>
             </div>
         </div>
     )

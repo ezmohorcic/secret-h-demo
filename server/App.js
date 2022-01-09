@@ -188,7 +188,7 @@ io.on('connection', socket =>
         if(data.vote){dataBase[0].votos.positivos++} //se suma el voto (que es un bool)
         else{dataBase[0].votos.positivos--}
         dataBase[0].votos.total++
-        if(dataBase[0].votos.total==dataBase[0].cant_jugadores - mod_total) //si es el jugador final que voto
+        if(dataBase[0].votos.total==dataBase[0].cant_jugadores - dataBase[0].mod_total) //si es el jugador final que voto
         {   
             if(dataBase[0].votos.positivos>=0) //si hay mas del 50% de votos positivos, devuelve a todos que el gobierno es exitoso, si el cliente es el pm, accede a 3 cartas
             {

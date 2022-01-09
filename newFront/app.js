@@ -88,7 +88,7 @@ function App()
 
         socket.on("law_done",function(msg)
         {
-            msg.selected==BLUE ? setBlue(msg.counter):setRed(mg.counter);
+            msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);
         });
     
     },[socket]);
