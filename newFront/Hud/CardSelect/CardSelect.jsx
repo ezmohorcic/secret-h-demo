@@ -6,14 +6,6 @@ function CardSelect(props)
 {
     const socket = useContext(SocketContext);
 
-    /*onSelectCard= function(numberCard,arrCartas)
-    {
-        arrCartas.splice(arrCartas[numberCard],1);
-        socket.emit(props.emitCards,{descartada:element,cartas:arrCartas});
-        props.setCardDisp("none");
-        
-    }*/
-
     var cards= props.cards.map((element,index)=>
     {
         return(
@@ -23,7 +15,6 @@ function CardSelect(props)
                 content={element}
                 emiting={props.emiting}
                 setViewCardSelect={props.setViewCardSelect}
-                //onSelectCard={onSelectCard}
             />
         )
     });

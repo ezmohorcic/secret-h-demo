@@ -10,8 +10,9 @@ function Card(props)
             <button className='buttonDiscard' onClick=
             {()=>
                 {
-                    props.arrCartas.splice(props.arrCartas[props.numberCard],1);
-                    socket.emit(props.emiting,{descartada:props.content,cartas:props.arrCartas}); 
+                    props.arrCartas.splice(props.numberCard,1);
+                    if(props.emiting=="chancellor_desition") {socket.emit(props.emiting,{descartada:props.content,selected:props.arrCartas});} 
+                    else {socket.emit(props.emiting,{descartada:props.content,cartas:props.arrCartas});} 
                     props.setViewCardSelect([false,[]])
                 }}>
                 {props.content}    

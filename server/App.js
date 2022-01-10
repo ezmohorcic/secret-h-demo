@@ -235,7 +235,7 @@ io.on('connection', socket =>
                     nextTurn();
                     var stats_stack=statStack();
                     io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
-                    io.to(dataBase[0].pm.socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
+                    io.to(dataBase[0].pm.socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
                 }
             }
         }
@@ -275,7 +275,7 @@ io.on('connection', socket =>
 
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
     });
 
     socket.on(PICK_CANDIDATE,data=>
@@ -284,7 +284,7 @@ io.on('connection', socket =>
        /* dataBase[0].pm=dataBase[0].jugadores[data.position];*/
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
     });
 
 })
@@ -302,7 +302,7 @@ function powerTurn(data)
             console.log("no es ley bloqueante")
             var stats_stack=statStack();
             io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-            io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
+            io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
         }
     
     }
@@ -311,7 +311,7 @@ function powerTurn(data)
         console.log("no es ley roja");
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores});
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
     }
 }
 
@@ -321,7 +321,7 @@ function determinePower()
     console.log("determinePower")
     console.log(reciever);
     var client_command=dataBase[0].board["position_"+dataBase[0].red];
-
+    console.log(client_command)
     switch (client_command) 
     {
         case EXAMINE_DECK:  
@@ -336,15 +336,15 @@ function determinePower()
         return false;
 
         case KILL_PLAYER:
-            io.to(reciever.socketId).emit(KILL_PLAYER);
+            io.to(reciever.socketId).emit(KILL_PLAYER,dataBase[0].jugadores);
         return true;
 
         case EXAMINE_PLAYER:
-            io.to(reciever.socketId).emit(EXAMINE_PLAYER);
+            io.to(reciever.socketId).emit(EXAMINE_PLAYER,dataBase[0].jugadores);
         return false;
 
         case PICK_CANDIDATE:
-            io.to(reciever.socketId).emit(PICK_CANDIDATE);
+            io.to(reciever.socketId).emit(PICK_CANDIDATE,dataBase[0].jugadores);
         return true;
     
         default:
@@ -390,6 +390,9 @@ function nextTurn()
 {
     if(dataBase[0].pm.position==dataBase[0].jugadores.length-1){dataBase[0].pm=dataBase[0].jugadores[0]}  //pasa al siguiente jugador para ser pm
     else{dataBase[0].pm=dataBase[0].jugadores[dataBase[0].pm.position+1]}
+    console.log("next turn")
+    console.log(dataBase[0].pm)
+    console.log(dataBase[0].pm.position)
     dataBase[0].chancellor={}; //se borra el chancellor
 }
 

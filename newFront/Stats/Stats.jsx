@@ -15,7 +15,6 @@ function Stats(props)
         socket.on("law_done",function(msg)
         {
             console.log("law_done")
-            console.log(msg)
             msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);
         });
     },[socket]);

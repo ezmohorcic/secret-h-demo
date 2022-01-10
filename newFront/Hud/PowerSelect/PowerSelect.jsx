@@ -11,8 +11,35 @@ function PowerSelect(props)
     const socket = useContext(SocketContext);
     const [viewPower,setViewPower]=useState(["",[]]); 
 
+    useEffect(()=>
+    {
+        socket.on("examine_deck",function(msg)
+        {
+            console.log("examine_deck");
+            setViewPower("DeckExam",msg);
+        });
+
+        socket.on("kill",function(msg)
+        {
+            console.log("kill");
+            setViewPower("KillSelect",msg);
+        });
+
+        socket.on("examine_player",function(msg)
+        {
+            console.log("examine_player");
+            setViewPower("PlayerExam",msg);
+        });
+
+        socket.on("pick_candidate",function(msg)
+        {
+            console.log("pick_candidate");
+            setViewPower("PmSelect",msg);
+        });
+    },[socket]);
     let viewPowerType= function()
     {
+
         if(viewPower[0]=="KillSelect")      {return <KillSelect all_players={viewPower[1]} setViewPower={setViewPower} />;}
         else if(viewPower[0]=="DeckExam")   {return <DeckExam powerPayload={viewPower[1]} setViewPower={setViewPower} />;}
         else if(viewPower[0]=="PlayerExam") {return <PlayerExam all_players={viewPower[1]} setViewPower={setViewPower} setKnownRols={props.setKnownRols} />;}
