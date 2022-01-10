@@ -9,6 +9,7 @@ function SelectCh(props)
 
     const sendCh= function()
     {
+        console.log("scdch")
         console.log(selected);
         socket.emit("selected_chancellor",selected);
         props.setViewSelectedCh(false,[],[])

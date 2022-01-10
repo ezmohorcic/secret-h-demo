@@ -2,14 +2,18 @@ import React from 'react';
 
 function ChCandidate(props)
 {
-    const onclick = function(elemento)
+    /*const onclick = function()
     {
-        console.log(elemento);
-        props.setSelected(elemento);
-    }
+        console.log(props.element);
+        props.setSelected(props.element);
+    }*/
     return(
         <div className='chCandidate'>
-            <button onClick={onclick(props.element)}>{props.element.username}</button>
+            <button onClick={()=>
+                {
+                    console.log(props.element);
+                    props.setSelected(props.element);
+                }}>{props.element.username}</button>
         </div>
     )
 }

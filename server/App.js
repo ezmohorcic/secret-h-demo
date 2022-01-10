@@ -472,11 +472,12 @@ function generateRol(hechos)
     /*dataBase[0].jugadores[0].rol=LIB;
     dataBase[0].jugadores[1].rol=H;*/
     var raw=[];
-    if(dataBase[0].jugadores<=5){raw=shuffle([H,FASC,LIB,LIB,LIB]);}
-    else if(dataBase[0].jugadores==6){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB]);}
-    else if(dataBase[0].jugadores==7){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC]);}
-    else if(dataBase[0].jugadores==8){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,LIB]);;}
-    else if(dataBase[0].jugadores==9){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,FASC,LIB]);}
-    else if(dataBase[0].jugadores==10){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,FASC,LIB,LIB]);}
-    for(var j=0;j<dataBase[0].jugadores.length;j++){dataBase[0].jugadores[j].rol=raw[j];}
+    if(dataBase[0].jugadores.length<=5){raw=shuffle([H,FASC,LIB,LIB,LIB]);}
+    else if(dataBase[0].jugadores.length==6){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB]);}
+    else if(dataBase[0].jugadores.length==7){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC]);}
+    else if(dataBase[0].jugadores.length==8){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,LIB]);;}
+    else if(dataBase[0].jugadores.length==9){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,FASC,LIB]);}
+    else if(dataBase[0].jugadores.length==10){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB,FASC,FASC,LIB,LIB]);}
+    for(var j=0;j<dataBase[0].jugadores.length;j++)
+    {dataBase[0].jugadores[j].rol=raw[j];}
 }

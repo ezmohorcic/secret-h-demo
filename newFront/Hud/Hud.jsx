@@ -5,7 +5,7 @@ import PowerSelect from "./PowerSelect/PowerSelect.jsx";
 import SelectCh from "./SelectCh/SelectCh.jsx";
 import Vote from "./Vote/Vote.jsx";
 
-function Hud()
+function Hud(props)
 {
     const socket = useContext(SocketContext);
     const [voteD,setVoteD]=useState(false);
@@ -39,7 +39,7 @@ function Hud()
     },[socket]);
 
     let viewVote= function(){if(voteD) return(<div className="hudShell"><Vote setVoteD={setVoteD}/></div>)};
-    let viewSelectionCh= function(){if(viewSelectedCh[0]) return(<div className="hudShell"><SelectCh setViewSelectedCh={setViewSelectedCh} last_elected={viewSelectedCh[1]} position={viewSelectedCh[3]} all_players={viewSelectedCh[2]}/></div>)}
+    let viewSelectionCh= function(){if(viewSelectedCh[0]) return(<div className="hudShell"><SelectCh setViewSelectedCh={setViewSelectedCh} last_elected={viewSelectedCh[1]} all_players={viewSelectedCh[2]} position={viewSelectedCh[3]} /></div>)}
     let viewCardSelection= function(){if(viewCardSelect[0]) return <div className="hudShell"><CardSelect setViewCardSelect={setViewCardSelect} cards={viewCardSelect[1]} emiting={viewCardSelect[2]}/></div>}
     //let viewPowerSelection = function(){if(viewPowerSelect[0]) return <div className="hudShell"><PowerSelect setViewPowerSelect={setViewPowerSelect}  /></div>}
     //{viewPowerSelection()}
@@ -49,7 +49,7 @@ function Hud()
             {viewVote()}
             {viewSelectionCh()}
             {viewCardSelection()}
-            <PowerSelect/>
+            <PowerSelect setKnownRols={props.setKnownRols}/>
 
         </div>
     )

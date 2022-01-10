@@ -21,6 +21,8 @@ function Header(props)
                 <p>{props.player_data.username}</p>
                 <p>{props.player_data.position}</p>
                 <p>{props.player_data.rol}</p>
+                {console.log("header")}
+                {console.log(props.player_data)}
             </div>
             <div id="nameChangeContainer">
                 <input type="text" name="newName" id="newNameInput" value={newName} onChange={e =>{setNewName(e.target.value)}}/>

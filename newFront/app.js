@@ -33,8 +33,8 @@ function App()
     //---
     const [stats_turno,setStats_turno]=useState({});
     const [knownRols,setKnownRols]=useState([]);
-    const [blue,setBlue]=useState(0);
-    const [red,setRed]=useState(0);
+    /*const [blue,setBlue]=useState(0);
+    const [red,setRed]=useState(0);*/
     //---
     //const [voteDisp,setVoteDisp]=useState({display:"none"});
     //const [viewSelectedCh,setViewSelectedCh]=useState({display:"none"})
@@ -79,11 +79,6 @@ function App()
             setAll_players(msg.jugadores);
         });
 
-        socket.on("law_done",function(msg)
-        {
-            msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);
-        });
-    
     },[socket]);
 
     return(
@@ -92,8 +87,8 @@ function App()
             <SocketContext.Provider value={socket}>
                 <Header soyCeroView={soyCeroView} setSoyCeroView={setSoyCeroView} player_data={player_data}/>
                 <Players knownRols={knownRols} player_data={player_data} all_players={all_players}/>
-                <Stats blue={blue} red={red} stats_turno={stats_turno}/>
-                <Hud/>
+                <Stats stats_turno={stats_turno}/>
+                <Hud setKnownRols={setKnownRols}/>
             </SocketContext.Provider>           
         </div>
     )

@@ -6,16 +6,16 @@ import PlayerExam from "./PlayerExam.jsx";
 import PmSelect from "./PmSelect.jsx";
 
 
-function PowerSelect()
+function PowerSelect(props)
 {
     const socket = useContext(SocketContext);
     const [viewPower,setViewPower]=useState(["",[]]); 
 
     let viewPowerType= function()
     {
-        if(viewPower[0]=="KillSelect")      {return <KillSelect all_players={viewPower[1]} setViewPower={setViewPower}/>;}
+        if(viewPower[0]=="KillSelect")      {return <KillSelect all_players={viewPower[1]} setViewPower={setViewPower} />;}
         else if(viewPower[0]=="DeckExam")   {return <DeckExam powerPayload={viewPower[1]} setViewPower={setViewPower} />;}
-        else if(viewPower[0]=="PlayerExam") {return <PlayerExam all_players={viewPower[1]} setViewPower={setViewPower} />;}
+        else if(viewPower[0]=="PlayerExam") {return <PlayerExam all_players={viewPower[1]} setViewPower={setViewPower} setKnownRols={props.setKnownRols} />;}
         else if(viewPower[0]=="PmSelect")   {return <PmSelect all_players={viewPower[1]} setViewPower={setViewPower} />;}    
     }
     
