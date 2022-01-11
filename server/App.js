@@ -268,10 +268,22 @@ io.on('connection', socket =>
     socket.on(KILL_PLAYER,data=>
     {
         console.log("jaja matar");
-        /*dataBase[0].jugadores[data.position].estado="dead";
-        io.to(data.socketId).emit("assasinated");
+        dataBase[0].jugadores[data.position].estado="dead";
+        console.log(data)
+        dataBase[0].jugadores.forEach(element => {
+            if(element.position!=data.position){io.to(element.socketId).emit("assasination",dataBase[0].jugadores)}
+        });
+        io.to(data.socketId).emit("assasinated",dataBase[0].jugadores[data.position])
+        //io.sockets.emit("assasinated",{jugadores:dataBase[0].jugadores,asesinado:data});
         dataBase[0].mod_total++;
-        */
+        if(data.position==dataBase[0].pm.position)
+        {
+            while(dataBase[0].pm.estado=="dead")
+            {
+                if(dataBase[0].pm.position==dataBase[0].jugadores.length-1){dataBase[0].pm=dataBase[0].jugadores[0]}  //pasa al siguiente jugador para ser pm
+                else{dataBase[0].pm=dataBase[0].jugadores[dataBase[0].pm.position+1]}
+            }
+        }
 
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
@@ -281,7 +293,7 @@ io.on('connection', socket =>
     socket.on(PICK_CANDIDATE,data=>
     {
         console.log("podemos meter a mi sobrino en ese puesto");
-       /* dataBase[0].pm=dataBase[0].jugadores[data.position];*/
+        dataBase[0].pm=dataBase[0].jugadores[data.position];
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
         io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
@@ -390,6 +402,11 @@ function nextTurn()
 {
     if(dataBase[0].pm.position==dataBase[0].jugadores.length-1){dataBase[0].pm=dataBase[0].jugadores[0]}  //pasa al siguiente jugador para ser pm
     else{dataBase[0].pm=dataBase[0].jugadores[dataBase[0].pm.position+1]}
+    while(dataBase[0].pm.estado=="dead")
+    {
+        if(dataBase[0].pm.position==dataBase[0].jugadores.length-1){dataBase[0].pm=dataBase[0].jugadores[0]}  //pasa al siguiente jugador para ser pm
+        else{dataBase[0].pm=dataBase[0].jugadores[dataBase[0].pm.position+1]}
+    }
     console.log("next turn")
     console.log(dataBase[0].pm)
     console.log(dataBase[0].pm.position)
@@ -432,7 +449,7 @@ function initGame()
     dataBase[0].last_elected=[dataBase[0].jugadores[0]],
     dataBase[0].mod_total=0;
     dataBase[0].jugadores.forEach(element =>
-    {element.estado=="alive";});
+    {element.estado="alive";});
     resetVotos();
 }
 
@@ -440,9 +457,9 @@ function generateBoard()
 {
     if(dataBase[0].jugadores.length<7)
     {
-        dataBase[0].board.position_3=EXAMINE_DECK;
-        dataBase[0].board.position_4=KILL_PLAYER;
-        dataBase[0].board.position_5=KILL_PLAYER;
+        dataBase[0].board.position_1=EXAMINE_DECK;
+        dataBase[0].board.position_2=KILL_PLAYER;
+        dataBase[0].board.position_3=KILL_PLAYER;
     }
     else if(dataBase[0].jugadores.length<9)
     {
@@ -469,7 +486,7 @@ function resetVotos()
     dataBase[0].votos.total=0;
 }
 
-function generateRol(hechos)
+function generateRol()
 {   //EN ESTE CASO DE DEMO PARA 2, NO PUEDO TESTEAR, TESTEARE MAS TARDE, AHORA HARDCODEO
     //CANT_FASC, CANT_LIBS
     /*dataBase[0].jugadores[0].rol=LIB;

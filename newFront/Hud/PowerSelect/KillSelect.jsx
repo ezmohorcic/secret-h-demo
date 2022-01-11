@@ -11,7 +11,7 @@ function KillSelect(props)
             <div className="genericSelect">
                 <button onClick={()=>
                 {
-                    socket.emit("kill",{element});
+                    socket.emit("kill",element);
                     props.setViewPower(["",[]]);
                 }}>{element.username}</button>
             </div>
@@ -19,7 +19,7 @@ function KillSelect(props)
     });
 
     return(
-        <div id='k illSelectContainer'>
+        <div id='killSelectContainer'>
             {arrShow}
         </div>
     )

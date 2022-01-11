@@ -9,13 +9,17 @@ function SelectCh(props)
 
     const sendCh= function()
     {
-        socket.emit("selected_chancellor",selected);
-        props.setViewSelectedCh(false,[],[])
+        if(selected!={})
+        {
+            socket.emit("selected_chancellor",selected);
+            props.setViewSelectedCh(false,[],[]);
+        }
+        
     }
 
     var chCandidates= props.all_players.map(element=>
         {
-            if(!props.last_elected.includes(element) && props.position!=element.position)return(<ChCandidate element={element} setSelected={setSelected}/>)
+            if(!props.last_elected.includes(element) && props.position!=element.position && element.estado!="dead")return(<ChCandidate element={element} setSelected={setSelected}/>)
         });
 
     return(

@@ -7,15 +7,19 @@ function PmSelect(props)
 
     var arrShow = props.all_players.map((element)=>
     {
-        return(
-            <div className="genericSelect">
-                <button onClick={()=>
-                {
-                    socket.emit("pick_candidate",{element});
-                    props.setViewPower(["",[]]);
-                }}>{element.username}</button>
-            </div>
-        )
+        if(element.estado!="dead")
+        {
+            return(
+                <div className="genericSelect">
+                    <button onClick={()=>
+                    {
+                        socket.emit("pick_candidate",{element});
+                        props.setViewPower(["",[]]);
+                    }}>{element.username}</button>
+                </div>
+            )
+        }
+        
     });
 
     return(

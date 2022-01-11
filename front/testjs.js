@@ -1,4 +1,4 @@
-//const mssql = require("mssql");
+ //const mssql = require("mssql");
 
 const BLUE="blue"; //ley liberal
 const RED="red"; //ley fascista

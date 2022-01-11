@@ -4,8 +4,6 @@ import Header from "./Header/Header.jsx";
 import Players from "./Players/Players.jsx"
 import Stats from "./Stats/Stats.jsx"
 import Hud from "./Hud/Hud.jsx"
-import SelectCh from "./Hud/SelectCh/SelectCh.jsx";
-import Vote from "./Hud/Vote/Vote.jsx";
 
 const BLUE="blue"; //ley liberal
 const RED="red"; //ley fascista
@@ -18,13 +16,6 @@ export const SocketContext = React.createContext()
 
 function App() 
 {
-    /*const [socket, setSocket] = useState(null);
-
-    useEffect(() => {
-        const newSocket = io(`http://${window.location.hostname}:3000`);
-      setSocket(newSocket);
-      return () => newSocket.close();
-    }, [setSocket]);*/
     //---
     const [all_players,setAll_players]=useState([]);
     const [player_data,setPlayer_data]=useState({});
@@ -33,12 +24,7 @@ function App()
     //---
     const [stats_turno,setStats_turno]=useState({});
     const [knownRols,setKnownRols]=useState([]);
-    /*const [blue,setBlue]=useState(0);
-    const [red,setRed]=useState(0);*/
-    //---
-    //const [voteDisp,setVoteDisp]=useState({display:"none"});
-    //const [viewSelectedCh,setViewSelectedCh]=useState({display:"none"})
-    //---
+    const [alive,setAlive]=useState(true);
 
     useEffect(()=>
     {
@@ -79,8 +65,21 @@ function App()
             setAll_players(msg.jugadores);
         });
 
+        socket.on("assasinated",function(msg)
+        {
+            console.log("assasinated")
+            setPlayer_data(msg);
+            setAlive(false);
+            alert("Has sido asesinado por orden del Primer Ministro");
+        });
+        
+        socket.on("assasination",function(msg)
+        {setAll_players(msg)
+         console.log("assasination")
+        });
     },[socket]);
 
+    const renderHud=function(){if(alive==true){return <Hud setKnownRols={setKnownRols}/>}}
     return(
         <div id='appContainer'>
             <h1>REACT</h1>
@@ -88,7 +87,7 @@ function App()
                 <Header soyCeroView={soyCeroView} setSoyCeroView={setSoyCeroView} player_data={player_data}/>
                 <Players knownRols={knownRols} player_data={player_data} all_players={all_players}/>
                 <Stats stats_turno={stats_turno}/>
-                <Hud setKnownRols={setKnownRols}/>
+                {renderHud()}
             </SocketContext.Provider>           
         </div>
     )

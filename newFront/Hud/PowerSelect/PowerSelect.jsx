@@ -37,6 +37,7 @@ function PowerSelect(props)
             setViewPower(["PmSelect",msg]);
         });
     },[socket]);
+    
     let viewPowerType= function()
     {
         console.log(viewPower[0])
