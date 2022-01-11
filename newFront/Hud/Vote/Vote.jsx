@@ -7,13 +7,11 @@ function Vote(props)
     //const [voteDisp,setVoteDisp]=useState({display:"none"}); 
     const onVoteYes= function()
     {
-        console.log("onVoteYes")
         socket.emit("voted_gov",{vote:true});
         props.setVoteD(false);
     }
     const onVoteNo= function()
     {
-        console.log("onVoteNo")
         socket.emit("voted_gov",{vote:false});
         props.setVoteD(false);
     }

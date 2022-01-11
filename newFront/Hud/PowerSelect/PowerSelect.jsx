@@ -15,25 +15,21 @@ function PowerSelect(props)
     {
         socket.on("examine_deck",function(msg)
         {
-            console.log("examine_deck");
             setViewPower(["DeckExam",msg]);
         });
 
         socket.on("kill",function(msg)
         {
-            console.log("kill");
             setViewPower(["KillSelect",msg]);
         });
 
         socket.on("examine_player",function(msg)
         {
-            console.log("examine_player");
             setViewPower(["PlayerExam",msg]);
         });
 
         socket.on("pick_candidate",function(msg)
         {
-            console.log("pick_candidate");
             setViewPower(["PmSelect",msg]);
         });
     },[socket]);

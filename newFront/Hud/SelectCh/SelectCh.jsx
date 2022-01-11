@@ -16,10 +16,9 @@ function SelectCh(props)
         }
         
     }
-
     var chCandidates= props.all_players.map(element=>
         {
-            if(!props.last_elected.includes(element) && props.position!=element.position && element.estado!="dead")return(<ChCandidate element={element} setSelected={setSelected}/>)
+            if(props.last_elected[0].position!=element.position && props.last_elected[1].position!=element.position && props.position!=element.position && element.estado!="dead")return(<ChCandidate element={element} setSelected={setSelected}/>)
         });
 
     return(

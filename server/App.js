@@ -66,6 +66,7 @@ dataBase=[obj];
     skipped                             //gobiernos fallados antes de pasar ley obligatoriamente
     fasc_players                        //fascistas
     h_player                            //hitler
+    last_elected                        //Last elected duo
     board:
         {
             position_N:                 //se le agrega el tipo de poder como value, N siendo el numero de ley RED que se instauro
@@ -446,7 +447,7 @@ function initGame()
     dataBase[0].chancellor={};
     dataBase[0].pm=dataBase[0].jugadores[0];
     dataBase[0].passed=0;
-    dataBase[0].last_elected=[dataBase[0].jugadores[0]],
+    dataBase[0].last_elected=[dataBase[0].jugadores[0],dataBase[0].jugadores[0]],
     dataBase[0].mod_total=0;
     dataBase[0].jugadores.forEach(element =>
     {element.estado="alive";});
@@ -457,9 +458,9 @@ function generateBoard()
 {
     if(dataBase[0].jugadores.length<7)
     {
-        dataBase[0].board.position_1=EXAMINE_DECK;
-        dataBase[0].board.position_2=KILL_PLAYER;
-        dataBase[0].board.position_3=KILL_PLAYER;
+        dataBase[0].board.position_3=EXAMINE_DECK;
+        dataBase[0].board.position_4=KILL_PLAYER;
+        dataBase[0].board.position_5=KILL_PLAYER;
     }
     else if(dataBase[0].jugadores.length<9)
     {

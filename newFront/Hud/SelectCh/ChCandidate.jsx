@@ -11,7 +11,6 @@ function ChCandidate(props)
         <div className='chCandidate'>
             <button onClick={()=>
                 {
-                    console.log(props.element);
                     props.setSelected(props.element);
                 }}>{props.element.username}</button>
         </div>
