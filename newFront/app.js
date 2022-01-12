@@ -33,12 +33,14 @@ function App()
         socket.on("your_data",function(msg)
         {
             setPlayer_data(msg);
+            //dispatch(setAllPlayer_data("YOUR_DATA"))
             msg.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
         });
 
         socket.on("new_position",function(msg)
         {
             setPlayer_data(msg.position);
+            //dispatch(setAllPlayer_data("NEW_POSITION"))
             setAll_players(msg.players);
             msg.position.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
         });
@@ -72,7 +74,7 @@ function App()
             setAlive(false);
             alert("Has sido asesinado por orden del Primer Ministro");
         });
-        
+
         socket.on("assasination",function(msg)
         {setAll_players(msg)
          console.log("assasination")
@@ -94,7 +96,3 @@ function App()
 }
 
 export default App;
-
-//<div className="hudShell"><Vote voteDisp={voteDisp} setVoteDisp={setVoteDisp}/></div>
-// <div className="hudShell"><SelectCh last_elected={stats_turno.last_elected} viewSelectedCh={viewSelectedCh} setViewSelectedCh={setViewSelectedCh} all_players={all_players}/></div>  
-//
