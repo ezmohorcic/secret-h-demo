@@ -1,7 +1,9 @@
 //--Client player_data effects
 export function setAllPlayer_data (payload)
 {
-    return({type:"YOUR_DATA",payload:payload})
+    console.log("setAllPlayer_data")
+    console.log(payload)
+    return({type:"YOUR_DATA",payload})
 }
 
 export function setPlayer_position(payload)
@@ -26,9 +28,10 @@ export function setOtherPlayer_Death(payload)
     return({type:"ASSASINATION",payload})
 }
 
-export function setAll_player(payload)
+export function setAll_players(payload)
 {
-    return({type:"ALL_PLAYER",payload})
+    console.log(payload)
+    return({type:"ALL_PLAYERS",payload})
 }
 
 export function setNew_player(payload)

@@ -1,17 +1,27 @@
-import { all } from "express/lib/application";
 import { combineReducers } from "redux";
 
-const initialState = {
+const initialState = 
+{
     all_players: [],
-    player_data: {},
+    player_data: {
+        username: "",                   
+        pos: null,
+        socketId: null,          
+        rol:"",
+        estado:"vivo"   
+    },
     soyCeroView: false,
     stats_turno:[],
-    alive:true
+    alive:true,
+    knownRols:[],
+    test:{}
 };
 
-function all_players(state=initialState,action)
+function all_players(state=[],action)
 {
-    if (action.type =="NEW_PLAYER"){return{...state,all_players:[...state.all_players,action.payload]}}
+    console.log(action);
+    if (action.type =="NEW_PLAYER")return[...state,action.payload]
+    //if (action.type =="NEW_PLAYER"){return[...state,action.payload]}
     else if(action.type =="NEW_POSITION")
     {
         let nwArr= state.map(player=>
@@ -32,34 +42,41 @@ function all_players(state=initialState,action)
             });
         return ({...state,all_players:nwArr});
     }
+    else if(action.type=="ALL_PLAYERS"){return{...state,all_players:action.payload}}
+    else {return state}
 }
 
-function player_data(state=initialState,action)
+function player_data(state=initialState.player_data,action)
 {
     if(action.type=="YOUR_DATA"){return action.payload}
     else if(action.type=="YOUR_ROL"){return {...state,player:{...state.player_data,rol:action.payload}}}
     else if(action.type=="NEW_POSITION"){return {...state,player:{...state.player_data,position:action.payload}}}
+    else {return state}
 }
 
-function soyCeroView(state=initialState,action)
+function soyCeroView(state=initialState.soyCeroView,action)
 {
     if(action.type=="SOY_CERO"){return{...state,soyCeroView:true}}
-    if(action.type=="DEJO_SERLO"){return{...state,soyCeroView:false}}
+    else if(action.type=="DEJO_SERLO"){return{...state,soyCeroView:false}}
+    else {return state}
 }
 
-function stats_turno(state=initialState,action)
+function stats_turno(state=initialState.stats_turno,action)
 {
     if(action.type=="NEW_STATS"){return{...state,stats_turno:action.payload}}
+    else {return state}
 }
 
-function knownRols (state=initialState,action)
+function knownRols (state=initialState.knownRols,action)
 {
-    if(action.type=="NEW_KNOWN"){return{...state,knownRols:[...state.knownRols,action.payload]}}
+    if(action.type=="NEW_KNOWN")return{...state,knownRols:[...state.knownRols,action.payload]}
+    else {return state}
 }
 
-function alive(state=initialState,action)
+function alive(state=initialState.alive,action)
 {
     if(action.type=="ASESINADO"){return {...state,alive:false}}
+    else {return state}
 }
 
 const rootReducer=combineReducers({

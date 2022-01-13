@@ -36,8 +36,6 @@ function PowerSelect(props)
     
     let viewPowerType= function()
     {
-        console.log(viewPower[0])
-
         if(viewPower[0]=="KillSelect")      {return <KillSelect all_players={viewPower[1]} setViewPower={setViewPower} />;}
         else if(viewPower[0]=="DeckExam")   {return <DeckExam powerPayload={viewPower[1]} setViewPower={setViewPower} />;}
         else if(viewPower[0]=="PlayerExam") {return <PlayerExam all_players={viewPower[1]} setViewPower={setViewPower} setKnownRols={props.setKnownRols} />;}

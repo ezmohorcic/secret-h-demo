@@ -139,7 +139,7 @@ io.on('connection', socket =>
     dataBase[0].cant_jugadores++;
     dataBase[0].jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
     io.sockets.emit('new_player', dataBase[0].jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
-    io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo"}) //le envia la informacion propia del jugador a su front
+    io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //le envia la informacion propia del jugador a su front
 
     socket.on("changed_username",data=>
     {  //desde el front, recibe el server que alguien quiere cambiar su nombre
@@ -158,7 +158,7 @@ io.on('connection', socket =>
         for(var i=0;i<dataBase[0].jugadores.length;i++)     
         {
             dataBase[0].jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
-            io.to( dataBase[0].jugadores[i].socketId).emit("new_position",{position: dataBase[0].jugadores[i], players:dataBase[0].jugadores}) //a cada jugador que se movio se le manda su nueva posicion
+            io.to( dataBase[0].jugadores[i].socketId).emit("new_position",{position: dataBase[0].jugadores[i].position, players:dataBase[0].jugadores}) //a cada jugador que se movio se le manda su nueva posicion
         }
         //io.sockets.emit("player_left",dataBase[0].jugadores);
 
