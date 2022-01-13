@@ -28,6 +28,11 @@ export function setOtherPlayer_Death(payload)
     return({type:"ASSASINATION",payload})
 }
 
+export function setOtherPlayer_name(payload)
+{
+    return({type:"NEW_POSITION_NAME",payload})
+}
+
 export function setAll_players(payload)
 {
     console.log(payload)

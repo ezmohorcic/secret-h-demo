@@ -20,9 +20,10 @@ const initialState =
 function all_players(state=[],action)
 {
     console.log(action);
-    if (action.type =="NEW_PLAYER")return[...state,action.payload]
+    //console.log(state)
+    if (action.type =="NEW_PLAYER")return{...state,all_players:[...state.all_players,action.payload]}
     //if (action.type =="NEW_PLAYER"){return[...state,action.payload]}
-    else if(action.type =="NEW_POSITION")
+    else if(action.type =="NEW_POSITION_NAME")
     {
         let nwArr= state.map(player=>
             {
@@ -30,7 +31,8 @@ function all_players(state=[],action)
                 if(copyPlayer.position==action.payload.position){copyPlayer.username=action.payload.username}
                 return copyPlayer;
             });
-        return ({...state,all_players:nwArr});
+        //return ({...state,all_players:nwArr});
+        return nwArr;
     }
     else if(action.type=="ASSASINATION")
     {
@@ -40,10 +42,10 @@ function all_players(state=[],action)
                 if(copyPlayer.position==action.payload.position){copyPlayer.estado="dead"}
                 return copyPlayer;
             });
-        return ({...state,all_players:nwArr});
+        return ({...state,all_players:nwArr}); //REVISAR
     }
-    else if(action.type=="ALL_PLAYERS"){return{...state,all_players:action.payload}}
-    else {return state}
+    else if(action.type=="ALL_PLAYERS"){return action.payload}
+    else return state
 }
 
 function player_data(state=initialState.player_data,action)
