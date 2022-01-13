@@ -12,14 +12,23 @@ const initialState = {
 function all_players(state=initialState,action)
 {
     if (action.type =="NEW_PLAYER"){return{...state,all_players:[...state.all_players,action.payload]}}
-    else if(action.type =="NEW_POSITION"){return{...state,all_players:action.payload}}
+    else if(action.type =="NEW_POSITION")
+    {
+        let nwArr= state.map(player=>
+            {
+                let copyPlayer={...player};
+                if(copyPlayer.position==action.payload.position){copyPlayer.username=action.payload.username}
+                return copyPlayer;
+            });
+        return (nwArr);
+    }
 }
 
 function player_data(state=initialState,action)
 {
     if(action.type=="YOUR_DATA")
     {
-        return {...state,player_data:action.payload}
+        return action.payload
     }
     else if(action.type=="YOUR_ROL")
     {
@@ -49,16 +58,25 @@ function knownRols (state=initialState,action)
 
 function alive(state=initialState,action)
 {
-    if(action.type=="ASESINADO"){return{...state,alive:false}}
+    if(action.type=="ASESINADO")
+    {
+        let nwArr= state.map(player=>
+            {
+                let copyPlayer={...player};
+                if(copyPlayer.position==action.payload.position){copyPlayer.estado="dead"}
+                return copyPlayer;
+            });
+        return (nwArr);
+    }
 }
 
 const rootReducer=combineReducers({
-    all_players:all_players,
-    player_data:player_data,
-    soyCeroView:soyCeroView,
-    stats_turno:stats_turno,
-    knownRols:knownRols,
-    alive:alive
+    all_players,
+    player_data,
+    soyCeroView,
+    stats_turno,
+    knownRols,
+    alive
 });
 
 export default rootReducer;

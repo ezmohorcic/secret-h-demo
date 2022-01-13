@@ -5,11 +5,7 @@ import Players from "./Players/Players.jsx"
 import Stats from "./Stats/Stats.jsx"
 import Hud from "./Hud/Hud.jsx"
 
-const BLUE="blue"; //ley liberal
-const RED="red"; //ley fascista
-const H="hitler"; //rol hitler
-const FASC="fascista"; //rol fascista
-const LIB="liberal";//rol liberal
+import {setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_player,setNew_player,soyCeroFalse,soyCeroTrue,setStats_turno,setKnownRols} from "./redux/actions.js"
 
 const socket = io.connect('http://localhost:3000/')
 export const SocketContext = React.createContext()
@@ -33,45 +29,55 @@ function App()
         socket.on("your_data",function(msg)
         {
             setPlayer_data(msg);
-            //dispatch(setAllPlayer_data("YOUR_DATA"))
+            //dispatch(setAllPlayer_data("msg"))
             msg.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
         });
 
         socket.on("new_position",function(msg)
         {
             setPlayer_data(msg.position);
-            //dispatch(setAllPlayer_data("NEW_POSITION"))
+            //dispatch(setAllPlayer_data("msg.position"))
             setAll_players(msg.players);
+            //dispatch(setAll_player(msg.players))
             msg.position.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
+            //msg.position.position==0 ? soyCeroFalse(false) : soyCeroTrue(true);
         });
 
         socket.on("new_player",function(msg)
         {
             setAll_players(msg);
+            //dispatch(setNew_player(msg))
         });
 
         socket.on("change_username_on_position",function(msg)
         {
             setAll_players(msg);
+            //dispatch(setPlayer_position(msg)) requiere msg.position y msg.username
         });
   
         socket.on("your_rol",function(msg)
         {
             setPlayer_data(msg);
+            //dispatch(setPlayer_rol(msg)) //msg=jugadores[n].rol
         });
 
         socket.on("init_game_client",function(msg)
         {
             setStats_turno(msg.stats);
+            //dispatch(setStats_turno(msg.stats))
             setSoyCeroView({display:"none"});
+            //dispatch(soyCeroFalse(false))
             setAll_players(msg.jugadores);
+            //dispatch(setAll_player(msg.jugadores))
         });
 
         socket.on("assasinated",function(msg)
         {
             console.log("assasinated")
             setPlayer_data(msg);
+            //dispatch(msg) necesita posicion de la muerte nada mas
             setAlive(false);
+            //dispatch(unAlive(false)))
             alert("Has sido asesinado por orden del Primer Ministro");
         });
 
