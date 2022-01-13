@@ -7,7 +7,7 @@ import Hud from "./Hud/Hud.jsx"
 import { useDispatch, useSelector } from "react-redux";
 
 //import store from "./redux/store.js"
-import {setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setStats_turno,setKnownRols} from "./redux/actions.js"
+import {setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setStats_turno,setKnownRols} from "./redux/actions.js"
 
 const socket = io.connect('http://localhost:3000/')
 export const SocketContext = React.createContext()
@@ -57,14 +57,14 @@ function App()
 
         socket.on("change_username_on_position",function(msg)
         {
-            setAll_players(msg);
-            //dispatch(setPlayer_position(msg)) requiere msg.position y msg.username
+            //setAll_players(msg);
+            dispatch(setOtherPlayer_name(msg)) //requiere msg.position y msg.username
         });
   
         socket.on("your_rol",function(msg)
         {
-            setPlayer_data(msg);
-            //dispatch(setPlayer_rol(msg)) //msg=jugadores[n].rol
+            //setPlayer_data(msg);
+            dispatch(setPlayer_rol(msg)) //msg=jugadores[n].rol
         });
 
         socket.on("init_game_client",function(msg)

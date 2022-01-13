@@ -21,7 +21,8 @@ function all_players(state=[],action)
 {
     console.log(action);
     //console.log(state)
-    if (action.type =="NEW_PLAYER")return{...state,all_players:[...state.all_players,action.payload]}
+    //if (action.type =="NEW_PLAYER")return{...state,all_players:[...state.all_players,action.payload]}
+    if (action.type =="NEW_PLAYER")return[...state,action.payload]
     //if (action.type =="NEW_PLAYER"){return[...state,action.payload]}
     else if(action.type =="NEW_POSITION_NAME")
     {
@@ -32,7 +33,8 @@ function all_players(state=[],action)
                 return copyPlayer;
             });
         //return ({...state,all_players:nwArr});
-        return nwArr;
+        console.log(nwArr)
+        return nwArr
     }
     else if(action.type=="ASSASINATION")
     {

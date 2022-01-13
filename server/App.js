@@ -146,7 +146,7 @@ io.on('connection', socket =>
         socket.username=data.username
         dataBase[0].jugadores[socket.position].username=data.username;
         //var out={position: socket.position,username: socket.username}
-        io.sockets.emit('change_username_on_position', dataBase[0].jugadores) //envia nuevo nombre del usuario en esa posicion
+        io.sockets.emit('change_username_on_position', {position:socket.position,username:socket.username}) //envia nuevo nombre del usuario en esa posicion
     })
 
     socket.on("disconnecting",data=>
