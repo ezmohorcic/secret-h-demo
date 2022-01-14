@@ -1,5 +1,7 @@
 import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../app";
+import { useDispatch, useSelector } from "react-redux";
+
 import CardSelect from "./cardSelect/CardSelect.jsx";
 import PowerSelect from "./PowerSelect/PowerSelect.jsx";
 import SelectCh from "./SelectCh/SelectCh.jsx";
@@ -8,6 +10,8 @@ import Vote from "./Vote/Vote.jsx";
 function Hud(props)
 {
     const socket = useContext(SocketContext);
+
+    
     const [voteD,setVoteD]=useState(false);
     const [viewSelectedCh,setViewSelectedCh]=useState([false,[],[],null]);
     const [viewCardSelect,setViewCardSelect]=useState([false,[]]);

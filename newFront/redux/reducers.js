@@ -11,7 +11,7 @@ const initialState =
         estado:"vivo"   
     },
     soyCeroView: false,
-    stats_turno:[],
+    stats_turno:{},
     alive:true,
     knownRols:[],
     test:{}
@@ -33,7 +33,7 @@ function all_players(state=[],action)
                 return copyPlayer;
             });
         //return ({...state,all_players:nwArr});
-        console.log(nwArr)
+        //console.log(nwArr)
         return nwArr
     }
     else if(action.type=="ASSASINATION")
@@ -67,7 +67,7 @@ function soyCeroView(state=initialState.soyCeroView,action)
 
 function stats_turno(state=initialState.stats_turno,action)
 {
-    if(action.type=="NEW_STATS"){return{...state,stats_turno:action.payload}}
+    if(action.type=="NEW_STATS"){return action.payload}
     else {return state}
 }
 

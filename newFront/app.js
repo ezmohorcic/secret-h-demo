@@ -7,7 +7,7 @@ import Hud from "./Hud/Hud.jsx"
 import { useDispatch, useSelector } from "react-redux";
 
 //import store from "./redux/store.js"
-import {setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setStats_turno,setKnownRols} from "./redux/actions.js"
+import {setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols} from "./redux/actions.js"
 
 const socket = io.connect('http://localhost:3000/')
 export const SocketContext = React.createContext()
@@ -21,7 +21,7 @@ function App()
     //---
     const [soyCeroView,setSoyCeroView]=useState({display:"none"})
     //---
-    const [stats_turno,setStats_turno]=useState({});
+    //const [stats_turno,setStats_turno]=useState({});
     const [knownRols,setKnownRols]=useState([]);
     const [alive,setAlive]=useState(true);
 
@@ -69,8 +69,8 @@ function App()
 
         socket.on("init_game_client",function(msg)
         {
-            setStats_turno(msg.stats);
-            //dispatch(setStats_turno(msg.stats))
+            //setStats_turno(msg.stats);
+            dispatch(setStats_turno(msg.stats))
             setSoyCeroView({display:"none"});
             //dispatch(soyCeroFalse(false))
             setAll_players(msg.jugadores);
@@ -99,13 +99,12 @@ function App()
         <div id='appContainer'>
             <h1>REACT</h1>
             <SocketContext.Provider value={socket}>
-                <Header soyCeroView={soyCeroView} setSoyCeroView={setSoyCeroView} player_data={player_data}/>
-                <Players knownRols={knownRols} />
-                <Stats stats_turno={stats_turno}/>
+                <Header/>
+                <Players/>
+                <Stats/>
                 {renderHud()}
             </SocketContext.Provider>           
         </div>
     )
 }
-// va en <players/> player_data={player_data} all_players={all_players}
 export default App;

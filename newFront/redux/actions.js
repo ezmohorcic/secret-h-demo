@@ -30,7 +30,7 @@ export function setOtherPlayer_Death(payload)
 
 export function setOtherPlayer_name(payload)
 {
-    console.log(payload)
+    //console.log(payload)
     return({type:"NEW_POSITION_NAME",payload})
 }
 

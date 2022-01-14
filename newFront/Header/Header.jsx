@@ -2,7 +2,7 @@ import React, {useState, useContext, useCallback, useEffect} from "react";
 import { SocketContext } from "../app";
 import { useDispatch, useSelector } from "react-redux";
 
-function Header(props)
+function Header()
 {
 
     const socket = useContext(SocketContext);

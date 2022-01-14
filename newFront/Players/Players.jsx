@@ -6,12 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 function Players()
 {
-    const state=useSelector((state)=>state)
+    const state=useSelector((state)=>state.stats_turno)
     const all_players=useSelector((state)=>state.all_players)
     const player_data=useSelector((state)=>state.player_data)
     const knownRols=useSelector((state)=>state.knownRols)
     console.log(state)
-    console.log(all_players)
+    //console.log(all_players)
     //var players=[];
     var players=all_players.map(element=>
         {
