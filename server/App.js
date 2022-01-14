@@ -133,7 +133,6 @@ const io = socketio(server)
 
 io.on('connection', socket => 
 {
-    console.log("New user connected");
     socket.username = "Anon";
     socket.position = dataBase[0].jugadores.length;
     dataBase[0].cant_jugadores++;
@@ -212,13 +211,11 @@ io.on('connection', socket =>
             }
             else
             {
-                console.log("no se paso gobierno");
                 var passed_law=false;  //saber si tiene que pasar o no una ley, para que el front consulte en el evento enviado
                 var law_to_send=null;
                 dataBase[0].skipped++;
                 if(dataBase[0].skipped==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
                 {
-                    console.log("ley obligatoria");
                     passed_law=true;
                     dataBase[0].skipped=0;    
                     if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)} //se obtienen las cartas
@@ -261,21 +258,17 @@ io.on('connection', socket =>
             else{io.sockets.emit("red_wins");}
         } 
         io.sockets.emit("law_done",{selected:data.selected,counter:dataBase[0][data.selected]}) //evento a todos para que vean que ley se paso
-        console.log("chancellor_desition")
-        console.log(socket.position)
         nextTurn();
         powerTurn(data);    //se envia al analisis de poder al pm
     })
     
     socket.on(KILL_PLAYER,data=>
     {
-        console.log("jaja matar");
         dataBase[0].jugadores[data.position].estado="dead";
-        console.log(data)
         dataBase[0].jugadores.forEach(element => {
             if(element.position!=data.position){io.to(element.socketId).emit("assasination",data.position)}
         });
-        io.to(data.socketId).emit("assasinated",dataBase[0].jugadores[data.position])
+        io.to(data.socketId).emit("assasinated",dataBase[0].jugadores[data.position].position)
         //io.sockets.emit("assasinated",{jugadores:dataBase[0].jugadores,asesinado:data});
         dataBase[0].mod_total++;
         if(data.position==dataBase[0].pm.position)
@@ -295,7 +288,6 @@ io.on('connection', socket =>
 
     socket.on(PICK_CANDIDATE,data=>
     {
-        console.log("podemos meter a mi sobrino en ese puesto");
         dataBase[0].pm=dataBase[0].jugadores[data.position];
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
@@ -308,14 +300,10 @@ io.on('connection', socket =>
 //Funciones Auxiliares:
 function powerTurn(data)
 {
-    console.log("entre a power turn");
-    console.log(dataBase[0].last_elected[0]);
     if(data.selected==RED)
     {
-        console.log("es ley roja");
         if(!determinePower()) //determina si la ley tiene un poder que para que el juego continue, el pm necesita enviar info
         {
-            console.log("no es ley bloqueante")
             var stats_stack=statStack();
             io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
             //io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
@@ -325,7 +313,6 @@ function powerTurn(data)
     }
     else    //La carta no es roja
     {   
-        console.log("no es ley roja");
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
         // io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
@@ -336,10 +323,7 @@ function powerTurn(data)
 function determinePower()
 {
     var reciever=dataBase[0].last_elected[0];
-    console.log("determinePower")
-    console.log(reciever);
     var client_command=dataBase[0].board["position_"+dataBase[0].red];
-    console.log(client_command)
     switch (client_command) 
     {
         case EXAMINE_DECK:  
@@ -366,7 +350,6 @@ function determinePower()
         return true;
     
         default:
-            console.log("no era turno con poder")
         return false
     }
     /*EXAMINE_DECK KILL_PLAYER EXAMINE_PLAYER PICK_CANDIDATE*/
@@ -413,9 +396,6 @@ function nextTurn()
         if(dataBase[0].pm.position==dataBase[0].jugadores.length-1){dataBase[0].pm=dataBase[0].jugadores[0]}  //pasa al siguiente jugador para ser pm
         else{dataBase[0].pm=dataBase[0].jugadores[dataBase[0].pm.position+1]}
     }
-    console.log("next turn")
-    console.log(dataBase[0].pm)
-    console.log(dataBase[0].pm.position)
     dataBase[0].chancellor={}; //se borra el chancellor
 }
 

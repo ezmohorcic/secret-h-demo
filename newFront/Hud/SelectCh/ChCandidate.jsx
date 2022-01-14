@@ -2,8 +2,7 @@ import React from 'react';
 
 
 function ChCandidate(props)
-{
-    
+{ 
     return(
         <div className='chCandidate'>
             <button onClick={()=>
@@ -12,6 +11,5 @@ function ChCandidate(props)
         </div>
     )
 }
-
 
 export default ChCandidate;

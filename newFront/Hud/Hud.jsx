@@ -17,11 +17,7 @@ function Hud()
 
     useEffect(()=>
     {
-        socket.on("asigned_pm",function(msg)
-        {
-            console.log("asigned_pm")
-            setViewSelectedCh(true);  
-        });
+        socket.on("asigned_pm",function(msg){setViewSelectedCh(true);});
 
         socket.on("init_vote",function(msg){setVoteD(true);});
 

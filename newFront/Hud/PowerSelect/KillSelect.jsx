@@ -23,12 +23,7 @@ function KillSelect(props)
         }
         
     });
-
-    return(
-        <div id='killSelectContainer'>
-            {arrShow}
-        </div>
-    )
+    return(<div id='killSelectContainer'>{arrShow}</div>)
 }
 
 export default KillSelect;

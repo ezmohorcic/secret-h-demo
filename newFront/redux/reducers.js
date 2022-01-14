@@ -19,11 +19,7 @@ const initialState =
 
 function all_players(state=[],action)
 {
-    console.log(action);
-    //console.log(state)
-    //if (action.type =="NEW_PLAYER")return{...state,all_players:[...state.all_players,action.payload]}
     if (action.type =="NEW_PLAYER")return[...state,action.payload]
-    //if (action.type =="NEW_PLAYER"){return[...state,action.payload]}
     else if(action.type =="NEW_POSITION_NAME")
     {
         let nwArr= state.map(player=>
@@ -32,8 +28,6 @@ function all_players(state=[],action)
                 if(copyPlayer.position==action.payload.position){copyPlayer.username=action.payload.username}
                 return copyPlayer;
             });
-        //return ({...state,all_players:nwArr});
-        //console.log(nwArr)
         return nwArr
     }
     else if(action.type=="ASSASINATION")
@@ -44,7 +38,7 @@ function all_players(state=[],action)
                 if(copyPlayer.position==action.payload.position){copyPlayer.estado="dead"}
                 return copyPlayer;
             });
-        return ({...state,all_players:nwArr}); //REVISAR
+        return nwArr 
     }
     else if(action.type=="ALL_PLAYERS"){return action.payload}
     else return state
@@ -83,13 +77,20 @@ function alive(state=initialState.alive,action)
     else {return state}
 }
 
+function next_pm(state={},action)
+{
+    if(action.type=="NEXT_PM"){return action.payload;}
+    else return state;
+}
+
 const rootReducer=combineReducers({
     all_players,
     player_data,
     soyCeroView,
     stats_turno,
     knownRols,
-    alive
+    alive,
+    next_pm
 });
 
 export default rootReducer;

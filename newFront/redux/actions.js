@@ -64,7 +64,17 @@ export function setStats_turno(payload)
     return({type:"NEW_STATS",payload})
 }
 
+export function setLast_elected(payload)
+{
+    return({type:"CHANGE_LAST_ELECTED",payload})
+}
+
 export function setKnownRols(payload)
 {
     return({type:"NEW_KNOWN",payload})
+}
+
+export function setNext_pm(payload)
+{
+    return({type:"NEXT_PM",payload})
 }
