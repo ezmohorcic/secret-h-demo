@@ -1,11 +1,13 @@
 import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../../app";
+import { useDispatch, useSelector } from "react-redux";
 
 function PmSelect(props)
 {
     const socket = useContext(SocketContext);
+    const all_players=useSelector((state)=>state.all_players);
 
-    var arrShow = props.all_players.map((element)=>
+    var arrShow = all_players.map((element)=>
     {
         if(element.estado!="dead")
         {
@@ -14,7 +16,7 @@ function PmSelect(props)
                     <button onClick={()=>
                     {
                         socket.emit("pick_candidate",{element});
-                        props.setViewPower(["",[]]);
+                        props.setViewPower("");
                     }}>{element.username}</button>
                 </div>
             )

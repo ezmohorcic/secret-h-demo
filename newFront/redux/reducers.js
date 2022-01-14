@@ -60,8 +60,8 @@ function player_data(state=initialState.player_data,action)
 
 function soyCeroView(state=initialState.soyCeroView,action)
 {
-    if(action.type=="SOY_CERO"){return{...state,soyCeroView:true}}
-    else if(action.type=="DEJO_SERLO"){return{...state,soyCeroView:false}}
+    if(action.type=="SOY_CERO"){return true}
+    else if(action.type=="DEJO_SERLO"){return false}
     else {return state}
 }
 
@@ -73,13 +73,13 @@ function stats_turno(state=initialState.stats_turno,action)
 
 function knownRols (state=initialState.knownRols,action)
 {
-    if(action.type=="NEW_KNOWN")return{...state,knownRols:[...state.knownRols,action.payload]}
+    if(action.type=="NEW_KNOWN")return [...state,action.payload]
     else {return state}
 }
 
 function alive(state=initialState.alive,action)
 {
-    if(action.type=="ASESINADO"){return {...state,alive:false}}
+    if(action.type=="ASESINADO"){return false}
     else {return state}
 }
 

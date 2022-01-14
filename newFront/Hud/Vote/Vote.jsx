@@ -4,7 +4,7 @@ import { SocketContext } from "../../app.js";
 function Vote(props)
 {
     const socket = useContext(SocketContext);
-    //const [voteDisp,setVoteDisp]=useState({display:"none"}); 
+     
     const onVoteYes= function()
     {
         socket.emit("voted_gov",{vote:true});

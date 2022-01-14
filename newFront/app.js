@@ -45,7 +45,7 @@ function App()
             //setAll_players(msg.players);
             dispatch(setAll_players(msg.players));
             //msg.position.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
-            msg.position==0 ? dispatch(soyCeroFalse(false)) : dispatch(soyCeroTrue(true));
+            msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
         });
 
         socket.on("new_player",function(msg)
@@ -71,8 +71,8 @@ function App()
         {
             //setStats_turno(msg.stats);
             dispatch(setStats_turno(msg.stats))
-            setSoyCeroView({display:"none"});
-            //dispatch(soyCeroFalse(false))
+            //setSoyCeroView({display:"none"});
+            dispatch(soyCeroFalse(false))
             setAll_players(msg.jugadores);
             //dispatch(setAll_player(msg.jugadores))
         });
@@ -94,7 +94,7 @@ function App()
         });
     },[socket]);
 
-    const renderHud=function(){if(alive==true){return <Hud setKnownRols={setKnownRols}/>}}
+    const renderHud=function(){if(alive==true){return <Hud/>}}
     return(
         <div id='appContainer'>
             <h1>REACT</h1>

@@ -1,16 +1,20 @@
 import React, {useState, useContext, useEffect} from "react";
-
+import { useDispatch, useSelector } from "react-redux";
+import {setKnownRols} from "../../redux/actions.js";
 function PlayerExam(props)
 {
-
-    var arrShow = props.all_players.map((element)=>
+    const all_players=useSelector((state)=>state.all_players);
+    const knownRols=useSelector((state)=>state.knownRols);
+    const dispatch = useDispatch();
+    var arrShow = all_players.map((element)=>
     {
         return(
             <div className="genericSelect">
                 <button onClick={()=>
                 {
-                    props.setKnownRols(oldRols=>[...oldRols,element.position])
-                    props.setViewPower(["",[]]);
+                    dispatch(setKnownRols(element.position))
+                    //props.setKnownRols(oldRols=>[...oldRols,element.position])
+                    props.setViewPower("");
                 }}>{element.username}</button>
             </div>
         )

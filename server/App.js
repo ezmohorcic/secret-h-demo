@@ -172,7 +172,8 @@ io.on('connection', socket =>
         /*dataBase[0].fasc_players.forEach(element =>{io.to(element.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players,h_player:dataBase[0].h_player})}); //cada fascista conoce al resto y a Hitler
         if(dataBase[0].jugadores.length<7){io.to(dataBase[0].h_player.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players})}*/  //hitler puede necesitar saber quien es el fascista, depende de cantidad de jugadores
         io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
-        io.to(socket.id).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:socket.position}); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
+        //io.to(socket.id).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:socket.position}); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
+        io.to(socket.id).emit("asigned_pm")
     });
     
     socket.on("selected_chancellor",data=>
@@ -203,10 +204,10 @@ io.on('connection', socket =>
                 for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
                 {
                     if(dataBase[0].stack_cartas.length==0){dataBase[0].stack_cartas=shuffle(dataBase[0].stack_descartados)}
-                    trio_cartas.push(dataBase[0].stack_cartas.pop())
+                    trio_cartas.push(dataBase[0].stack_cartas.pop());
                 }
                 resetVotos(); //resetea los valores de los votos
-                io.to(dataBase[0].pm.socketId).emit("pm_desition_client",{cartas:trio_cartas})
+                io.to(dataBase[0].pm.socketId).emit("pm_desition_client",{cartas:trio_cartas});
                 io.sockets.emit("duo_won");
             }
             else
@@ -226,7 +227,6 @@ io.on('connection', socket =>
                     io.sockets.emit("duo_lost",{passed_law:passed_law,selected:law_to_send,counter:dataBase[0][law_to_send]});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                     resetVotos(); //resetea los valores de los votos
                     nextTurn(); //genera el siguiente pm
-                    console.log(law_to_send);
                     powerTurn({selected:law_to_send}); //se envia al analisis de poder al pm
                 }
                 else
@@ -236,7 +236,8 @@ io.on('connection', socket =>
                     nextTurn();
                     var stats_stack=statStack();
                     io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
-                    io.to(dataBase[0].pm.socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+                    //io.to(dataBase[0].pm.socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+                    io.to(dataBase[0].pm.socketId).emit("asigned_pm");
                 }
             }
         }
@@ -288,7 +289,8 @@ io.on('connection', socket =>
 
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+        //io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
     });
 
     socket.on(PICK_CANDIDATE,data=>
@@ -297,7 +299,8 @@ io.on('connection', socket =>
         dataBase[0].pm=dataBase[0].jugadores[data.position];
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+        //io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
     });
 
 })
@@ -315,7 +318,8 @@ function powerTurn(data)
             console.log("no es ley bloqueante")
             var stats_stack=statStack();
             io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-            io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+            //io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+            io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
         }
     
     }
@@ -324,7 +328,8 @@ function powerTurn(data)
         console.log("no es ley roja");
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+        //io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
+        io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
     }
 }
 
