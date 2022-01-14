@@ -8,7 +8,14 @@ export function setAllPlayer_data (payload)
 
 export function setPlayer_position(payload)
 {
+    console.log(payload)
     return({type:"NEW_POSITION",payload:payload})
+}
+
+export function setPlayer_username(payload)
+{
+    console.log(payload)
+    return({type:"NEW_USERNAME",payload:payload})
 }
 
 export function setPlayer_rol(payload)

@@ -15,7 +15,8 @@ function SelectCh(props)
     console.log(stats_turno.last_elected);
     const sendCh= function()
     {
-        if(selected!={})
+        console.log(selected)
+        if(selected.socketId)
         {
             socket.emit("selected_chancellor",selected);
             props.setViewSelectedCh(false);

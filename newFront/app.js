@@ -29,6 +29,8 @@ function App()
 
         socket.on("new_position",function(msg)
         {
+            console.log("new_position");
+            console.log(msg)
             dispatch(setPlayer_position(msg.position));
             dispatch(setAll_players(msg.players));
             msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
@@ -58,9 +60,13 @@ function App()
 
         socket.on("next_turn",function(msg)
         {
+            console.log(msg);
             dispatch(setStats_turno(msg.stats));
             dispatch(setNext_pm(msg.next_pm));
         });
+
+       
+
     },[socket]);
 
     const renderHud=function(){if(alive==true){return <Hud/>}}

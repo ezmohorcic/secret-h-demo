@@ -7,7 +7,7 @@ const CANT_PASSED_MAX=2; //cantreq.params.idad de gobiernos pasados maxima
 const BLUE="blue"; //ley liberal
 const RED="red"; //ley fascista
 const WINS_BLUE=5; //cantidad para que liberales ganen
-const WINS_RED=6; //cantidad para que fascistas ganen
+const WINS_RED=1; //cantidad para que fascistas ganen
 const MIN_RED_H=3; //minima cantidad de leyes rojas + Hitle cansiller 
 const H="hitler"; //rol hitler
 const FASC="fascista"; //rol fascista
@@ -154,9 +154,11 @@ io.on('connection', socket =>
         var flag=false;
         dataBase[0].jugadores=dataBase[0].jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
         dataBase[0].cant_jugadores--;
+        //console.log(dataBase[0].jugadores)
         for(var i=0;i<dataBase[0].jugadores.length;i++)     
         {
             dataBase[0].jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
+            //console.log(dataBase[0].jugadores[i])
             io.to( dataBase[0].jugadores[i].socketId).emit("new_position",{position: dataBase[0].jugadores[i].position, players:dataBase[0].jugadores}) //a cada jugador que se movio se le manda su nueva posicion
         }
         //io.sockets.emit("player_left",dataBase[0].jugadores);
@@ -170,13 +172,14 @@ io.on('connection', socket =>
         dataBase[0].jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element.rol)}) //A cada cliente se le envia su rol de juego
         /*dataBase[0].fasc_players.forEach(element =>{io.to(element.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players,h_player:dataBase[0].h_player})}); //cada fascista conoce al resto y a Hitler
         if(dataBase[0].jugadores.length<7){io.to(dataBase[0].h_player.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players})}*/  //hitler puede necesitar saber quien es el fascista, depende de cantidad de jugadores
-        io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats}) //evento para iniciar el juego en todos los front
+        io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats,next_pm:dataBase[0].jugadores[0]}) //evento para iniciar el juego en todos los front
         //io.to(socket.id).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:socket.position}); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
         io.to(socket.id).emit("asigned_pm")
     });
     
     socket.on("selected_chancellor",data=>
     {//el primer ministro escogio chancellor y se inicia votacion
+        console.log("selected_chancelor")
         dataBase[0].chancellor=data;
         io.to(dataBase[0].chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
         io.sockets.emit("init_vote",{chancellor:data.chancellor}) //evento para que en todos los front aparezca para votar si/no
@@ -196,6 +199,7 @@ io.on('connection', socket =>
                 var winner = determine_winner("h_chancellor")//por si al ganar este duo, ganan los fascistas
                 if(winner!=false) //si hay un ganador 
                 {
+                    console.log(winner)
                     if(winner==BLUE){io.sockets.emit("blue_wins");}
                     else{io.sockets.emit("red_wins");}
                 }
@@ -254,6 +258,7 @@ io.on('connection', socket =>
         var winner = determine_winner("just_decided"); //si ganan fascistas por cantidad de leyes rojas o liberales por cantidad de leyes azules
         if(winner!=false) //si hay un ganador 
         {
+            console.log(winner)
             if(winner==BLUE){io.sockets.emit("blue_wins");}
             else{io.sockets.emit("red_wins");}
         } 

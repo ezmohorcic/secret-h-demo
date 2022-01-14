@@ -49,6 +49,7 @@ function player_data(state=initialState.player_data,action)
     if(action.type=="YOUR_DATA"){return action.payload}
     else if(action.type=="YOUR_ROL"){return {...state,rol:action.payload}}
     else if(action.type=="NEW_POSITION"){return {...state,position:action.payload}}
+    else if(action.type=="NEW_USERNAME"){return {...state,username:action.payload}}
     else {return state}
 }
 
