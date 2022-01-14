@@ -15,15 +15,16 @@ export const SocketContext = React.createContext()
 function App() 
 {
     const dispatch = useDispatch();
+    const alive= useSelector((state)=>state.alive);
     //---
     //const [all_players,setAll_players]=useState([]);
-    const [player_data,setPlayer_data]=useState({});
+    //const [player_data,setPlayer_data]=useState({});
     //---
-    const [soyCeroView,setSoyCeroView]=useState({display:"none"})
+    //const [soyCeroView,setSoyCeroView]=useState({display:"none"})
     //---
     //const [stats_turno,setStats_turno]=useState({});
-    const [knownRols,setKnownRols]=useState([]);
-    const [alive,setAlive]=useState(true);
+    //const [knownRols,setKnownRols]=useState([]);
+    //const [alive,setAlive]=useState(true);
 
     useEffect(()=>
     {
@@ -31,20 +32,15 @@ function App()
 
         socket.on("your_data",function(msg)
         {
-            //setPlayer_data(msg);
             console.log("your_data")
             dispatch(setAllPlayer_data(msg))
-            //msg.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
             msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false));
         });
 
         socket.on("new_position",function(msg)
         {
-            //setPlayer_data(msg.position);
             dispatch(setPlayer_position(msg.position));
-            //setAll_players(msg.players);
             dispatch(setAll_players(msg.players));
-            //msg.position.position==0 ? setSoyCeroView({display:"block"}) :setSoyCeroView({display:"none"});
             msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
         });
 
@@ -52,46 +48,33 @@ function App()
         {
             console.log("new_player")
             dispatch(setAll_players(msg));
-            //dispatch(setNew_player(msg))
         });
 
         socket.on("change_username_on_position",function(msg)
         {
-            //setAll_players(msg);
             dispatch(setOtherPlayer_name(msg)) //requiere msg.position y msg.username
         });
   
         socket.on("your_rol",function(msg)
         {
-            //setPlayer_data(msg);
             dispatch(setPlayer_rol(msg)) //msg=jugadores[n].rol
         });
 
         socket.on("init_game_client",function(msg)
         {
-            //setStats_turno(msg.stats);
+            console.log("init")
             dispatch(setStats_turno(msg.stats))
-            //setSoyCeroView({display:"none"});
             dispatch(soyCeroFalse(false))
-            setAll_players(msg.jugadores);
-            //dispatch(setAll_player(msg.jugadores))
+            dispatch(setAll_players(msg.jugadores))
         });
 
         socket.on("assasinated",function(msg)
         {
-            console.log("assasinated")
-            setPlayer_data(msg);
-            //dispatch(msg) necesita posicion de la muerte nada mas
-            setAlive(false);
-            //dispatch(unAlive(false)))
+            dispatch(unAlive()) 
             alert("Has sido asesinado por orden del Primer Ministro");
         });
 
-        socket.on("assasination",function(msg)
-        {setAll_players(msg)
-            //dispatch(setOtherPlayer_Death(msg))
-         console.log("assasination")
-        });
+        socket.on("assasination",function(msg){dispatch(setOtherPlayer_Death(msg))});
     },[socket]);
 
     const renderHud=function(){if(alive==true){return <Hud/>}}

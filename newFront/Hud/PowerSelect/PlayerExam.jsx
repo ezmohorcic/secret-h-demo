@@ -1,6 +1,7 @@
 import React, {useState, useContext, useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {setKnownRols} from "../../redux/actions.js";
+
 function PlayerExam(props)
 {
     const all_players=useSelector((state)=>state.all_players);
@@ -13,7 +14,6 @@ function PlayerExam(props)
                 <button onClick={()=>
                 {
                     dispatch(setKnownRols(element.position))
-                    //props.setKnownRols(oldRols=>[...oldRols,element.position])
                     props.setViewPower("");
                 }}>{element.username}</button>
             </div>

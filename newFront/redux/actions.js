@@ -13,12 +13,12 @@ export function setPlayer_position(payload)
 
 export function setPlayer_rol(payload)
 {
-    return({type:"NEW_ROL",payload})
+    return({type:"YOUR_ROL",payload})
 }
 
-export function unAlive(payload)
+export function unAlive()
 {
-    return({type:"ASESINADO",payload})
+    return({type:"ASESINADO",payload:false})
 }
 
 //--- Array of players effects

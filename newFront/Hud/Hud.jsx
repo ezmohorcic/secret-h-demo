@@ -1,6 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../app";
-import { useDispatch, useSelector } from "react-redux";
 
 import CardSelect from "./cardSelect/CardSelect.jsx";
 import PowerSelect from "./PowerSelect/PowerSelect.jsx";
@@ -24,20 +23,11 @@ function Hud()
             setViewSelectedCh(true);  
         });
 
-        socket.on("init_vote",function(msg)
-        {
-            setVoteD(true);  
-        });
+        socket.on("init_vote",function(msg){setVoteD(true);});
 
-        socket.on("pm_desition_client",function(msg)
-        {
-            setViewCardSelect([true,msg.cartas,"pm_desition"]);
-        });
+        socket.on("pm_desition_client",function(msg){setViewCardSelect([true,msg.cartas,"pm_desition"]);});
 
-        socket.on("chancellor_turn",function(msg)
-        {
-            setViewCardSelect([true,msg.cartas,"chancellor_desition"]);
-        });
+        socket.on("chancellor_turn",function(msg){setViewCardSelect([true,msg.cartas,"chancellor_desition"]);});
 
     },[socket]);
 

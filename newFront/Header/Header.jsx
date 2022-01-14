@@ -1,13 +1,13 @@
 import React, {useState, useContext, useCallback, useEffect} from "react";
 import { SocketContext } from "../app";
 import { useDispatch, useSelector } from "react-redux";
-//import {soyCeroView} from "../../redux/actions.js";
+
 function Header()
 {
 
     const socket = useContext(SocketContext);
     const [newName,setNewName]=useState("");
-    //const dispatch = useDispatch();
+    
     const player_data=useSelector((state)=>state.player_data)
     const soyCeroView=useSelector((state)=>state.soyCeroView)
 
@@ -16,11 +16,8 @@ function Header()
         socket.emit("changed_username",{username:newName});
         setNewName("");
     }
-    const sendInit = function()
-    {
-        socket.emit("init_game",{})
-        
-    }
+    const sendInit = function(){socket.emit("init_game",{})}
+
     const initButton = function()
     {
         if(soyCeroView)
