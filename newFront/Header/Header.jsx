@@ -11,23 +11,12 @@ function Header()
     const dispatch = useDispatch();
     
     const player_data=useSelector((state)=>state.player_data)
+    console.log(player_data);
     const soyCeroView=useSelector((state)=>state.soyCeroView)
 
     useEffect(()=>
     {
-        socket.on("blue_wins",function(msg)
-        {
-            console.log("blue wins")
-            alarm("BLUE WINS");
-            player_data.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
-        });
-
-        socket.on("red_wins",function(msg)
-        {
-            console.log("red wins")
-            alarm("RED WINS");
-            player_data.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
-        });
+        
     },[socket]);
 
     const sendNewName = function ()

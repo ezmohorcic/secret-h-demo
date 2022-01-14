@@ -65,7 +65,19 @@ function App()
             dispatch(setNext_pm(msg.next_pm));
         });
 
-       
+        socket.on("blue_wins",function(msg)
+        {
+            console.log("blue wins")
+            alert("BLUE WINS");
+            msg==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
+        });
+
+        socket.on("red_wins",function(msg)
+        {
+            console.log("red wins")
+            alert("RED WINS");
+            msg==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
+        });
 
     },[socket]);
 

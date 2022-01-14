@@ -200,8 +200,17 @@ io.on('connection', socket =>
                 if(winner!=false) //si hay un ganador 
                 {
                     console.log(winner)
-                    if(winner==BLUE){io.sockets.emit("blue_wins");}
-                    else{io.sockets.emit("red_wins");}
+                    /*if(winner==BLUE){io.sockets.emit("blue_wins");}
+                    else{io.sockets.emit("red_wins");}*/
+                    if(winner==BLUE){dataBase[0].jugadores.forEach(element=>
+                    {
+                        io.to(element.socketId).emit("blue_wins",element.position)
+                    });}
+                    else
+                    {dataBase[0].jugadores.forEach(element=>
+                    {
+                        io.to(element.socketId).emit("red_wins",element.position)
+                    });}
                 }
                 var trio_cartas=[];
                 for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
@@ -259,8 +268,15 @@ io.on('connection', socket =>
         if(winner!=false) //si hay un ganador 
         {
             console.log(winner)
-            if(winner==BLUE){io.sockets.emit("blue_wins");}
-            else{io.sockets.emit("red_wins");}
+            if(winner==BLUE){dataBase[0].jugadores.forEach(element=>
+                {
+                    io.to(element.socketId).emit("blue_wins",element.position)
+                });}
+                else
+                {dataBase[0].jugadores.forEach(element=>
+                {
+                    io.to(element.socketId).emit("red_wins",element.position)
+                });}
         } 
         io.sockets.emit("law_done",{selected:data.selected,counter:dataBase[0][data.selected]}) //evento a todos para que vean que ley se paso
         nextTurn();
