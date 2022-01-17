@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import { SocketContext } from "../app";
+import { SocketContext } from "../Indexjs";
 
 import CardSelect from "./cardSelect/CardSelect.jsx";
 import PowerSelect from "./PowerSelect/PowerSelect.jsx";

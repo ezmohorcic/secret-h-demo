@@ -44,6 +44,8 @@ var obj=
         }
 }
 dataBase=[obj];
+
+
 /* 
 ////dataBase plantilla\\\\
 {
@@ -144,7 +146,6 @@ io.on('connection', socket =>
     {  //desde el front, recibe el server que alguien quiere cambiar su nombre
         socket.username=data.username
         dataBase[0].jugadores[socket.position].username=data.username;
-        //var out={position: socket.position,username: socket.username}
         io.sockets.emit('change_username_on_position', {position:socket.position,username:socket.username}) //envia nuevo nombre del usuario en esa posicion
     })
 
@@ -154,14 +155,11 @@ io.on('connection', socket =>
         var flag=false;
         dataBase[0].jugadores=dataBase[0].jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
         dataBase[0].cant_jugadores--;
-        //console.log(dataBase[0].jugadores)
         for(var i=0;i<dataBase[0].jugadores.length;i++)     
         {
             dataBase[0].jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
-            //console.log(dataBase[0].jugadores[i])
             io.to( dataBase[0].jugadores[i].socketId).emit("new_position",{position: dataBase[0].jugadores[i].position, players:dataBase[0].jugadores}) //a cada jugador que se movio se le manda su nueva posicion
         }
-        //io.sockets.emit("player_left",dataBase[0].jugadores);
 
     });
 
@@ -170,10 +168,7 @@ io.on('connection', socket =>
         initGame();
         var stats= statStack();
         dataBase[0].jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element.rol)}) //A cada cliente se le envia su rol de juego
-        /*dataBase[0].fasc_players.forEach(element =>{io.to(element.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players,h_player:dataBase[0].h_player})}); //cada fascista conoce al resto y a Hitler
-        if(dataBase[0].jugadores.length<7){io.to(dataBase[0].h_player.socketId).emit("know_fasc",{fasc_players:dataBase[0].fasc_players})}*/  //hitler puede necesitar saber quien es el fascista, depende de cantidad de jugadores
         io.sockets.emit('init_game_client',{jugadores:dataBase[0].jugadores,stats:stats,next_pm:dataBase[0].jugadores[0]}) //evento para iniciar el juego en todos los front
-        //io.to(socket.id).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:socket.position}); //el que tiene el boton de inicio es el mismo que es el primer pm, pos 0
         io.to(socket.id).emit("asigned_pm")
     });
     
@@ -199,9 +194,6 @@ io.on('connection', socket =>
                 var winner = determine_winner("h_chancellor")//por si al ganar este duo, ganan los fascistas
                 if(winner!=false) //si hay un ganador 
                 {
-                    console.log(winner)
-                    /*if(winner==BLUE){io.sockets.emit("blue_wins");}
-                    else{io.sockets.emit("red_wins");}*/
                     if(winner==BLUE){dataBase[0].jugadores.forEach(element=>
                     {
                         io.to(element.socketId).emit("blue_wins",element.position)
@@ -246,7 +238,6 @@ io.on('connection', socket =>
                     nextTurn();
                     var stats_stack=statStack();
                     io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
-                    //io.to(dataBase[0].pm.socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
                     io.to(dataBase[0].pm.socketId).emit("asigned_pm");
                 }
             }
@@ -290,7 +281,6 @@ io.on('connection', socket =>
             if(element.position!=data.position){io.to(element.socketId).emit("assasination",data.position)}
         });
         io.to(data.socketId).emit("assasinated",dataBase[0].jugadores[data.position].position)
-        //io.sockets.emit("assasinated",{jugadores:dataBase[0].jugadores,asesinado:data});
         dataBase[0].mod_total++;
         if(data.position==dataBase[0].pm.position)
         {
@@ -303,7 +293,6 @@ io.on('connection', socket =>
 
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        //io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
         io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
     });
 
@@ -312,7 +301,6 @@ io.on('connection', socket =>
         dataBase[0].pm=dataBase[0].jugadores[data.position];
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        //io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
         io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
     });
 
@@ -327,7 +315,6 @@ function powerTurn(data)
         {
             var stats_stack=statStack();
             io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-            //io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
             io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
         }
     
@@ -336,7 +323,6 @@ function powerTurn(data)
     {   
         var stats_stack=statStack();
         io.sockets.emit("next_turn",{next_pm:dataBase[0].pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        // io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm",{last_elected:dataBase[0].last_elected,players:dataBase[0].jugadores,position:dataBase[0].pm.position});
         io.to(dataBase[0].jugadores[dataBase[0].pm.position].socketId).emit("asigned_pm");
     }
 }
@@ -378,7 +364,7 @@ function determinePower()
 
 function cardStackGenerator()
 {
-    dataBase[0].stack_cartas=shuffle([BLUE,RED,BLUE,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,RED,RED,RED,RED,BLUE,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE,RED,RED,RED,RED])
+    dataBase[0].stack_cartas=shuffle([BLUE,RED,RED,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE])
 } 
 
 function shuffle(array) {

@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
-import { SocketContext } from "../../app";
+import { SocketContext } from "../../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
 
 function KillSelect(props)

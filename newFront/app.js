@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { io, Socket, socketio } from 'socket.io-client';
+import React, { useEffect, useState, useContext } from 'react';
+//import { io, Socket, socketio } from 'socket.io-client';
 import Header from "./Header/Header.jsx";
 import Players from "./Players/Players.jsx"
 import Stats from "./Stats/Stats.jsx"
 import Hud from "./Hud/Hud.jsx"
 import { useDispatch, useSelector } from "react-redux";
-
-//import store from "./redux/store.js"
+import { SocketContext } from './Indexjs.js';
 import {setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols} from "./redux/actions.js"
 
-const socket = io.connect('http://localhost:3000/')
-export const SocketContext = React.createContext()
+/*const socket = io.connect('http://localhost:3000/')
+export const SocketContext = React.createContext()*/
 
 function App() 
 {
+    const socket = useContext(SocketContext);
     const dispatch = useDispatch();
     const alive= useSelector((state)=>state.alive);
 
@@ -29,8 +29,6 @@ function App()
 
         socket.on("new_position",function(msg)
         {
-            console.log("new_position");
-            console.log(msg)
             dispatch(setPlayer_position(msg.position));
             dispatch(setAll_players(msg.players));
             msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
@@ -60,21 +58,18 @@ function App()
 
         socket.on("next_turn",function(msg)
         {
-            console.log(msg);
             dispatch(setStats_turno(msg.stats));
             dispatch(setNext_pm(msg.next_pm));
         });
 
         socket.on("blue_wins",function(msg)
         {
-            console.log("blue wins")
             alert("BLUE WINS");
             msg==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
         });
 
         socket.on("red_wins",function(msg)
         {
-            console.log("red wins")
             alert("RED WINS");
             msg==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
         });
@@ -85,12 +80,10 @@ function App()
     return(
         <div id='appContainer'>
             <h1>REACT</h1>
-            <SocketContext.Provider value={socket}>
                 <Header/>
                 <Players/>
                 <Stats/>
-                {renderHud()}
-            </SocketContext.Provider>           
+                {renderHud()}      
         </div>
     )
 }

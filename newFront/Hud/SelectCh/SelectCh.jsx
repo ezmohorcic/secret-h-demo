@@ -1,5 +1,5 @@
 import React,{useContext, useState} from 'react';
-import { SocketContext } from "../../app.js";
+import { SocketContext } from "../../Indexjs";
 import ChCandidate from "./ChCandidate.jsx"
 import { useDispatch, useSelector } from "react-redux";
 

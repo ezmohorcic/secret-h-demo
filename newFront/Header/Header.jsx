@@ -1,5 +1,5 @@
 import React, {useState, useContext, useCallback, useEffect} from "react";
-import { SocketContext } from "../app";
+import { SocketContext } from "../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
 import {setPlayer_username,soyCeroTrue,soyCeroFalse} from "../redux/actions.js";
 
@@ -10,14 +10,9 @@ function Header()
     const [newName,setNewName]=useState("");
     const dispatch = useDispatch();
     
-    const player_data=useSelector((state)=>state.player_data)
+    const player_data=useSelector((state)=>state.player_data);
     console.log(player_data);
-    const soyCeroView=useSelector((state)=>state.soyCeroView)
-
-    useEffect(()=>
-    {
-        
-    },[socket]);
+    const soyCeroView=useSelector((state)=>state.soyCeroView);
 
     const sendNewName = function ()
     {

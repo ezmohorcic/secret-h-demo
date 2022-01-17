@@ -1,5 +1,5 @@
 import React,{useContext, useEffect, useState} from 'react';
-import { SocketContext } from "../../app.js";
+import { SocketContext } from "../../Indexjs";
 
 function Vote(props)
 {
