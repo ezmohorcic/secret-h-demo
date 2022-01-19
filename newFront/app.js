@@ -29,9 +29,12 @@ function App()
 
         socket.on("new_position",function(msg)
         {
+            console.log("new_position")
+            console.log(msg)
             dispatch(setPlayer_position(msg.position));
             dispatch(setAll_players(msg.players));
             msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
+            socket.emit("set_sv_position",msg.position)
         });
 
         socket.on("new_player",function(msg)

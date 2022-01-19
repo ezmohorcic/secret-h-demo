@@ -133,32 +133,11 @@ const io = socketio(server)
 
 io.on('connection', socket => 
 {
-    /*
-    socket.username = "Anon";
-    socket.position = socket.dataBase.jugadores.length;
-    socket.dataBase.cant_jugadores++;
-    socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
-    io.sockets.emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
-    io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //le envia la informacion propia del jugador a su front
-    */
-
     socket.on("new_room",data=>
     {
 
         const roomdata=createDataBase();
-        console.log("new_room")
-        console.log(socket.id)
-        //socket.username = "Anon";
-        //socket.dataBase= roomdata.dataBase;
-        //socket.position= 0;
-        //socket.roomId= roomdata.roomId;
-        //socket.roomKey= roomdata.roomKey;
-        io.to(socket.id).emit("join_room",roomdata.roomKey)
-        //socket.dataBase.cant_jugadores++;
-        //socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
-        //io.sockets.emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
-        //io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //le envia la informacion propia del jugador a su front
-    
+        io.to(socket.id).emit("join_room",roomdata.roomKey) 
     });
 
     socket.on("join_room",data=>
@@ -169,38 +148,50 @@ io.on('connection', socket =>
         socket.roomId=hash(data);
         socket.dataBase=assignDataBase(data,socket.roomId);
         socket.join(data);
-        console.log(socket.dataBase);
+
         socket.username = "Anon";
         socket.position = socket.dataBase.jugadores.length;
         socket.dataBase.cant_jugadores++;
         socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
+        
         io.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
         io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}) //le envia la informacion propia del jugador a su front
-
+        console.log(socket.dataBase);
     });
 
     socket.on("changed_username",data=>
     {  //desde el front, recibe el server que alguien quiere cambiar su nombre
         console.log("changed_username")
-        console.log(socket.dataBase)
-        socket.username=data.username
+        //console.log(socket.dataBase)
+        socket.username=data.username;
         socket.dataBase.jugadores[socket.position].username=data.username;
-        io.to(socket.roomKey).emit('change_username_on_position', {position:socket.position,username:socket.username}) //envia nuevo nombre del usuario en esa posicion
+        io.to(socket.roomKey).emit('change_username_on_position', {position:socket.position,username:socket.username}); //envia nuevo nombre del usuario en esa posicion
     })
 
     socket.on("disconnecting",data=>
     {
-        /*console.log("disconnecting")
-        var flag=false;
-        socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
-        socket.dataBase.cant_jugadores--;
-        for(var i=0;i<socket.dataBase.jugadores.length;i++)     
+        console.log("disconnecting")
+        //console.log(Object.getOwnPropertyNames(socket))
+        //console.log(socket.dataBase)
+        if(socket.hasOwnProperty("dataBase"))
         {
-            socket.dataBase.jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
-            io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
-        }*/
-
+            console.log("disconnect with dataBase")
+            console.log(socket.position)
+            socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
+            socket.dataBase.cant_jugadores--;
+            console.log(socket.dataBase.jugadores)
+            for(var i=0;i<socket.dataBase.jugadores.length;i++)     
+            {
+                socket.dataBase.jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
+                socket.position=i;
+                console.log(socket.dataBase.jugadores[i])
+                io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
+            }
+            //console.log(socket.dataBase)
+        }
     });
+
+    socket.on("set_sv_position",data=>{socket.position=data});
 
     socket.on("init_game",data=>
     {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
