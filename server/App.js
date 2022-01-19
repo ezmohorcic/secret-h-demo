@@ -159,7 +159,7 @@ io.on('connection', socket =>
         socket.username = "Anon";
         socket.position = socket.dataBase.jugadores.length;
         socket.dataBase.cant_jugadores++;
-        socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) //todavia no se como almacenar esa data que no sea un array con todas las posibles instancias de partreq.params.idas
+        socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) 
         
         io.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
         io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}) //le envia la informacion propia del jugador a su front
@@ -177,11 +177,11 @@ io.on('connection', socket =>
         if(socket.hasOwnProperty("dataBase"))
         {
             socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
-            socket.dataBase.cant_jugadores--;
+            socket.dataBase.cant_jugadores--;   //se va uno, resto
             for(var i=0;i<socket.dataBase.jugadores.length;i++)     
             {
                 socket.dataBase.jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
-                socket.position=i;
+                socket.position=i;  //coloco nueva posicion
                 io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
             }
         }
@@ -403,18 +403,17 @@ function hash(roomKey)
     for(var i=0; i<roomKey.length;i++)
     {rawKey = rawKey + roomKey.charCodeAt(i);}
     return rawKey%20;
-
 }
 
 function createDataBase()
 {
-    const roomKey=makeKey(5);
-    const roomId=hash(roomKey);
-    if(typeof dataBase[roomId] == "object")
+    const roomKey=makeKey(5); //Genero llave
+    const roomId=hash(roomKey); //index
+    if(typeof dataBase[roomId] == "object") //chequeo si esta ese objeto inicializado
     {
-        if(dataBase[roomId].hasOwnProperty(roomKey))
+        if(dataBase[roomId].hasOwnProperty(roomKey)) //si existe esta key
         {
-            if(dataBase[roomId][roomKey].jugadores.length==0)
+            if(dataBase[roomId][roomKey].jugadores.length==0) // Y no esta en uso
             {
                 dataBase[roomId][roomKey]={...obj};
                 return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]};
@@ -422,8 +421,8 @@ function createDataBase()
         }
         else
         {
-            dataBase[roomId][roomKey]={...obj};
-            return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]};
+            dataBase[roomId][roomKey]={...obj}; //creo una copia de obj
+            return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]}; //devuelvo toda la informacion necesaria
         }
     }
     else
