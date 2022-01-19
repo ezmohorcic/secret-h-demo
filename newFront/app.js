@@ -34,7 +34,12 @@ function App()
             msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
         });
 
-        socket.on("new_player",function(msg){dispatch(setAll_players(msg));});
+        socket.on("new_player",function(msg)
+        {
+            console.log("new_player")
+            dispatch(setAll_players(msg));
+           
+        });
 
         socket.on("change_username_on_position",function(msg){dispatch(setOtherPlayer_name(msg))});
   

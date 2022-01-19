@@ -8,7 +8,8 @@ const initialState =
         pos: null,
         socketId: null,          
         rol:"",
-        estado:"vivo"   
+        estado:"vivo",
+        sala:""
     },
     soyCeroView: false,
     stats_turno:{},

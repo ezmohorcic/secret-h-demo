@@ -19,7 +19,7 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<RoomSelect/>}/>   
+          <Route index element={<RoomSelect/>}/>   
           <Route path=":id" element={<App/>}/>
         </Routes>
       </BrowserRouter>
