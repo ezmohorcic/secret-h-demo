@@ -62,7 +62,7 @@ dataBase=new Array(20);
     red                                 //cantidad de leyes fascistas pasadas
     pm_pos                              //posicion del pm del turno
     chancellor                          //obj entero de quien es el chacellor del turno
-    pm
+    pm                                  //pm actual
     skipped                             //gobiernos fallados antes de pasar ley obligatoriamente
     fasc_players                        //fascistas
     h_player                            //hitler
@@ -82,6 +82,7 @@ dataBase=new Array(20);
 
 EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
 
+    join_room,roomKey                                                         |   Se envia la key del nuevo room al cliente
     new_player,database[].jugadores:                                          |   avisa a todos los clientes de un nuevo jugador, envia toda la lista de jugadores
     your_data,{username:,position:,socketId:}:                                |   le envia a al nuevo cliente la data necesaria para logica de front
     change_username_on_position,socket.position:                              |   retransmision del nuevo nombre de un jugador a todos
@@ -101,6 +102,11 @@ EVENTOS DESDE EL SERVER AL CLIENTE: *evento,carga que envia*
     law_done,{selected:}:                                                     |   Se envia la ley que fue elegida por pm+chancellor
     your_rol,rol:                                                             |   Se envia el rol del jugador
     know_fasc,fasc_players,h_player:                                          |   Se envia a los fascistas quienes son y quien es hitler, tambien hitler puede que reciba si hay menos de 7 jugadores
+    assasination,position                                                     |   Manda comando para que se cambie el estado del jugador muerto 
+    assasinated                                                               |   Manda aviso al jugador asesinado  
+    examine_deck,cards                                                        |   Manda comando para mostrar cartas de deck
+    kill                                                                      |   Manda comando para que active power de asesinato al pm actual 
+    pick_candidate                                                            |   Manda comando para que active power de elegir pm al pm actual 
 
 EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 
@@ -113,7 +119,10 @@ EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
     chancellor_desition:                                                      |   descarte y decision final del chancellor
     kill,victim:                                                              |   el pm envia a quien asesino
     pick_candidate,candidate:                                                 |   el pm elige quien es el siguiente pm
-    */
+    new_room                                                                  |   Cliente pide nueva room
+    join_room,roomkey                                                         |   Cliente indica a que room quiere entrar
+    set_sv_position,position                                                  |   Front avisa al socket en sv para actualizar la posicion
+*/
 
 
 app.set('view engine', 'ejs')
@@ -142,8 +151,6 @@ io.on('connection', socket =>
 
     socket.on("join_room",data=>
     {
-        console.log("join_room")
-        
         socket.roomKey = data;
         socket.roomId=hash(data);
         socket.dataBase=assignDataBase(data,socket.roomId);
@@ -156,13 +163,10 @@ io.on('connection', socket =>
         
         io.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
         io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}) //le envia la informacion propia del jugador a su front
-        console.log(socket.dataBase);
     });
 
     socket.on("changed_username",data=>
     {  //desde el front, recibe el server que alguien quiere cambiar su nombre
-        console.log("changed_username")
-        //console.log(socket.dataBase)
         socket.username=data.username;
         socket.dataBase.jugadores[socket.position].username=data.username;
         io.to(socket.roomKey).emit('change_username_on_position', {position:socket.position,username:socket.username}); //envia nuevo nombre del usuario en esa posicion
@@ -170,24 +174,16 @@ io.on('connection', socket =>
 
     socket.on("disconnecting",data=>
     {
-        console.log("disconnecting")
-        //console.log(Object.getOwnPropertyNames(socket))
-        //console.log(socket.dataBase)
         if(socket.hasOwnProperty("dataBase"))
         {
-            console.log("disconnect with dataBase")
-            console.log(socket.position)
             socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
             socket.dataBase.cant_jugadores--;
-            console.log(socket.dataBase.jugadores)
             for(var i=0;i<socket.dataBase.jugadores.length;i++)     
             {
                 socket.dataBase.jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
                 socket.position=i;
-                console.log(socket.dataBase.jugadores[i])
                 io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
             }
-            //console.log(socket.dataBase)
         }
     });
 
@@ -204,7 +200,6 @@ io.on('connection', socket =>
     
     socket.on("selected_chancellor",data=>
     {//el primer ministro escogio chancellor y se inicia votacion
-        console.log("selected_chancelor")
         socket.dataBase.chancellor=data;
         io.to(socket.dataBase.chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
         io.to(socket.roomKey).emit("init_vote",{chancellor:data.chancellor}) //evento para que en todos los front aparezca para votar si/no
@@ -288,7 +283,6 @@ io.on('connection', socket =>
         var winner = determine_winner("just_decided",socket); //si ganan fascistas por cantidad de leyes rojas o liberales por cantidad de leyes azules
         if(winner!=false) //si hay un ganador 
         {
-            console.log(winner)
             if(winner==BLUE){socket.dataBase.jugadores.forEach(element=>
                 {
                     io.to(element.socketId).emit("blue_wins",element.position)
@@ -346,8 +340,7 @@ function powerTurn(data,socket)
             var stats_stack=statStack(socket);
             io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
             io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
-        }
-    
+        } 
     }
     else    //La carta no es roja
     {   
@@ -449,7 +442,7 @@ function assignDataBase(roomKey,roomId)
         return dataBase[roomId][roomKey]
     }
 }
-//[{a:{m:1}},{b:{m:2}},{c:{m:3}}]
+
 function cardStackGenerator(socket)
 {
     socket.dataBase.stack_cartas=shuffle([BLUE,RED,RED,RED,RED,RED,BLUE,RED,BLUE,RED,RED,BLUE,BLUE,RED,RED,RED,BLUE])
