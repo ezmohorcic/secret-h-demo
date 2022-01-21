@@ -182,3 +182,7 @@ function assignDataBase(roomKey,roomId)
 
 Y a partir de este momento, el usuario en posicion 0 va a poder dar inicio al juego en cualquier momento. Y yendo a cada llamada, voy a listar abajo que haria cada una de ellas
 Creo que anotaciones y comentarios dentro del codigo de por si son suficientes para esclarecer cualquier otra duda que pueda generarte la logica, que debo admitir, es algo rebuscada 
+
+```javascrip
+
+```
