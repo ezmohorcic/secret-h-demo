@@ -3,6 +3,8 @@ import { SocketContext } from "../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
 import {setPlayer_username,soyCeroTrue,soyCeroFalse} from "../redux/actions.js";
 
+import './Header.css';
+
 function Header()
 {
 

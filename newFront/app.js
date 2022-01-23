@@ -87,7 +87,6 @@ function App()
     const renderHud=function(){if(alive==true){return <Hud/>}}
     return(
         <div id='appContainer'>
-            <h1>REACT</h1>
                 <Header/>
                 <Players/>
                 <Stats/>
