@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { io, Socket, socketio } from 'socket.io-client';
 import { SocketContext } from '../Indexjs.js';
+
 import './RoomSelect.css';
+import BirdSvg from '../img/BirdSvg.jsx';
 
 export default function RoomSelect()
 {
@@ -13,6 +15,9 @@ export default function RoomSelect()
     const sendRoom=function(){socket.emit("join_room",roomNumber);}
     const joinRoom=function(){socket.emit("join_room",unit);}
     const newRoom=function(){socket.emit("new_room");}
+
+    let today = new Date(),
+    date =today.getDate() + '/' + (today.getMonth() + 1) + '/';
     useEffect(()=>
     {
         socket.on("join_room",function(msg)
@@ -30,26 +35,40 @@ export default function RoomSelect()
                     <div id='imgTitleShell'><img id='imgTitle' src="../img/sh_banner.png" alt="" /></div>
                     <div id='ticketWholeContainer'>
                         <div id='mainTicketPart'>
-                            <p>--  You've recieved your ticket back to the Weimar Republic  --  --  date: xx/xx/193x  --</p>
+                            <p>--  You've recieved your ticket back to the Weimar Republic  --  date: {date}193x  --</p>
                             <div id='mainJoinShell'>
-                                <input type="text" name="roomNumber" placeholder='Room Id' id="idRoomInput" value={roomNumber} onChange={(e)=>setRoomNumber(e.target.value)}/>
-                                <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+roomNumber} onClick={sendRoom}>travel</Link></div>
+                                <input type="text" name="roomNumber" placeholder='Room' id="idRoomInput" value={roomNumber} onChange={(e)=>setRoomNumber(e.target.value)}/>
+                                <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+roomNumber} onClick={sendRoom}>travel</Link></div>            
                             </div> 
                             <p>--  Approx. Time: 50 min  --  Age: +17  -- Qty players: 5-10  --</p>
                         </div>
                         <div id='sideTicketPart'>
                             <p>Will you start this?</p>
-                            <button id='createButton' onClick={newRoom}>Create a Secret Hitler</button>
-                            
+                            {/* <p>Create a</p> */}
+                            <button id='createButton' onClick={newRoom}><img id='newRoomImg' src="../img/output-onlinepngtools.png" alt="" /></button>
                         </div>
-                        
                     </div>
                 </div>
             )
         }
         else
         {
-            return(<div className='joinBShell'><Link className='joinB' to={"/"+unit} onClick={joinRoom}>Join!</Link></div>)
+            return(
+                <div id='roomSelect'>
+                <div id='imgTitleShell'><img id='imgTitle' src="../img/sh_banner.png" alt="" /></div>
+                <div id='ticketWholeContainer'>
+                    <div id='mainTicketPart'>
+                        <p>--  You've recieved your ticket back to the Weimar Republic  --  date: xx/xx/193x  --</p>
+                        <div id='mainJoinShell'>
+                            <input type="text" name="roomNumber" placeholder='Room Id' id="idRoomInput" value={unit} onChange={(e)=>setRoomNumber(e.target.value)}/>
+                            <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+unit} onClick={joinRoom}>travel</Link></div>
+                        </div> 
+                        <p>--  Approx. Time: 50 min  --  Age: +17  -- Qty players: 5-10  --</p>
+                    </div>
+                </div>
+            </div>
+            )
+            // return(<div className='joinBShell'><Link className='joinB' to={"/"+unit} onClick={joinRoom}>Join!</Link></div>)
         }
     }
     return(<div>{roomsview()}</div>)

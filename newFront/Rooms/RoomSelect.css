@@ -6,71 +6,64 @@
     background-color: #fbb969;
 }
 
-#imgTitleShell
-{
-    margin: 0px auto 40px auto;
-    width: 405px;
-    height: 120px;
+#imgTitleShell{
+    margin: 0px auto 0px auto;
+    width: 540px;
+    height: 200px;
 }
-#imgTitle
-{
+#imgTitle{
     margin-top: 30px;
     width: 100%;
-    height: 150px;
+    height: 200px;
 }
 
-#ticketWholeContainer
-{
+#ticketWholeContainer{
     display:flex;
     flex-direction: row;
 
-    width: 412px;
-    height: 156px;
+    width: 540px;
+    height: 186px;
     margin: auto;
 }
 
-#mainTicketPart
-{
-    width: 306px;
-    height: 150px;
+#mainTicketPart{
+    width: 405px;
+    height: 180px;
     margin-top: auto;
     margin-bottom: auto;
 
     background-color: #F2654B;
     border: 3px solid #b8a38d;
 }
-#mainTicketPart >p
-{
+#mainTicketPart >p{
     font-size: 12px;
     text-align: center;
     color: #fde1c0;
-    width: 300px;
+    width: 400px;
     margin-left: auto;
     margin-right: auto;
 }
-#mainJoinShell
-{
+#mainJoinShell{
     display: flex;
     flex-direction: row;
-    width: 222px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 192px;
+    /*margin-left: auto;
+    margin-right: auto;*/
+    margin: 44px auto 44px auto;
 }
 
-#idRoomInput
-{
-    width: 150px;
+#idRoomInput{
+    width: 110px;
     height: 40px;
     font-size: 30px;
    
-    /* margin-right: 20px; */
+     padding-left: 10px; 
     /* border:2px solid #b8a58f; */
     border: none;
     background-color: #fde1c0;
     color:#434243;
 }
-#idRoomInput:focus, textarea:focus
-{
+#idRoomInput:focus, textarea:focus{
     outline:none;
 }
 #idRoomInput::placeholder{
@@ -79,33 +72,33 @@
     color: #b8a58f;
 }
 
-#sideTicketPart
-{
-    width: 150px;
-    height: 100px;
+#sideTicketPart{
+    width: 180px;
+    height: 135px;
     
-    margin: auto 0 auto -28px;
+    margin: auto 0px auto -24px;
     background-color: #b25544;
+    /*#b25544   #fde1bf*/
     border: 3px solid #b7947f;
     border-top: 3px dashed #b7947f;
 
-    background-image: url('../img/wave-haikei_svg.svg');
-
+    /*background-image: url("data:image/svg+xml,%3Csvg id='visual' viewBox='0 0 200 135' width='200' height='135' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1'%3E%3Crect x='0' y='0' width='200' height='135' fill='%23b25544'%3E%3C/rect%3E%3Cpath d='M0 108L6 108L6 97L13 97L13 104L19 104L19 110L26 110L26 116L32 116L32 106L39 106L39 101L45 101L45 106L52 106L52 109L58 109L58 110L65 110L65 100L71 100L71 115L77 115L77 112L84 112L84 101L90 101L90 113L97 113L97 97L103 97L103 105L110 105L110 96L116 96L116 116L123 116L123 99L129 99L129 112L135 112L135 100L142 100L142 115L148 115L148 105L155 105L155 111L161 111L161 102L168 102L168 100L174 100L174 102L181 102L181 114L187 114L187 114L194 114L194 100L200 100L200 98L200 136L200 136L194 136L194 136L187 136L187 136L181 136L181 136L174 136L174 136L168 136L168 136L161 136L161 136L155 136L155 136L148 136L148 136L142 136L142 136L135 136L135 136L129 136L129 136L123 136L123 136L116 136L116 136L110 136L110 136L103 136L103 136L97 136L97 136L90 136L90 136L84 136L84 136L77 136L77 136L71 136L71 136L65 136L65 136L58 136L58 136L52 136L52 136L45 136L45 136L39 136L39 136L32 136L32 136L26 136L26 136L19 136L19 136L13 136L13 136L6 136L6 136L0 136Z' fill='%23fde1c0' stroke-linecap='square' stroke-linejoin='miter'%3E%3C/path%3E%3C/svg%3E");
+    */
     transform: rotate(-90deg);
 }
-#sideTicketPart>p
-{
+#sideTicketPart>p{
     height: 20px;
-    width: 120px;
+    width: 180px;
+
     font-size: 15px;
     color:#413e3f;
-    margin:5px auto 5px auto ;
+    text-align: center;
 
+    margin:5px auto 5px auto ;
 }
 
-#createButton
-{
-    width: 150px;
+#createButton{
+    width: 180px;
     height: 20px;
     margin-top: auto;
     margin-bottom: auto; 
@@ -118,21 +111,28 @@
 }
 #createButton:hover{
     cursor: pointer;
-
-
+}
+#newRoomImg{
+    width: 100px;
+    height: 80px;
+    margin-bottom: 5px;
 }
 
-.joinBShell
-{
+.joinBShell{
     padding-top: 3px;
+    padding-right: 10px;
     width: 70px;
     height: 39px;
     background-color: #fde1c0;   
 }
-.joinB
-{
+
+.joinB{
     font-size: 30px;
     text-decoration: none;
     color:#434243;
-    
+    transition: 1s;
+}
+.joinB:hover{
+    transition: 1s;
+    color:#b25544;
 }
