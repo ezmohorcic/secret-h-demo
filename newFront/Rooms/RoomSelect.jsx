@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { io, Socket, socketio } from 'socket.io-client';
 import { SocketContext } from '../Indexjs.js';
+import './RoomSelect.css';
 
 export default function RoomSelect()
 {
@@ -25,18 +26,30 @@ export default function RoomSelect()
         if(unit=="")
         {
             return(
-                <div id='roomselectContainer'>
-                    <h1>Secret Hitler!</h1>
-                    <input type="text" name="roomNumber" placeholder='Room Number' id="idRoom" value={roomNumber} onChange={(e)=>setRoomNumber(e.target.value)}/>
-                    <Link id='joinButton' to={"/"+roomNumber} onClick={sendRoom}>Join!</Link>
-                    <br /><br />
-                    <button id='createButton' onClick={newRoom}>Create...</button>
+                <div id='roomSelect'>
+                    <div id='imgTitleShell'><img id='imgTitle' src="../img/sh_banner.png" alt="" /></div>
+                    <div id='ticketWholeContainer'>
+                        <div id='mainTicketPart'>
+                            <p>--  You've recieved your ticket back to the Weimar Republic  --  --  date: xx/xx/193x  --</p>
+                            <div id='mainJoinShell'>
+                                <input type="text" name="roomNumber" placeholder='Room Id' id="idRoomInput" value={roomNumber} onChange={(e)=>setRoomNumber(e.target.value)}/>
+                                <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+roomNumber} onClick={sendRoom}>travel</Link></div>
+                            </div> 
+                            <p>--  Approx. Time: 50 min  --  Age: +17  -- Qty players: 5-10  --</p>
+                        </div>
+                        <div id='sideTicketPart'>
+                            <p>Will you start this?</p>
+                            <button id='createButton' onClick={newRoom}>Create a Secret Hitler</button>
+                            
+                        </div>
+                        
+                    </div>
                 </div>
             )
         }
         else
         {
-            return(<Link to={"/"+unit} onClick={joinRoom}>Join!</Link>)
+            return(<div className='joinBShell'><Link className='joinB' to={"/"+unit} onClick={joinRoom}>Join!</Link></div>)
         }
     }
     return(<div>{roomsview()}</div>)

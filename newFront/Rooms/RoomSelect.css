@@ -1,0 +1,138 @@
+#roomSelect
+{
+    height: 400px;
+    width: 100%;
+    padding-bottom: 100px;
+    background-color: #fbb969;
+}
+
+#imgTitleShell
+{
+    margin: 0px auto 40px auto;
+    width: 405px;
+    height: 120px;
+}
+#imgTitle
+{
+    margin-top: 30px;
+    width: 100%;
+    height: 150px;
+}
+
+#ticketWholeContainer
+{
+    display:flex;
+    flex-direction: row;
+
+    width: 412px;
+    height: 156px;
+    margin: auto;
+}
+
+#mainTicketPart
+{
+    width: 306px;
+    height: 150px;
+    margin-top: auto;
+    margin-bottom: auto;
+
+    background-color: #F2654B;
+    border: 3px solid #b8a38d;
+}
+#mainTicketPart >p
+{
+    font-size: 12px;
+    text-align: center;
+    color: #fde1c0;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#mainJoinShell
+{
+    display: flex;
+    flex-direction: row;
+    width: 222px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#idRoomInput
+{
+    width: 150px;
+    height: 40px;
+    font-size: 30px;
+   
+    /* margin-right: 20px; */
+    /* border:2px solid #b8a58f; */
+    border: none;
+    background-color: #fde1c0;
+    color:#434243;
+}
+#idRoomInput:focus, textarea:focus
+{
+    outline:none;
+}
+#idRoomInput::placeholder{
+    text-align: center;
+    opacity: 1;
+    color: #b8a58f;
+}
+
+#sideTicketPart
+{
+    width: 150px;
+    height: 100px;
+    
+    margin: auto 0 auto -28px;
+    background-color: #b25544;
+    border: 3px solid #b7947f;
+    border-top: 3px dashed #b7947f;
+
+    background-image: url('../img/wave-haikei_svg.svg');
+
+    transform: rotate(-90deg);
+}
+#sideTicketPart>p
+{
+    height: 20px;
+    width: 120px;
+    font-size: 15px;
+    color:#413e3f;
+    margin:5px auto 5px auto ;
+
+}
+
+#createButton
+{
+    width: 150px;
+    height: 20px;
+    margin-top: auto;
+    margin-bottom: auto; 
+
+    color: #b8a58f;
+    background-color: transparent;
+    border: none;
+
+    transition: 1s;
+}
+#createButton:hover{
+    cursor: pointer;
+
+
+}
+
+.joinBShell
+{
+    padding-top: 3px;
+    width: 70px;
+    height: 39px;
+    background-color: #fde1c0;   
+}
+.joinB
+{
+    font-size: 30px;
+    text-decoration: none;
+    color:#434243;
+    
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { io, Socket, socketio } from 'socket.io-client';
+import './';
 
 
 export default function RoomPlay()

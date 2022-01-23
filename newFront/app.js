@@ -7,7 +7,7 @@ import Hud from "./Hud/Hud.jsx"
 import { useDispatch, useSelector } from "react-redux";
 import { SocketContext } from './Indexjs.js';
 import {setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols} from "./redux/actions.js"
-
+import './app.css';
 /*const socket = io.connect('http://localhost:3000/')
 export const SocketContext = React.createContext()*/
 
