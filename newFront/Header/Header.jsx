@@ -39,8 +39,8 @@ function Header()
         <div id="headerContainer" >
             <div id='imgHeaderShell'><img id='imgHeader' src="../img/output-onlinepngtools.png" alt="" /></div>
             <div id="nameChangeContainer">
-                <input type="text" name="newName" id="newNameInput" value={newName} onChange={e =>{setNewName(e.target.value)}}/>
-                <button id="sendNewName" onClick={sendNewName}>Nuevo Nombre</button>
+                <input type="text" name="newName" id="newNameInput" placeholder="New Name" value={newName} onChange={e =>{setNewName(e.target.value)}}/>
+                <button id="sendNewName" onClick={sendNewName}>Send Name</button>
             </div> 
             <div id="infoContainer">
                 <p>Name:{player_data.username}</p>
