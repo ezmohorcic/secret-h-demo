@@ -1,0 +1,16 @@
+#playersContainer{
+
+    width: 46%;
+    height: 200px;
+    margin: 0 2% 30px 2%;
+    
+}
+
+#playersUl{
+    display: flex;
+    flex-wrap: wrap;
+    
+    list-style: none;
+    width: 100%;
+    height: 100%;
+}

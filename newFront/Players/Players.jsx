@@ -2,7 +2,7 @@ import React from "react";
 import Player from "./Player/Player.jsx";
 import { useDispatch, useSelector } from "react-redux";
 
-
+import './Players.css';
 
 function Players()
 {
@@ -10,10 +10,11 @@ function Players()
     const all_players=useSelector((state)=>state.all_players)
     const player_data=useSelector((state)=>state.player_data)
     const knownRols=useSelector((state)=>state.knownRols)
+    console.log(all_players);
     
     var players=all_players.map(element=>
         {
-            return(<Player qty={all_players.length} knownRols={knownRols} your_rol={player_data.rol} player={element}/>)
+            return(<Player key={'player'+element.position} qty={all_players.length} knownRols={knownRols} your_rol={player_data.rol} player={element}/>)
         });
     return(
         <div id="playersContainer">

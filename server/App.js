@@ -18,7 +18,7 @@ const EXAMINE_PLAYER="examine_player";
 const PICK_CANDIDATE="pick_candidate";
 
 
-var obj=
+/*var obj=
 {
     jugadores:[],
     cant_jugadores:0,
@@ -40,7 +40,35 @@ var obj=
             positivos:0,
             total:0
         }
+}*/
+
+class roomDataBase
+{
+    constructor()
+    {
+        this.jugadores=[];
+        this.cant_jugadores=0;
+        this.stack_cartas=null;
+        this.stack_descartados=[];
+        this.blue=0;
+        this.red=0;
+        this.pm_pos=0;
+        this.chancellor={};
+        this.pm={};
+        this.skipped=0;
+        this.fasc_players=[];
+        this.h_player={};
+        this.board={};
+        this.last_elected={};
+        this.mod_total=0;
+        this.votos=
+        {
+            positivos:0,
+            total:0
+        }
+    }
 }
+
 dataBase=new Array(20);
 
 
@@ -161,8 +189,10 @@ io.on('connection', socket =>
         socket.dataBase.cant_jugadores++;
         socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}) 
         
-        io.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
-        io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}) //le envia la informacion propia del jugador a su front
+        console.log("your_data");
+        console.log(socket.id)
+        io.to(socket.id).emit("your_data",{all_players:socket.dataBase.jugadores,userData:{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}}) //le envia la informacion propia del jugador a su front
+        socket.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
     });
 
     socket.on("changed_username",data=>
@@ -415,20 +445,24 @@ function createDataBase()
         {
             if(dataBase[roomId][roomKey].jugadores.length==0) // Y no esta en uso
             {
-                dataBase[roomId][roomKey]={...obj};
+                dataBase[roomId][roomKey]= new roomDataBase();
+                console.log(dataBase[roomId][roomKey])
                 return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]};
             }
         }
         else
         {
-            dataBase[roomId][roomKey]={...obj}; //creo una copia de obj
+            dataBase[roomId][roomKey]=new roomDataBase(); //creo una copia de obj
+            console.log(dataBase[roomId][roomKey])
             return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]}; //devuelvo toda la informacion necesaria
+            
         }
     }
     else
     {
         dataBase[roomId]={};
-        dataBase[roomId][roomKey]={...obj}
+        dataBase[roomId][roomKey]=new roomDataBase();
+        console.log(dataBase[roomId][roomKey])
         return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]};
     }
     

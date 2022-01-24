@@ -71,7 +71,7 @@
     border: none;
     background-color: #F2654B;
     color:#434243;
-    box-shadow: 0px -20px #fde1c0 inset
+    box-shadow: 0px -20px #fde1c0 inset;
 }
 #idRoomInput:focus, textarea:focus{
     outline:none;

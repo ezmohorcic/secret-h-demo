@@ -1,5 +1,7 @@
 body{
     background-color: #fbb969;
+    padding: 0;
+    margin: 0;
 }
 
 #appContainer

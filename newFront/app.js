@@ -23,8 +23,9 @@ function App()
 
         socket.on("your_data",function(msg)
         {
-            dispatch(setAllPlayer_data(msg))
-            msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false));
+            dispatch(setAllPlayer_data(msg.userData))
+            dispatch(setAll_players(msg.all_players))
+            msg.userData.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false));
         });
 
         socket.on("new_position",function(msg)
@@ -39,7 +40,7 @@ function App()
 
         socket.on("new_player",function(msg)
         {
-            console.log("new_player")
+            console.log("new_player");
             dispatch(setAll_players(msg));
            
         });
