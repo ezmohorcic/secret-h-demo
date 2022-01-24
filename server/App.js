@@ -159,7 +159,7 @@ io.on('connection', socket =>
         socket.username = "Anon";
         socket.position = socket.dataBase.jugadores.length;
         socket.dataBase.cant_jugadores++;
-        socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:""}) 
+        socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}) 
         
         io.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
         io.to(socket.id).emit("your_data",{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}) //le envia la informacion propia del jugador a su front

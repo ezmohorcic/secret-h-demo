@@ -37,16 +37,19 @@ function Header()
     };
     return(
         <div id="headerContainer" >
-            <div id="infoContainer">
-                <p>{player_data.username}</p>
-                <p>{player_data.position}</p>
-                <p>{player_data.rol}</p>
-                <p>{player_data.estado}</p>
-            </div>
+            <div id='imgHeaderShell'><img id='imgHeader' src="../img/output-onlinepngtools.png" alt="" /></div>
             <div id="nameChangeContainer">
                 <input type="text" name="newName" id="newNameInput" value={newName} onChange={e =>{setNewName(e.target.value)}}/>
                 <button id="sendNewName" onClick={sendNewName}>Nuevo Nombre</button>
-            </div>   
+            </div> 
+            <div id="infoContainer">
+                <p>Name:{player_data.username}</p>
+                <p>position:{player_data.position}</p>
+                <p>Rol:{player_data.rol}</p>
+                <p>State:{player_data.estado}</p>
+                <p>Wagon:{player_data.sala}</p>
+            </div>
+              
             {initButton()}
         </div>
         

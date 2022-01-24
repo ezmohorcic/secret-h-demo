@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 
 import './RoomSelect.css';
-import BirdSvg from '../img/BirdSvg.jsx';
 
 export default function RoomSelect()
 {
