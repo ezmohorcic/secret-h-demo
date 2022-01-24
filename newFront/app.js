@@ -18,11 +18,14 @@ function App()
     const alive= useSelector((state)=>state.alive);
 
     useEffect(()=>
-    {
+    {   
+        console.log("useEffect")
         socket.on("connect_error", (err) => {console.log(`connect_error due to ${err.message}`)});
 
         socket.on("your_data",function(msg)
         {
+            console.log("your_data")
+            console.log(msg.userData);
             dispatch(setAllPlayer_data(msg.userData))
             dispatch(setAll_players(msg.all_players))
             msg.userData.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false));
@@ -81,6 +84,11 @@ function App()
         {
             alert("RED WINS");
             msg==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
+        });
+
+        socket.on("you_chancellor",function(msg)
+        {
+            alarm()
         });
 
     },[socket]);

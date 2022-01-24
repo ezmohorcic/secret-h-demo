@@ -1,15 +1,20 @@
 import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../Indexjs";
+import { useDispatch } from "react-redux";
 
 import CardSelect from "./cardSelect/CardSelect.jsx";
 import PowerSelect from "./PowerSelect/PowerSelect.jsx";
 import SelectCh from "./SelectCh/SelectCh.jsx";
 import Vote from "./Vote/Vote.jsx";
 
+import {setYou_chancelor,setNext_chancelor} from '../redux/actions.js';
+import { useSelector } from "react-redux";
+
+
 function Hud()
 {
     const socket = useContext(SocketContext);
-
+    const dispatch = useDispatch();
     
     const [voteD,setVoteD]=useState(false);
     const [viewSelectedCh,setViewSelectedCh]=useState(false);
@@ -19,7 +24,13 @@ function Hud()
     {
         socket.on("asigned_pm",function(msg){setViewSelectedCh(true);});
 
-        socket.on("init_vote",function(msg){setVoteD(true);});
+        socket.on("init_vote",function(msg) 
+        {
+            console.log(msg)
+            console.log(msg.chancellor)
+            setVoteD(true);
+            dispatch(setNext_chancelor(msg));
+        });
 
         socket.on("pm_desition_client",function(msg){setViewCardSelect([true,msg.cartas,"pm_desition"]);});
 

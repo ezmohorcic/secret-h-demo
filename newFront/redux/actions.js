@@ -6,6 +6,12 @@ export function setAllPlayer_data (payload)
     return({type:"YOUR_DATA",payload})
 }
 
+export function setYou_chancelor(payload)
+{
+    console.log("setYou_chacellor")
+    return({type:"YOU_CHANCELLOR",payload})
+}
+
 export function setPlayer_position(payload)
 {
     console.log(payload)
@@ -84,4 +90,10 @@ export function setKnownRols(payload)
 export function setNext_pm(payload)
 {
     return({type:"NEXT_PM",payload})
+}
+
+export function setNext_chancelor(payload)
+{
+    console.log("setNext_chacellor")
+    return({type:"NEXT_CHANCELLOR",payload})
 }

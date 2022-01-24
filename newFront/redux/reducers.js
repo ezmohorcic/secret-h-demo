@@ -9,7 +9,8 @@ const initialState =
         socketId: null,          
         rol:"",
         estado:"vivo",
-        sala:""
+        sala:"",
+        chancelor:false
     },
     soyCeroView: false,
     stats_turno:{},
@@ -51,6 +52,9 @@ function player_data(state=initialState.player_data,action)
     else if(action.type=="YOUR_ROL"){return {...state,rol:action.payload}}
     else if(action.type=="NEW_POSITION"){return {...state,position:action.payload}}
     else if(action.type=="NEW_USERNAME"){return {...state,username:action.payload}}
+    else if(action.type=="YOU_CHANCELLOR")
+    {console.log("reducer you_chacelor")
+        return {...state,chancelor:action.payload}}
     else {return state}
 }
 
@@ -84,6 +88,14 @@ function next_pm(state={},action)
     if(action.type=="NEXT_PM"){return action.payload;}
     else return state;
 }
+function next_chancelor(state={chancellor:{position:-1}},action)
+{
+
+    if(action.type=="NEXT_CHANCELLOR")
+    {    console.log("reducer next_chacelor")
+        return action.payload;}
+    else return state;
+}
 
 const rootReducer=combineReducers({
     all_players,
@@ -92,7 +104,8 @@ const rootReducer=combineReducers({
     stats_turno,
     knownRols,
     alive,
-    next_pm
+    next_pm,
+    next_chancelor
 });
 
 export default rootReducer;

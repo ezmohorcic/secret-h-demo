@@ -28,7 +28,7 @@ function Header()
 
     const initButton = function()
     {
-        
+
         if(soyCeroView)
         {
             return(

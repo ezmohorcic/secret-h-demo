@@ -187,11 +187,12 @@ io.on('connection', socket =>
         socket.username = "Anon";
         socket.position = socket.dataBase.jugadores.length;
         socket.dataBase.cant_jugadores++;
-        socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}) 
+        socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}) 
         
         console.log("your_data");
         console.log(socket.id)
-        io.to(socket.id).emit("your_data",{all_players:socket.dataBase.jugadores,userData:{username:socket.username,position:socket.position,socketId:socket.id,estado:"vivo",rol:"",sala:socket.roomKey}}) //le envia la informacion propia del jugador a su front
+        io.to(socket.id).emit("your_data",{all_players:socket.dataBase.jugadores,userData:{username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}}) //le envia la informacion propia del jugador a su front
+        console.log("mande your_data")
         socket.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
     });
 
@@ -231,8 +232,9 @@ io.on('connection', socket =>
     socket.on("selected_chancellor",data=>
     {//el primer ministro escogio chancellor y se inicia votacion
         socket.dataBase.chancellor=data;
-        io.to(socket.dataBase.chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
-        io.to(socket.roomKey).emit("init_vote",{chancellor:data.chancellor}) //evento para que en todos los front aparezca para votar si/no
+        console.log(data);
+        //io.to(socket.dataBase.chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
+        io.to(socket.roomKey).emit("init_vote",{chancellor:data}) //evento para que en todos los front aparezca para votar si/no
         
     });
 
