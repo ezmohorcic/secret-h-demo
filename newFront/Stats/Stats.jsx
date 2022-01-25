@@ -2,10 +2,12 @@ import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
 
+import './Stats.css';
+
 const BLUE="blue"; //ley liberal
 const RED="red"; //ley fascista
 
-function Stats(props)
+function Stats()
 {
     const socket = useContext(SocketContext);
 
@@ -23,15 +25,33 @@ function Stats(props)
 
     var blueLaws=[];
     var redLaws=[];
-    for(var i=0;i<blue;i++){blueLaws.push(<div className='blueLawShell'><p>Blue</p></div>)}
-    for(var i=0;i<red;i++){redLaws.push(<div className='redLawShell'><p>Red</p></div>)}
+    var skipped=[];
+
+    for(var i=0;i<blue;i++){blueLaws.push(<div className="blueLaw"></div>)}
+    for(var i=0;i<red;i++){redLaws.push(<div className="redLaw"></div>)}
+    for(var i=0;i<stats_turno.skipped_turns;i++){blueLaws.push(<div className='skippedTurns'><div className="skippedDot"></div></div>)}
+
+
     return(
-        <div className="lawLayourContainer">
-            <div className="lawLayoutShell">layout azul: {blueLaws}</div>
-            <div className="lawLayoutShell">layout rojo: {redLaws}</div>
-            <div className='stackLayoutShell' id='mainStackLayout'>cartas en juego:{stats_turno.cant_left}</div>
-            <div className='stackLayoutShell' id='discardStackLayout'>cartas descartadas:{stats_turno.cant_descart}</div>
-            <div id='skippedTurnsShell'>Gobiernos no pactados:{stats_turno.skipped_turns}</div>
+        <div id="lawLayourContainer">
+            <div id="lawsCounters">
+                <div className='blueLawShell'>{blueLaws}</div>
+                <div className='redLawShell'>{redLaws}</div>
+            </div>
+
+            <div id="stacksCounters">
+                <div className='stackLayoutShell' id='mainStackLayout'>
+                    <p>cartas en juego:</p>   
+                    {stats_turno.cant_left}
+                </div>
+                <div className='stackLayoutShell' id='discardStackLayout'>
+                    <p>cartas descartadas:</p> 
+                    {stats_turno.cant_descart}
+                </div>
+                <div id='skippedTurnsShell'>Gobiernos no pactados:{stats_turno.skipped_turns}</div>
+            </div>
+            
+            
         </div>
     )
 }

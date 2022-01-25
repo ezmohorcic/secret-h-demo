@@ -6,5 +6,7 @@ body{
 
 #appContainer
 {
+    display: flex;
+    flex-wrap: wrap;
     background-color: #fbb969;
 }
