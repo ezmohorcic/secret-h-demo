@@ -9,7 +9,7 @@ import Vote from "./Vote/Vote.jsx";
 
 import {setYou_chancelor,setNext_chancelor} from '../redux/actions.js';
 import { useSelector } from "react-redux";
-
+import './Hud.css';
 
 function Hud()
 {
@@ -38,16 +38,16 @@ function Hud()
 
     },[socket]);
 
-    let viewVote= function(){if(voteD) return(<div className="hudShell"><Vote setVoteD={setVoteD}/></div>)};
-    let viewSelectionCh= function(){if(viewSelectedCh==true) return(<div className="hudShell"><SelectCh setViewSelectedCh={setViewSelectedCh}/></div>)}
-    let viewCardSelection= function(){if(viewCardSelect[0]) return <div className="hudShell"><CardSelect setViewCardSelect={setViewCardSelect} cards={viewCardSelect[1]} emiting={viewCardSelect[2]}/></div>}
+    let viewVote= function(){if(voteD) return(<Vote setVoteD={setVoteD}/>)};
+    let viewSelectionCh= function(){if(viewSelectedCh==true) return(<SelectCh setViewSelectedCh={setViewSelectedCh}/>)}
+    let viewCardSelection= function(){if(viewCardSelect[0]) return <CardSelect setViewCardSelect={setViewCardSelect} cards={viewCardSelect[1]} emiting={viewCardSelect[2]}/>}
 
     return(
         <div id="HudContainer">
-            {viewVote()}
-            {viewSelectionCh()}
-            {viewCardSelection()}
-            <PowerSelect/>
+            <div className="hudShell">{viewVote()}</div>
+            <div className="hudShell">{viewSelectionCh()}</div>
+            <div className="hudShell">{viewCardSelection()}</div>
+            <div className="hudShell"><PowerSelect/></div>
 
         </div>
     )

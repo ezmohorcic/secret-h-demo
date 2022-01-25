@@ -1,0 +1,13 @@
+#VoteContainer{
+    width: 90%;
+    height: 270px;
+    margin: 15px 5% 15px 5%;
+}
+
+.voteCard{
+    width: 45%;
+    height: 200px;
+    margin: 35px 2.5% 35px 2.5%;
+
+    background-color: #f6d399;
+}

@@ -14,8 +14,14 @@ export default function RoomSelect()
     const [roomNumber,setRoomNumber]=useState("");
     const [unit,setUnit]=useState('');
     
-    const sendRoom=function(){socket.emit("join_room",roomNumber);}
-    const joinRoom=function(){socket.emit("join_room",unit);}
+    const sendRoom=function()
+    {
+        if(roomNumber!=""){socket.emit("join_room",roomNumber);}
+    }
+    const joinRoom=function()
+    {
+        if(unit!=""){socket.emit("join_room",unit);}
+    }
     const newRoom=function(){socket.emit("new_room");}
 
     let today = new Date(),

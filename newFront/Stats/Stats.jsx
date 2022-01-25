@@ -1,6 +1,8 @@
 import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSkull, faDove} from '@fortawesome/free-solid-svg-icons';
 
 import './Stats.css';
 
@@ -27,28 +29,51 @@ function Stats()
     var redLaws=[];
     var skipped=[];
 
-    for(var i=0;i<blue;i++){blueLaws.push(<div className="blueLaw"></div>)}
-    for(var i=0;i<red;i++){redLaws.push(<div className="redLaw"></div>)}
-    for(var i=0;i<stats_turno.skipped_turns;i++){blueLaws.push(<div className='skippedTurns'><div className="skippedDot"></div></div>)}
+    for(var i=0;i<6;i++)
+    {
+        if(i<blue){blueLaws.push(<div className="blueLaw"><div className="blueIcon"><FontAwesomeIcon className="fontAweDove" icon={faDove}/></div></div>)}
+        else{blueLaws.push(<div className="blueLaw"></div>)}
+    }
+    for(var i=0;i<5;i++)
+    {
+        if(i<red){redLaws.push(<div className="redLaw"> <div className="redIcon"><FontAwesomeIcon className="fontAweSkull" icon={faSkull}/></div></div>)}
+        else{{redLaws.push(<div className="redLaw"></div>)}}
+    }
+
+    //for(var i=0;i<blue;i++){blueLaws.push(<div className="blueLaw"><FontAwesomeIcon icon={faDove}/></div>)}
+    //for(var i=0;i<red;i++){redLaws.push(<div className="redLaw"><FontAwesomeIcon icon={faSkull}/></div>)}
+    for(var i=0;i<stats_turno.skipped_turns;i++){blueLaws.push(<div className="skippedDot"></div>)}
 
 
     return(
         <div id="lawLayourContainer">
             <div id="lawsCounters">
-                <div className='blueLawShell'>{blueLaws}</div>
-                <div className='redLawShell'>{redLaws}</div>
+                <div className='blueLawShell'><div id="thinBlueBorder"><div id="blueBorder">{blueLaws}</div></div></div>
+                <div className='redLawShell'><div id="thinRedBorder"><div id="redBorder">{redLaws}</div></div></div>
             </div>
 
             <div id="stacksCounters">
                 <div className='stackLayoutShell' id='mainStackLayout'>
-                    <p>cartas en juego:</p>   
-                    {stats_turno.cant_left}
+                    <div id="stackBorder">
+                        <p>Stack</p>   
+                        {stats_turno.cant_left}
+                    </div>
+                    
                 </div>
                 <div className='stackLayoutShell' id='discardStackLayout'>
-                    <p>cartas descartadas:</p> 
-                    {stats_turno.cant_descart}
+                    <div id="stackBorder">
+                        <p>Discard</p> 
+                        {stats_turno.cant_descart}
+                    </div>
                 </div>
-                <div id='skippedTurnsShell'>Gobiernos no pactados:{stats_turno.skipped_turns}</div>
+                <div id='skippedTurnsShell'>
+                    <div id="borderSkipped">
+                        <p>Skipped Goverments</p>
+                        <div className='skippedTurns'>
+                            {stats_turno.skipped_turns}
+                        </div> 
+                    </div>
+                </div>
             </div>
             
             

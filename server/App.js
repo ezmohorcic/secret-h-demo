@@ -156,7 +156,7 @@ EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 app.set('view engine', 'ejs')
 app.use(express.static('../newFront/'))
 
-app.get("/",(req,res)=>
+app.get("*",(req,res)=>
 {
     res.render("index")
 })
@@ -215,6 +215,7 @@ io.on('connection', socket =>
                 socket.position=i;  //coloco nueva posicion
                 io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
             }
+            socket.leave(socket.roomKey);
         }
     });
 

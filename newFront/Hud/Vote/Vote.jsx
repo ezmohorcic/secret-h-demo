@@ -1,5 +1,6 @@
 import React,{useContext, useEffect, useState} from 'react';
 import { SocketContext } from "../../Indexjs";
+import './Vote.css';
 
 function Vote(props)
 {
@@ -19,10 +20,22 @@ function Vote(props)
     return(
         <div id="VoteContainer">
             <div className="voteCard">
-                <button id='voteNo' onClick={onVoteNo}>NEIN!</button>
+                <button id='voteNo' onClick={onVoteNo}>
+                    <div id="borderNo">
+                        <div id="thinBorderNo">
+                            NEIN!
+                        </div>
+                    </div>
+                </button>
             </div>
             <div className="voteCard">
-                <button id='voteYes' onClick={onVoteYes}>JA!</button>
+                <button id='voteYes' onClick={onVoteYes}>      
+                    <div id="borderYes">
+                        <div id="thinBorderYes">
+                            JA!
+                        </div>
+                    </div>
+                </button>
             </div>
         </div>
     )
