@@ -1,0 +1,55 @@
+.CardShell{
+    width: 120px;
+    height: 95px;
+    margin: 5px 0px 5px 0px;
+    box-shadow: 5px 5px #8e4336;
+}
+.CardShell:hover{
+    cursor: pointer;
+}
+.CardShell:hover>.buttonDiscard>.cardIcon{
+    color: #f8c283;
+}
+
+.blueCard{
+    
+    background-color: #5ca6c5;
+}
+.blueBut{
+    border: 5px solid #394f76; 
+}
+
+.redCard{
+    background-color: #fa6923;
+}
+.redBut{
+    border: 5px solid #d53f1e;
+}   
+
+.buttonDiscard{
+    width: 90px;
+    height: 65px;
+    margin: 15px;
+    padding: 0;
+
+    background-color: transparent;
+
+    border-radius: 5px;
+}
+.buttonDiscard:hover{
+    cursor: pointer;
+}
+.buttonDiscard:hover>.cardIcon{
+    color: #f8c283;
+    transition: 0.2s;
+}
+.cardIcon{
+    width: 45px;
+    height:45px;
+    margin: 0px 17.5px 5px 17.5px;
+
+    text-align: center;
+    font-size: 45px;
+
+    transition: 2s;
+}

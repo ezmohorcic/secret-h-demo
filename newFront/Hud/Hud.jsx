@@ -18,7 +18,7 @@ function Hud()
     
     const [voteD,setVoteD]=useState(false);
     const [viewSelectedCh,setViewSelectedCh]=useState(false);
-    const [viewCardSelect,setViewCardSelect]=useState([false,[]]);
+    const [viewCardSelect,setViewCardSelect]=useState([false,[],""]);
 
     useEffect(()=>
     {
@@ -46,10 +46,8 @@ function Hud()
         <div id="HudContainer">
             {viewVote()}
             {viewSelectionCh()}
-            {/* <div className="hudShell"><SelectCh setViewSelectedCh={setViewSelectedCh}/></div> */}
             {viewCardSelection()}
             <div className="hudShell"><PowerSelect/></div>
-
         </div>
     )
 }

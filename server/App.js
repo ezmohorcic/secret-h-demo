@@ -190,7 +190,7 @@ io.on('connection', socket =>
         socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}) 
         
         console.log("your_data");
-        console.log(socket.id)
+        console.log(socket.dataBase)
         io.to(socket.id).emit("your_data",{all_players:socket.dataBase.jugadores,userData:{username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}}) //le envia la informacion propia del jugador a su front
         console.log("mande your_data")
         socket.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion

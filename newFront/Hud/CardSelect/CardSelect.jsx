@@ -2,6 +2,8 @@ import React, {useState, useContext, useEffect} from 'react';
 import { SocketContext } from "../../Indexjs";
 import Card from "./Card.jsx";
 
+import './CardSelect.css';
+
 function CardSelect(props)
 {
     const socket = useContext(SocketContext);
@@ -18,7 +20,15 @@ function CardSelect(props)
             />
         )
     });
-    return(<div id='CardSelectContainer'>{cards}</div>)
+    return(<div id='CardSelectContainer'>
+        <div id="CardSlFlavor">
+            <p>Select your discard</p>
+        </div>
+        <div id="CardsShell">
+            {cards}
+        </div>
+
+        </div>)
 }
 
 export default CardSelect;

@@ -7,6 +7,7 @@ import DeckExam from "./DeckExam.jsx";
 import PlayerExam from "./PlayerExam.jsx";
 import PmSelect from "./PmSelect.jsx";
 
+import './PowerSelect.css';
 
 function PowerSelect()
 {

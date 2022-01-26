@@ -1,0 +1,33 @@
+#CardSelectContainer{
+    display:flex;
+    flex-wrap: column;
+    
+    width: 280px;
+    height: 320px;
+    margin: 0px 10px 10px 10px;
+}
+#CardSlFlavor{
+    height: 35px;
+    width: 110px;
+    margin: 0px 20px 10px 20px;
+
+    text-align: center;
+    font-size: 15px;
+    font-weight: bolder;
+    font-style: italic;
+
+    color: #fde1c0;
+    box-shadow: 0px -7px #b25544 inset;
+}
+#CardsShell{
+    height: 200px;
+    width: 260px;
+    padding: 5px;
+
+    /* background-color: #F2654B;
+    box-shadow: 5px 5px #8e4336;
+
+    border: 2px dashed  #b25544;
+    border-right: 2px dashed  #8e4336;
+    border-bottom: 2px dashed  #8e4336; */
+}
