@@ -23,7 +23,7 @@ function Vote(props)
                 <button id='voteNo' onClick={onVoteNo}>
                     <div id="borderNo">
                         <div id="thinBorderNo">
-                            NEIN!
+                           <p id="nein">NEIN!</p> 
                         </div>
                     </div>
                 </button>
@@ -32,7 +32,7 @@ function Vote(props)
                 <button id='voteYes' onClick={onVoteYes}>      
                     <div id="borderYes">
                         <div id="thinBorderYes">
-                            JA!
+                           <p>JA!</p>
                         </div>
                     </div>
                 </button>

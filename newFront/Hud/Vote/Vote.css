@@ -1,13 +1,101 @@
 #VoteContainer{
-    width: 90%;
+    display:flex;
+    flex-direction: row;
+    
+    width: 280px;
     height: 270px;
-    margin: 15px 5% 15px 5%;
+    margin: 15px 10px 15px 10px;
 }
-
 .voteCard{
-    width: 45%;
+    position: relative;
+    top:0;
+
+    width: 130px;
     height: 200px;
-    margin: 35px 2.5% 35px 2.5%;
+    margin: 35px 5px 35px 5px;
 
     background-color: #f6d399;
+    box-shadow: 5px 5px #8e4336;
+
+    border-radius: 3px;
+
+    transition: 0.2s;
+}
+.voteCard:hover{
+    top:-30px;
+}
+
+
+#voteNo,#voteYes{
+    width: 130px;
+    height: 200px;
+    padding: 0;
+
+    background-color: #f6d399;
+
+    border: none;
+    border-radius: 3px;
+}
+#borderNo,#borderYes{
+    width: 90px;
+    height: 160px;
+    margin: 10px;
+
+    text-align: center;
+    color:#161d1e;
+
+    border: 10px solid #6b5041;
+    border-radius: 5px;
+}
+#thinBorderNo{
+    width: 86px;
+    height: 156px;
+    margin: 2px;
+
+    background-color: #6b5041;
+}
+#thinBorderNo>p{
+    position: relative;
+    top: 55px;
+    left: -20px;
+
+    width: 120px;
+    height: 40px;
+    margin: auto;
+    margin-bottom: 30px;
+
+    text-align: center;
+    font-size: 40px;
+
+    color: #f6d399;
+
+    transform: rotate(-90deg);
+}
+
+
+#thinBorderYes{
+    width: 82px;
+    height: 152px;
+    margin: 2px;
+
+    border:2px solid #6b5041;
+    background-color: #f6d399;
+}
+
+#thinBorderYes>p{
+    position: relative;
+    top: 55px;
+    left: -20px;
+
+    width: 120px;
+    height: 40px;
+    margin: auto;
+    margin-bottom: 30px;
+
+    text-align: center;
+    font-size: 40px;
+
+    color: #6b5041;
+
+    transform: rotate(-90deg);
 }

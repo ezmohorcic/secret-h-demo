@@ -154,7 +154,7 @@
     color: #434243;
 }
 #initGame:hover{
-
+    cursor: pointer;
 }
 #leverInit{
     padding-left: 20px;

@@ -156,7 +156,7 @@ EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 app.set('view engine', 'ejs')
 app.use(express.static('../newFront/'))
 
-app.get("*",(req,res)=>
+app.get("/",(req,res)=>
 {
     res.render("index")
 })

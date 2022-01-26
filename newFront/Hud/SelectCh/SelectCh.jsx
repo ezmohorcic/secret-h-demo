@@ -3,6 +3,8 @@ import { SocketContext } from "../../Indexjs";
 import ChCandidate from "./ChCandidate.jsx"
 import { useDispatch, useSelector } from "react-redux";
 
+import './SelectCh.css';
+
 function SelectCh(props)
 {
     const socket = useContext(SocketContext);
@@ -13,6 +15,7 @@ function SelectCh(props)
     const player_data=useSelector((state)=>state.player_data)
     console.log("last_elected")
     console.log(stats_turno.last_elected);
+
     const sendCh= function()
     {
         console.log(selected)
@@ -31,8 +34,12 @@ function SelectCh(props)
 
     return(
         <div id='SelectChContainer'>
-            <p>Seleccionado: {selected.username}</p>
-            <button onClick={sendCh}>Enviar!</button>
+            <p id='chFlavor'>Select your Chancellor, Mr.President</p>
+            <div id="sendContainer">
+                <p id='selectedView'>Selected: {selected.username}</p>
+                <button id='selectedSend' onClick={sendCh}>Send</button>
+            </div>
+
             <div id='candidatesShell'>{chCandidates}</div>
         </div>
     )

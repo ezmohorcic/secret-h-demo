@@ -38,15 +38,16 @@ function Hud()
 
     },[socket]);
 
-    let viewVote= function(){if(voteD) return(<Vote setVoteD={setVoteD}/>)};
-    let viewSelectionCh= function(){if(viewSelectedCh==true) return(<SelectCh setViewSelectedCh={setViewSelectedCh}/>)}
-    let viewCardSelection= function(){if(viewCardSelect[0]) return <CardSelect setViewCardSelect={setViewCardSelect} cards={viewCardSelect[1]} emiting={viewCardSelect[2]}/>}
+    let viewVote= function(){if(voteD) return(<div className="hudShell"><Vote setVoteD={setVoteD}/></div>)};
+    let viewSelectionCh= function(){if(viewSelectedCh==true) return <div className="hudShell"><SelectCh setViewSelectedCh={setViewSelectedCh}/></div>}
+    let viewCardSelection= function(){if(viewCardSelect[0]) return <div className="hudShell"><CardSelect setViewCardSelect={setViewCardSelect} cards={viewCardSelect[1]} emiting={viewCardSelect[2]}/></div>}
 
     return(
         <div id="HudContainer">
-            <div className="hudShell">{viewVote()}</div>
-            <div className="hudShell">{viewSelectionCh()}</div>
-            <div className="hudShell">{viewCardSelection()}</div>
+            {viewVote()}
+            {viewSelectionCh()}
+            {/* <div className="hudShell"><SelectCh setViewSelectedCh={setViewSelectedCh}/></div> */}
+            {viewCardSelection()}
             <div className="hudShell"><PowerSelect/></div>
 
         </div>
