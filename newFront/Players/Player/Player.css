@@ -23,8 +23,9 @@
 }
 
 .estado{
+
     height: 30px;
-    margin: 5px auto 0px auto;
+    margin: 0px auto 0px auto;
 
     font-size: 30px;
     text-align: center;

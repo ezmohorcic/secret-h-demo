@@ -84,6 +84,8 @@
     transition: 0.2s;
 }
 .skullIcon{
+    position: relative;
+    left: -5px;
     width: 0px;
     font-size: 0px;
     margin-top: 10px;

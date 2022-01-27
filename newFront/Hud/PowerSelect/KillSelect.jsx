@@ -28,7 +28,6 @@ function KillSelect(props)
                 </div>
             )
         }
-        
     });
     return(
         <div id='killSelectContainer'>

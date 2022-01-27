@@ -167,6 +167,11 @@ const server = app.listen(process.env.PORT || 3000, () => {
 
 const io = socketio(server)
 
+const dummy=function(out)
+{
+    console.log(out)
+    return out
+}
 
 io.on('connection', socket => 
 {
@@ -182,18 +187,22 @@ io.on('connection', socket =>
         socket.roomKey = data;
         socket.roomId=hash(data);
         socket.dataBase=assignDataBase(data,socket.roomId);
-        socket.join(data);
+        if(socket.dataBase==false)
+        {
+            io.to(socket.id).emit("wagon_error");
+        }
+        else
+        {
+            socket.join(data);
 
-        socket.username = "Anon";
-        socket.position = socket.dataBase.jugadores.length;
-        socket.dataBase.cant_jugadores++;
-        socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}) 
-        
-        console.log("your_data");
-        console.log(socket.dataBase)
-        io.to(socket.id).emit("your_data",{all_players:socket.dataBase.jugadores,userData:{username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}}) //le envia la informacion propia del jugador a su front
-        console.log("mande your_data")
-        socket.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+            socket.username = "Anon";
+            socket.position = socket.dataBase.jugadores.length;
+            socket.dataBase.cant_jugadores++;
+            socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}) 
+
+            io.to(socket.id).emit("your_data",dummy({all_players:socket.dataBase.jugadores,userData:{username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}})) //le envia la informacion propia del jugador a su front
+            socket.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+        }
     });
 
     socket.on("changed_username",data=>
@@ -233,7 +242,6 @@ io.on('connection', socket =>
     socket.on("selected_chancellor",data=>
     {//el primer ministro escogio chancellor y se inicia votacion
         socket.dataBase.chancellor=data;
-        console.log(data);
         //io.to(socket.dataBase.chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
         io.to(socket.roomKey).emit("init_vote",{chancellor:data}) //evento para que en todos los front aparezca para votar si/no
         
@@ -333,6 +341,7 @@ io.on('connection', socket =>
     
     socket.on(KILL_PLAYER,data=>
     {
+        console.log(data);
         socket.dataBase.jugadores[data.position].estado="dead";
         socket.dataBase.jugadores.forEach(element => {
             if(element.position!=data.position){io.to(element.socketId).emit("assasination",data.position)}
@@ -477,6 +486,7 @@ function assignDataBase(roomKey,roomId)
     {
         return dataBase[roomId][roomKey]
     }
+    else{return false}
 }
 
 function cardStackGenerator(socket)
@@ -508,6 +518,7 @@ function determine_winner(comm,socket)
     if(socket.dataBase.blue==WINS_BLUE){return BLUE}
     else if(socket.dataBase.red==WINS_RED){return RED}
     else if(socket.dataBase.red>=MIN_RED_H && socket.dataBase.chancellor.rol==H && comm=="h_chancellor"){return RED}
+    else if(comm=="assasination" && socket.rol==H){return BLUE}
     else{return false}
 }
 

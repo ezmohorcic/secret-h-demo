@@ -15,9 +15,11 @@
 
     background-color: #F2654B;
     box-shadow: 10px 10px #c59257;
-
-    border: 2px solid #b8a38d;
-    border-bottom: 2px dashed #b8a38d;
+    
+    border-left: 2px dashed #fbb969;
+    border-top: 2px dashed #fbb969;
+    border-bottom: 2px dashed #c59257;
+    border-right: 2px dashed #c59257;
 }
 
 #lawLayoutShell{
@@ -139,6 +141,7 @@
     margin: auto;
 }
 
+
 #stacksCounters{
     display: flex;
     /* flex-direction: row; */
@@ -150,8 +153,10 @@
     background-color: #F2654B;
     box-shadow: 10px 10px #c59257;
 
-    border: 2px solid #b8a38d;
-    border-top: 2px dashed #b8a38d;
+    border-left: 2px dashed #fbb969;
+    border-top: 2px dashed #c59257;
+    border-bottom: 2px dashed #c59257;
+    border-right: 2px dashed #c59257;
 }
 .stackLayoutShell{
     width: 100px;

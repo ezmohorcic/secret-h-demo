@@ -24,8 +24,6 @@ function App()
 
         socket.on("your_data",function(msg)
         {
-            console.log("your_data")
-            console.log(msg.userData);
             dispatch(setAllPlayer_data(msg.userData))
             dispatch(setAll_players(msg.all_players))
             msg.userData.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false));
@@ -33,8 +31,6 @@ function App()
 
         socket.on("new_position",function(msg)
         {
-            console.log("new_position")
-            console.log(msg)
             dispatch(setPlayer_position(msg.position));
             dispatch(setAll_players(msg.players));
             msg.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
@@ -43,9 +39,7 @@ function App()
 
         socket.on("new_player",function(msg)
         {
-            console.log("new_player");
-            dispatch(setAll_players(msg));
-           
+            dispatch(setAll_players(msg));  
         });
 
         socket.on("change_username_on_position",function(msg){dispatch(setOtherPlayer_name(msg))});

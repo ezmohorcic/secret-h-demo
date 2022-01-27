@@ -31,7 +31,13 @@ export default function RoomSelect()
         socket.on("join_room",function(msg)
         {
             console.log(msg);
+            
+            navigator.clipboard.writeText(msg).then(()=>{alert(`Wagon room copied on Clipboard! Send it to your friends!`);})
             setUnit(msg);
+        });
+
+        socket.on("wagon_error",function(){
+            alert("This wagon was not found!");
         });
     },[socket]);
 
@@ -69,8 +75,10 @@ export default function RoomSelect()
                     <div id='mainTicketPart'>
                         <p className='notesMain'>--  You've recieved your ticket back to the Weimar Republic  --  date: {date}193x  --</p>
                         <div id='mainJoinShell'>
+                            <div className="arrowShell"><FontAwesomeIcon icon={faArrowRight}/></div>
                             <input type="text" name="roomNumber" placeholder='Wagon' id="idRoomInput" value={unit} onChange={(e)=>setRoomNumber(e.target.value)}/>
                             <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+unit} onClick={joinRoom}>travel</Link></div>
+                            <div className="arrowShell"><FontAwesomeIcon icon={faArrowLeft}/></div> 
                         </div> 
                         <p className='notesMain'>--  Approx. Time: 50 min  --  Age: +17  -- Qty of passengers: 5-10  --</p>
                     </div>

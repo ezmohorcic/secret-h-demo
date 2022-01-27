@@ -3,7 +3,7 @@ import { SocketContext } from "../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
 import {setPlayer_username,soyCeroTrue,soyCeroFalse} from "../redux/actions.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLevelDownAlt} from '@fortawesome/free-solid-svg-icons';
+import { faLevelDownAlt, faCopy} from '@fortawesome/free-solid-svg-icons';
 
 import './Header.css';
 
@@ -20,9 +20,12 @@ function Header()
 
     const sendNewName = function ()
     {
-        socket.emit("changed_username",{username:newName});
-        dispatch(setPlayer_username(newName));
-        setNewName("");
+        if(newName!="")
+        {
+            socket.emit("changed_username",{username:newName});
+            dispatch(setPlayer_username(newName));
+            setNewName("");
+        }
     }
     const sendInit = function(){socket.emit("init_game",{})}
 
@@ -39,6 +42,12 @@ function Header()
             )
         }
     };
+
+    const handleCopy= function()
+    {
+        navigator.clipboard.writeText(player_data.sala).then(()=>{alert(`Wagon room copied on Clipboard! Send it to your friends!`);})
+    }
+
     return(
         <div id="headerContainer" >
             <div id='imgHeaderShell'><img id='imgHeader' src="../img/output-onlinepngtools.png" alt="" /></div>
@@ -51,7 +60,8 @@ function Header()
                 <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Position: </span>{player_data.position}</p>
                 <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Rol: </span>{player_data.rol}</p>
                 <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>State: </span>{player_data.estado}</p>
-                <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Wagon: </span>{player_data.sala}</p>
+                <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Wagon: </span>{player_data.sala} <FontAwesomeIcon className="copyIcon" onClick={handleCopy} icon={faCopy}/></p>
+                <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Copy Wagon: </span><FontAwesomeIcon className="copyIcon" onClick={handleCopy} icon={faCopy}/></p>
             </div>
             {initButton()}
         </div>
