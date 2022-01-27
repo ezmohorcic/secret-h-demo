@@ -1,6 +1,10 @@
 import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHandshake} from '@fortawesome/free-solid-svg-icons';
+
+import './PmSelect.css';
 
 function PmSelect(props)
 {
@@ -12,12 +16,17 @@ function PmSelect(props)
         if(element.estado!="dead")
         {
             return(
-                <div className="genericSelect">
-                    <button onClick={()=>
-                    {
-                        socket.emit("pick_candidate",{element});
-                        props.setViewPower("");
-                    }}>{element.username}</button>
+                <div className="genericSelectPm">
+                    <div className="borderShowPm">
+                        <button className="pmBut" onClick={()=>
+                        {
+                            socket.emit("pick_candidate",{element});
+                            props.setViewPower("");
+                        }}>{element.username}</button>
+                    </div>
+                    <div className="showPm">
+                        <FontAwesomeIcon className="handsIcon" icon={faHandshake}/>
+                    </div>
                 </div>
             )
         }
@@ -26,7 +35,8 @@ function PmSelect(props)
 
     return(
         <div id='pmSelectContainer'>
-            {arrShow}
+            <p id="pmSlFlavor">The influence you manage bends the rules</p>
+            <div id="pmContainer">{arrShow}</div>
         </div>
     )
 }

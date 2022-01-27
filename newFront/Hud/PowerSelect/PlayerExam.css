@@ -1,11 +1,10 @@
-#killSelectContainer{
+#playerExamContainer{
     margin-left: 10px;
 }
-
-#killSlFlavor{
+#examSlFlavor{
     height: 15px;
-    width: 240px;
-    margin: 0px 20px 0px 20px;
+    width: 220px;
+    margin: 0px 20px 0px 15px;
 
     text-align: center;
     font-size: 15px;
@@ -15,8 +14,7 @@
     color: #fde1c0;
     box-shadow: 0px -7px #b25544 inset;
 }
-
-#killContainer{
+#examContainer{
     display: flex;
     flex-wrap: wrap;
     height: 230px;
@@ -24,7 +22,7 @@
     padding: 5px;
 }
 
-.genericSelectKill{
+.genericSelectExam{
     display: flex;
     flex-direction: row;
 
@@ -33,25 +31,22 @@
 
     margin: 5px 0px 5px 0px;
 }
-.genericSelectKill:hover>.showKill{
+.genericSelectExam:hover>.showExam{
     width: 20px;
 }
-.genericSelectKill:hover>.showKill>.skullIcon{
-    font-size: 20px;
-    width: 20px;
+.genericSelectExam:hover>.showExam>.eyeIcon{
+    display: block;
 }
-
-.borderKillShow{
+.borderShowExam{
     height: 40px;
     width: 95px;
-    /* margin-right: 20px; */
-    background: linear-gradient(90deg, rgba(107,80,65,1) 50%, rgba(138,3,3,1) 100%);
+
+    background: linear-gradient(90deg, rgba(107,80,65,1) 42%, rgba(0,212,255,1) 100%);
     box-shadow: 5px 5px #8e4336;
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
 }
-
-.killBut{
+.examBut{
     width: 90px;
     height: 30px;
     margin: 5px;
@@ -65,27 +60,28 @@
     border: none;
 
     color: #6b5041;
-    background: linear-gradient(90deg, rgba(246,211,153,1) 50%, rgba(138,3,3,1) 100%);
+    background: linear-gradient(90deg, rgba(248,195,131,1) 42%, rgba(0,212,255,1) 100%);
 }
-
-.killBut>p{
+.examBut>p{
     margin-top: 0;
     margin-bottom: 0;
 }
-
-.showKill{
+.showExam{
     width: 0px;
     height: 40px;
 
-    background-color: #8a0303;
+    background-color: rgba(0,212,255,1);
     box-shadow: 5px 5px #8e4336;
-    color: #f8c283;
+    color: #a98490;
 
     transition: 0.2s;
 }
-.skullIcon{
-    width: 0px;
-    font-size: 0px;
+.eyeIcon{
+    position: relative;
+    left: -5px;
+    display: none;
+    width: 20px;
+    font-size: 20px;
     margin-top: 10px;
     margin-bottom: 10px;
     transition: 0.1s;

@@ -11,20 +11,20 @@ function KillSelect(props)
     const socket = useContext(SocketContext);
     const all_players=useSelector((state)=>state.all_players);
 
-    var arrShow = props.all_players.map((element)=>
+    var arrShow = all_players.map((element)=>
     {
         if(element.estado!="dead")
         {
             return(
-                <div className="genericSelect">
-                    <div className="borderShow">
+                <div className="genericSelectKill">
+                    <div className="borderKillShow">
                         <button className="killBut" onClick={()=>
                         {
                             socket.emit("kill",element);
                             props.setViewPower("");
                         }}><p className="killName">{element.username}</p></button>
                     </div>
-                    <div className="show"><FontAwesomeIcon className="skullIcon" icon={faSkull}/></div>
+                    <div className="showKill"><FontAwesomeIcon className="skullIcon" icon={faSkull}/></div>
                 </div>
             )
         }

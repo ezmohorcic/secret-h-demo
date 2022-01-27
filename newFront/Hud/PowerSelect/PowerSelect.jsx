@@ -48,8 +48,7 @@ function PowerSelect()
         else if(viewPower[0]=="PmSelect")   {return <div id='PowerSelectContainer'><PmSelect all_players={viewPower[1]} setViewPower={setViewPower}/></div>;}    
     }
     
-    //return(<React.Fragment>{viewPowerType()}</React.Fragment>)
-    return (<div id='PowerSelectContainer'><KillSelect all_players={dummy} setViewPower={setViewPower}/></div>)
+    return(<React.Fragment>{viewPowerType()}</React.Fragment>)
 }
 
 export default PowerSelect;

@@ -227,8 +227,15 @@
     background-color: #6b5041;
 }
 .skippedTurns{
+    display: flex;
+    justify-content: space-evenly;
+
+    position: relative;
+    top: -15px;
+
     height: 30px;
-    width: 30px;
+    width: 160px;
+    margin: 5px 0 5px 0;
 }
 .skippedDot{
     height: 30px;

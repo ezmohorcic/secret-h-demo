@@ -39,17 +39,18 @@ function Stats()
         if(i<red){redLaws.push(<div className="redLaw"> <div className="redIcon"><FontAwesomeIcon className="fontAweSkull" icon={faSkull}/></div></div>)}
         else{{redLaws.push(<div className="redLaw"></div>)}}
     }
-
-    //for(var i=0;i<blue;i++){blueLaws.push(<div className="blueLaw"><FontAwesomeIcon icon={faDove}/></div>)}
-    //for(var i=0;i<red;i++){redLaws.push(<div className="redLaw"><FontAwesomeIcon icon={faSkull}/></div>)}
-    for(var i=0;i<stats_turno.skipped_turns;i++){blueLaws.push(<div className="skippedDot"></div>)}
+    for(var i=0;i<stats_turno.skipped_turns;i++){skipped.push(<div className="skippedDot"></div>)}
 
 
     return(
         <div id="lawLayourContainer">
             <div id="lawsCounters">
-                <div className='blueLawShell'><div id="thinBlueBorder"><div id="blueBorder">{blueLaws}</div></div></div>
-                <div className='redLawShell'><div id="thinRedBorder"><div id="redBorder">{redLaws}</div></div></div>
+                <div className='blueLawShell'>
+                    <div id="thinBlueBorder"><div id="blueBorder">{blueLaws}</div></div>
+                </div>
+                <div className='redLawShell'>
+                    <div id="thinRedBorder"><div id="redBorder">{redLaws}</div></div>
+                </div>
             </div>
 
             <div id="stacksCounters">
@@ -70,7 +71,7 @@ function Stats()
                     <div id="borderSkipped">
                         <p>Skipped Goverments</p>
                         <div className='skippedTurns'>
-                            {stats_turno.skipped_turns}
+                            {skipped}
                         </div> 
                     </div>
                 </div>
