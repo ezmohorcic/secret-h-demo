@@ -13,12 +13,9 @@ function SelectCh(props)
     const stats_turno=useSelector((state)=>state.stats_turno)
     const all_players=useSelector((state)=>state.all_players)
     const player_data=useSelector((state)=>state.player_data)
-    console.log("last_elected")
-    console.log(stats_turno.last_elected);
 
     const sendCh= function()
     {
-        console.log(selected)
         if(selected.socketId)
         {
             socket.emit("selected_chancellor",selected);

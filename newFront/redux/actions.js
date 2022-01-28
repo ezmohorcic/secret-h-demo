@@ -1,8 +1,6 @@
 //--Client player_data effects
 export function setAllPlayer_data (payload)
 {
-    console.log("setAllPlayer_data")
-    console.log(payload)
     return({type:"YOUR_DATA",payload})
 }
 
@@ -14,13 +12,11 @@ export function setYou_chancelor(payload)
 
 export function setPlayer_position(payload)
 {
-    console.log(payload)
     return({type:"NEW_POSITION",payload:payload})
 }
 
 export function setPlayer_username(payload)
 {
-    console.log(payload)
     return({type:"NEW_USERNAME",payload:payload})
 }
 
@@ -94,6 +90,5 @@ export function setNext_pm(payload)
 
 export function setNext_chancelor(payload)
 {
-    console.log("setNext_chacellor")
     return({type:"NEXT_CHANCELLOR",payload})
 }

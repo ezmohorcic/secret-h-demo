@@ -10,7 +10,6 @@ function Players()
     const all_players=useSelector((state)=>state.all_players)
     const player_data=useSelector((state)=>state.player_data)
     const knownRols=useSelector((state)=>state.knownRols)
-    console.log(all_players);
     
     var players=all_players.map(element=>
         {

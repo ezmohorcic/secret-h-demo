@@ -17,13 +17,16 @@ function App()
     const dispatch = useDispatch();
     const alive= useSelector((state)=>state.alive);
 
+    const [resetEv,setResetEv]=useState(false);
+
     useEffect(()=>
     {   
-        console.log("useEffect")
         socket.on("connect_error", (err) => {console.log(`connect_error due to ${err.message}`)});
 
         socket.on("your_data",function(msg)
         {
+            console.log("your_data");
+            console.log(msg)
             dispatch(setAllPlayer_data(msg.userData))
             dispatch(setAll_players(msg.all_players))
             msg.userData.position==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false));
@@ -39,6 +42,8 @@ function App()
 
         socket.on("new_player",function(msg)
         {
+            console.log("new player")
+            console.log(msg)
             dispatch(setAll_players(msg));  
         });
 
@@ -52,15 +57,22 @@ function App()
             dispatch(soyCeroFalse(false));
             dispatch(setAll_players(msg.jugadores));
             dispatch(setNext_pm(msg.next_pm));
+            //setResetEv(true);
         });
 
         socket.on("assasinated",function(msg)
         {
-            dispatch(unAlive()) 
-            alert("Has sido asesinado por orden del Primer Ministro");
+            dispatch(unAlive());
+            alert("You were executed by order of the president");
         });
 
-        socket.on("assasination",function(msg){dispatch(setOtherPlayer_Death(msg))});
+        socket.on("assasination",function(msg)
+        {
+            console.log("assasination")
+            console.log(msg)
+            dispatch(setOtherPlayer_Death(msg))
+        
+        });
 
         socket.on("next_turn",function(msg)
         {
@@ -70,30 +82,33 @@ function App()
 
         socket.on("blue_wins",function(msg)
         {
+            console.log(msg)
             alert("BLUE WINS");
             msg==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
         });
 
         socket.on("red_wins",function(msg)
         {
+            console.log(msg)
             alert("RED WINS");
             msg==0 ? dispatch(soyCeroTrue(true)) : dispatch(soyCeroFalse(false)); 
         });
 
         socket.on("you_chancellor",function(msg)
         {
-            alarm()
+            alarm("You were selected to be the Chancellor")
         });
 
     },[socket]);
 
-    const renderHud=function(){if(alive==true){return <Hud/>}}
+    //const renderHud=function(){if(alive==true){return <Hud resetEv={resetEv} setResetEv={setResetEv}/>}}
     return(
         <div id='appContainer'>
                 <Header/>
                 <Players/>
                 <Stats/>
-                {renderHud()}      
+                {/* {renderHud()} */}
+                <Hud/>      
         </div>
     )
 }

@@ -169,7 +169,8 @@ const io = socketio(server)
 
 const dummy=function(out)
 {
-    console.log(out)
+    console.log("Dummy");
+    console.log(out);
     return out
 }
 
@@ -231,12 +232,12 @@ io.on('connection', socket =>
     socket.on("set_sv_position",data=>{socket.position=data});
 
     socket.on("init_game",data=>
-    {//llega desde el front de pos=0 evento de iniciar partreq.params.ida
+    {//llega desde el front de pos=0 evento de iniciar partida
         initGame(socket);
         var stats= statStack(socket);
         socket.dataBase.jugadores.forEach(element =>{io.to(element.socketId).emit("your_rol",element.rol)}) //A cada cliente se le envia su rol de juego
         io.to(socket.roomKey).emit('init_game_client',{jugadores:socket.dataBase.jugadores,stats:stats,next_pm:socket.dataBase.jugadores[0]}) //evento para iniciar el juego en todos los front
-        io.to(socket.id).emit("asigned_pm")
+        io.to(socket.dataBase.jugadores[0].socketId).emit("asigned_pm");
     });
     
     socket.on("selected_chancellor",data=>
@@ -263,17 +264,23 @@ io.on('connection', socket =>
                     if(winner==BLUE){socket.dataBase.jugadores.forEach(element=>
                     {
                         io.to(element.socketId).emit("blue_wins",element.position)
+                        io.to(element.socketId).emit("reset_hud")
                     });}
                     else
                     {socket.dataBase.jugadores.forEach(element=>
                     {
                         io.to(element.socketId).emit("red_wins",element.position)
+                        io.to(element.socketId).emit("reset_hud")
                     });}
                 }
                 var trio_cartas=[];
                 for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
                 {
-                    if(socket.dataBase.stack_cartas.length==0){socket.dataBase.stack_cartas=shuffle(socket.dataBase.stack_descartados)}
+                    if(socket.dataBase.stack_cartas.length==0)
+                    {
+                        socket.dataBase.stack_cartas=shuffle(socket.dataBase.stack_descartados)
+                        socket.dataBase.stack_descartados=[];
+                    }
                     trio_cartas.push(socket.dataBase.stack_cartas.pop());
                 }
                 resetVotos(socket); //resetea los valores de los votos
@@ -282,14 +289,21 @@ io.on('connection', socket =>
             }
             else
             {
+                console.log("fallo votacion")
+                
                 var passed_law=false;  //saber si tiene que pasar o no una ley, para que el front consulte en el evento enviado
                 var law_to_send=null;
                 socket.dataBase.skipped++;
+                console.log(socket.dataBase.skipped)
                 if(socket.dataBase.skipped==CANT_PASSED_MAX)    //si llego al limite de gobiernos skipeados
                 {
                     passed_law=true;
                     socket.dataBase.skipped=0;    
-                    if(socket.dataBase.stack_cartas.length==0){socket.dataBase.stack_cartas=shuffle(socket.dataBase.stack_descartados)} //se obtienen las cartas
+                    if(socket.dataBase.stack_cartas.length==0)
+                    {
+                        socket.dataBase.stack_cartas=shuffle(socket.dataBase.stack_descartados)
+                        socket.dataBase.stack_descartados=[];
+                    } //se obtienen las cartas
                     law_to_send=socket.dataBase.stack_cartas.pop();
                     lawCounter({selected:law_to_send},socket); //se suma la ley al contador
                     io.to(socket.roomKey).emit("duo_lost",{passed_law:passed_law,selected:law_to_send,counter:socket.dataBase[law_to_send]});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
@@ -327,39 +341,56 @@ io.on('connection', socket =>
             if(winner==BLUE){socket.dataBase.jugadores.forEach(element=>
                 {
                     io.to(element.socketId).emit("blue_wins",element.position)
+                    io.to(element.socketId).emit("reset_hud")
                 });}
                 else
                 {socket.dataBase.jugadores.forEach(element=>
                 {
                     io.to(element.socketId).emit("red_wins",element.position)
+                    io.to(element.socketId).emit("reset_hud")
                 });}
         } 
-        io.to(socket.roomKey).emit("law_done",{selected:data.selected,counter:socket.dataBase[data.selected]}) //evento a todos para que vean que ley se paso
-        nextTurn(socket);
-        powerTurn(data,socket);    //se envia al analisis de poder al pm
+        else
+        {
+            io.to(socket.roomKey).emit("law_done",{selected:data.selected,counter:socket.dataBase[data.selected]}) //evento a todos para que vean que ley se paso
+            nextTurn(socket);
+            powerTurn(data,socket);    //se envia al analisis de poder al pm
+        }
+
     })
     
     socket.on(KILL_PLAYER,data=>
     {
-        console.log(data);
         socket.dataBase.jugadores[data.position].estado="dead";
         socket.dataBase.jugadores.forEach(element => {
             if(element.position!=data.position){io.to(element.socketId).emit("assasination",data.position)}
         });
         io.to(data.socketId).emit("assasinated",socket.dataBase.jugadores[data.position].position)
         socket.dataBase.mod_total++;
-        if(data.position==socket.dataBase.pm.position)
+        if(determine_winner("assasination",socket))
         {
-            while(socket.dataBase.pm.estado=="dead")
+            socket.dataBase.jugadores.forEach(element=>
             {
-                if(socket.dataBase.pm.position==socket.dataBase.jugadores.length-1){socket.dataBase.pm=socket.dataBase.jugadores[0]}  //pasa al siguiente jugador para ser pm
-                else{socket.dataBase.pm=socket.dataBase.jugadores[socket.dataBase.pm.position+1]}
+                io.to(element.socketId).emit("blue_wins",element.position)
+                io.to(element.socketId).emit("reset_hud")
+            })
+        }
+        else
+        {
+            if(data.position==socket.dataBase.pm.position)
+            {
+                while(socket.dataBase.pm.estado=="dead")
+                {
+                    if(socket.dataBase.pm.position==socket.dataBase.jugadores.length-1){socket.dataBase.pm=socket.dataBase.jugadores[0]}  //pasa al siguiente jugador para ser pm
+                    else{socket.dataBase.pm=socket.dataBase.jugadores[socket.dataBase.pm.position+1]}
+                }
             }
+    
+            var stats_stack=statStack(socket);
+            io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
+            io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
         }
 
-        var stats_stack=statStack(socket);
-        io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
-        io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
     });
 
     socket.on(PICK_CANDIDATE,data=>
@@ -402,7 +433,11 @@ function determinePower(socket)
             var trio_cartas=[];
             for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
             {
-                if(socket.dataBase.stack_cartas.length==0){socket.dataBase.stack_cartas=shuffle(socket.dataBase.stack_descartados)}
+                if(socket.dataBase.stack_cartas.length==0)
+                {
+                    socket.dataBase.stack_cartas=shuffle(socket.dataBase.stack_descartados)
+                    socket.dataBase.stack_descartados=[];
+                }
                 trio_cartas.push(socket.dataBase.stack_cartas.pop())
             }
             io.to(reciever.socketId).emit(EXAMINE_DECK,trio_cartas);
@@ -458,14 +493,16 @@ function createDataBase()
             if(dataBase[roomId][roomKey].jugadores.length==0) // Y no esta en uso
             {
                 dataBase[roomId][roomKey]= new roomDataBase();
-                console.log(dataBase[roomId][roomKey])
                 return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]};
+            }
+            else
+            {
+                return createDataBase(); //si esta en uso, esta funcion es recursiva y autosuficiente
             }
         }
         else
         {
             dataBase[roomId][roomKey]=new roomDataBase(); //creo una copia de obj
-            console.log(dataBase[roomId][roomKey])
             return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]}; //devuelvo toda la informacion necesaria
             
         }
@@ -474,7 +511,6 @@ function createDataBase()
     {
         dataBase[roomId]={};
         dataBase[roomId][roomKey]=new roomDataBase();
-        console.log(dataBase[roomId][roomKey])
         return{roomKey,roomId,dataBase:dataBase[roomId][roomKey]};
     }
     
@@ -556,6 +592,8 @@ function statStack(socket)
 function initGame(socket)
 {
     generateRol(socket);
+    console.log("generated rol")
+    console.log(socket.dataBase.jugadores)
     generateBoard(socket);
     socket.dataBase.cant_jugadores=socket.dataBase.jugadores.length;
     socket.dataBase.pm_pos=0;
@@ -607,10 +645,7 @@ function resetVotos(socket)
 }
 
 function generateRol(socket)
-{   //EN ESTE CASO DE DEMO PARA 2, NO PUEDO TESTEAR, TESTEARE MAS TARDE, AHORA HARDCODEO
-    //CANT_FASC, CANT_LIBS
-    /*socket.dataBase.jugadores[0].rol=LIB;
-    socket.dataBase.jugadores[1].rol=H;*/
+{   
     var raw=[];
     if(socket.dataBase.jugadores.length<=5){raw=shuffle([H,FASC,LIB,LIB,LIB]);}
     else if(socket.dataBase.jugadores.length==6){raw=shuffle([H,FASC,LIB,LIB,LIB,LIB]);}

@@ -34,10 +34,11 @@ function all_players(state=[],action)
     }
     else if(action.type=="ASSASINATION")
     {
-        let nwArr= state.map(player=>
+        let nwArr= new Array();
+        nwArr= state.map(player=>
             {
                 let copyPlayer={...player};
-                if(copyPlayer.position==action.payload.position){copyPlayer.estado="dead"}
+                if(copyPlayer.position==action.payload){copyPlayer.estado="dead"}
                 return copyPlayer;
             });
         return nwArr 
@@ -52,9 +53,8 @@ function player_data(state=initialState.player_data,action)
     else if(action.type=="YOUR_ROL"){return {...state,rol:action.payload}}
     else if(action.type=="NEW_POSITION"){return {...state,position:action.payload}}
     else if(action.type=="NEW_USERNAME"){return {...state,username:action.payload}}
-    else if(action.type=="YOU_CHANCELLOR")
-    {console.log("reducer you_chacelor")
-        return {...state,chancelor:action.payload}}
+    else if(action.type=="ASESINADO"){return {...state,estado:"dead"}}
+    else if(action.type=="YOU_CHANCELLOR"){return {...state,chancelor:action.payload}}
     else {return state}
 }
 
@@ -91,9 +91,7 @@ function next_pm(state={},action)
 function next_chancelor(state={chancellor:{position:-1}},action)
 {
 
-    if(action.type=="NEXT_CHANCELLOR")
-    {    console.log("reducer next_chacelor")
-        return action.payload;}
+    if(action.type=="NEXT_CHANCELLOR"){return action.payload;}
     else return state;
 }
 

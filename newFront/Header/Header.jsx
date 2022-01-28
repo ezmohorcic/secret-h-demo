@@ -15,7 +15,6 @@ function Header()
     const dispatch = useDispatch();
     
     const player_data=useSelector((state)=>state.player_data);
-    console.log(player_data);
     const soyCeroView=useSelector((state)=>state.soyCeroView);
 
     const sendNewName = function ()

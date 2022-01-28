@@ -19,16 +19,13 @@ function Player(props)
     else{ rol="desconocido";}
     let cargo = function()
     {
-        console.log(next_chancelor)
-        console.log(props.player)
-        console.log(next_chancelor.chancellor.position==props.player.position)
         if(next_pm.position==props.player.position) {return (<p className="cargo playerP">PM</p>)}
         else if(next_chancelor.chancellor.position==props.player.position) return (<p className="cargo playerP">chancellor</p>)
     }
-    let estado= function()
+    let estado= function(estado)
     {
-        if(props.player.estado=="alive"){return (<FontAwesomeIcon className="estado"  icon={faUser}/>)}
-        else{return(<FontAwesomeIcon className="estado"  icon={faSkullCrossbones}/>)}}
+        if(estado=="alive"){return (<FontAwesomeIcon className="estado"  icon={faUser}/>)}
+        else{return(<FontAwesomeIcon className="estadoMuerto"  icon={faSkullCrossbones}/>)}}
     
         let colorUs= function()
     {
@@ -40,7 +37,7 @@ function Player(props)
     return(
         <li  className="player" id={'player'+props.player.position}>
             <p className='username playerP'>{props.player.username}</p>
-            <p className="estado" style={colorUs()}>{estado()}</p>
+            <p className="estado" style={colorUs()}>{estado(props.player.estado)}</p>
             <p className='rol playerP'>{rol}</p> 
             {cargo()}
         </li>

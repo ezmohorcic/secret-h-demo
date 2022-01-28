@@ -23,6 +23,11 @@ function Stats()
         {
             msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);
         });
+
+        socket.on("duo_lost",function(msg)
+        {
+            if(msg.passed_law){msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);}
+        });
     },[socket]);
 
     var blueLaws=[];
