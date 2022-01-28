@@ -8,6 +8,7 @@ module.exports = {
       path: __dirname + '/newFront',
       filename: 'bundle.js',
       publicPath: 'https://localhost:3000/bundle.js'
+      
     },
     module: {
       rules: [
@@ -29,5 +30,9 @@ module.exports = {
           ]
         }
       ]
+    },
+    devServer: {
+      publicPath:"/",
+      historyApiFallback:{index:"./newFront/bundle.js"}
     }
   }

@@ -152,11 +152,13 @@ EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
     set_sv_position,position                                                  |   Front avisa al socket en sv para actualizar la posicion
 */
 
-
-app.set('view engine', 'ejs')
 app.use(express.static('../newFront/'))
+app.set('views','../newFront/')
+app.set('view engine', 'ejs')
+app.engine('html',require('ejs').renderFile);
+app.set('view engine','html')
 
-app.get("/",(req,res)=>
+app.get("/*",(req,res)=>
 {
     res.render("index")
 })

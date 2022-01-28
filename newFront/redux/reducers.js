@@ -94,6 +94,12 @@ function next_chancelor(state={chancellor:{position:-1}},action)
     if(action.type=="NEXT_CHANCELLOR"){return action.payload;}
     else return state;
 }
+function room(state={roomNumber:"",unit:""},action)
+{
+    if(action.type=="ROOM_NUMBER"){return{...state,roomNumber:action.payload};}
+    else if(action.type=="UNIT"){return{...state,unit:action.payload};}
+    else {return state;}
+}
 
 const rootReducer=combineReducers({
     all_players,
@@ -103,7 +109,8 @@ const rootReducer=combineReducers({
     knownRols,
     alive,
     next_pm,
-    next_chancelor
+    next_chancelor,
+    room
 });
 
 export default rootReducer;

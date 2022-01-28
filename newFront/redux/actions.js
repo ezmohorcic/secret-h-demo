@@ -92,3 +92,15 @@ export function setNext_chancelor(payload)
 {
     return({type:"NEXT_CHANCELLOR",payload})
 }
+
+//---Rooms actions
+
+export function roomNumber(payload)
+{
+    return({type:"ROOM_NUMBER",payload})
+}
+
+export function unit(payload)
+{
+    return({type:"UNIT",payload})
+}

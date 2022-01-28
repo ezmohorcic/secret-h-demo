@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useContext } from 'react';
-//import { io, Socket, socketio } from 'socket.io-client';
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
+
 import Header from "./Header/Header.jsx";
 import Players from "./Players/Players.jsx"
 import Stats from "./Stats/Stats.jsx"
 import Hud from "./Hud/Hud.jsx"
-import { useDispatch, useSelector } from "react-redux";
+
 import { SocketContext } from './Indexjs.js';
-import {setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols} from "./redux/actions.js"
+import {setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols, roomNumber} from "./redux/actions.js"
 import './app.css';
 /*const socket = io.connect('http://localhost:3000/')
 export const SocketContext = React.createContext()*/
@@ -16,11 +18,16 @@ function App()
     const socket = useContext(SocketContext);
     const dispatch = useDispatch();
     const alive= useSelector((state)=>state.alive);
-
+    const room=useSelector((state)=>state.room)
     const [resetEv,setResetEv]=useState(false);
 
     useEffect(()=>
     {   
+        socket.on("fucky_wucky",function(msg)
+        {
+
+        });
+
         socket.on("connect_error", (err) => {console.log(`connect_error due to ${err.message}`)});
 
         socket.on("your_data",function(msg)
@@ -98,17 +105,35 @@ function App()
         {
             alarm("You were selected to be the Chancellor")
         });
-
     },[socket]);
 
-    //const renderHud=function(){if(alive==true){return <Hud resetEv={resetEv} setResetEv={setResetEv}/>}}
+    const fallBackRoom = ()=>
+    {
+        if(room.roomNumber!="" || room.unit!="")
+        {
+            return(
+                <React.Fragment>
+                    <Header/>
+                    <Players/>
+                    <Stats/>
+                    {/* {renderHud()} */}
+                    <Hud/>      
+                </React.Fragment>
+            )
+        }
+        else
+        {
+            return(
+                <React.Fragment>
+                <p>OOPSIE WOOPSIE!! Uwu We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!</p>
+                <Link to={"/"}>Try another ticket!</Link>
+                </React.Fragment>
+            )
+        }
+    }
     return(
         <div id='appContainer'>
-                <Header/>
-                <Players/>
-                <Stats/>
-                {/* {renderHud()} */}
-                <Hud/>      
+            {fallBackRoom()}
         </div>
     )
 }

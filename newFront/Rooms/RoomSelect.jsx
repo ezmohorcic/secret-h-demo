@@ -3,24 +3,26 @@ import { Link } from 'react-router-dom';
 import { io, Socket, socketio } from 'socket.io-client';
 import { SocketContext } from '../Indexjs.js';
 import { CSSTransition } from 'react-transition-group';
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight, faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 
+import {roomNumber,unit} from '../redux/actions.js';
 import './RoomSelect.css';
 
 export default function RoomSelect()
 {
     const socket = useContext(SocketContext);
-    const [roomNumber,setRoomNumber]=useState("");
-    const [unit,setUnit]=useState('');
+    const room=useSelector((state)=>state.room);
+    const dispatch=useDispatch();
     
     const sendRoom=function()
     {
-        if(roomNumber!=""){socket.emit("join_room",roomNumber);}
+        if(room.roomNumber!=""){socket.emit("join_room",room.roomNumber);}
     }
     const joinRoom=function()
     {
-        if(unit!=""){socket.emit("join_room",unit);}
+        if(room.unit!=""){socket.emit("join_room",room.unit);}
     }
     const newRoom=function(){socket.emit("new_room");}
 
@@ -31,9 +33,8 @@ export default function RoomSelect()
         socket.on("join_room",function(msg)
         {
             console.log(msg);
-            
+            dispatch(unit(msg));
             navigator.clipboard.writeText(msg).then(()=>{alert(`Wagon room copied on Clipboard! Send it to your friends!`);})
-            setUnit(msg);
         });
 
         socket.on("wagon_error",function(){
@@ -42,7 +43,7 @@ export default function RoomSelect()
     },[socket]);
 
     function roomsview(){
-        if(unit=="")
+        if(room.unit=="")
         {
             return(
                 <div id='roomSelect'>
@@ -52,8 +53,8 @@ export default function RoomSelect()
                             <p className='notesMain'>--  You've recieved your ticket back to the Weimar Republic  --  date: {date}193x  --</p>
                             <div id='mainJoinShell'>
                                 <div className="arrowShell"><FontAwesomeIcon icon={faArrowRight}/></div>
-                                <input type="text" name="roomNumber" placeholder='Wagon' id="idRoomInput" value={roomNumber} onChange={(e)=>setRoomNumber(e.target.value)}/>
-                                <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+roomNumber} onClick={sendRoom}>travel</Link></div> 
+                                <input type="text" name="roomNumber" placeholder='Wagon' id="idRoomInput" value={room.roomNumber} onChange={(e)=>dispatch(roomNumber(e.target.value))}/>
+                                <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+room.roomNumber} onClick={sendRoom}>travel</Link></div> 
                                 <div className="arrowShell"><FontAwesomeIcon icon={faArrowLeft}/></div>      
                             </div>
                             <p className='notesMain'>--  Approx. Time: 50 min  --  Age: +17  -- Qty of passengers: 5-10  --</p>
@@ -76,8 +77,8 @@ export default function RoomSelect()
                         <p className='notesMain'>--  You've recieved your ticket back to the Weimar Republic  --  date: {date}193x  --</p>
                         <div id='mainJoinShell'>
                             <div className="arrowShell"><FontAwesomeIcon icon={faArrowRight}/></div>
-                            <input type="text" name="roomNumber" placeholder='Wagon' id="idRoomInput" value={unit} onChange={(e)=>setRoomNumber(e.target.value)}/>
-                            <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+unit} onClick={joinRoom}>travel</Link></div>
+                            <input type="text" name="roomNumber" placeholder='Wagon' id="idRoomInput" value={room.unit}  onChange={(e)=>dispatch(roomNumber(e.target.value))}/>
+                            <div className='joinBShell'><Link id='joinButton' className='joinB' to={"/"+room.unit} onClick={joinRoom}>travel</Link></div>
                             <div className="arrowShell"><FontAwesomeIcon icon={faArrowLeft}/></div> 
                         </div> 
                         <p className='notesMain'>--  Approx. Time: 50 min  --  Age: +17  -- Qty of passengers: 5-10  --</p>
