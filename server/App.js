@@ -153,10 +153,10 @@ EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
 */
 
 app.use(express.static('../newFront/'))
-app.set('views','../newFront/')
+/*app.set('views','../newFront/')
 //app.set('view engine', 'ejs')
 app.engine('html',require('ejs').renderFile);
-app.set('view engine','html')
+app.set('view engine','html')*/
 
 app.get("/",(req,res)=>
 {
