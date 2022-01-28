@@ -7,7 +7,7 @@ import store from './redux/store.js'
 import RoomSelect from './Rooms/RoomSelect.jsx'
 import {BrowserRouter,Routes,Route} from "react-router-dom";
 
-const socket = io.connect('http://localhost:3000/')
+const socket = io.connect('https://secret-h-demo-bqsrf.ondigitalocean.app/')
 export const SocketContext = React.createContext()
 // element={<App/>}
 
