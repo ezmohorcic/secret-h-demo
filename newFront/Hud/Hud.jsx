@@ -2,7 +2,7 @@ import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../Indexjs";
 import { useDispatch } from "react-redux";
 
-import CardSelect from "./cardSelect/CardSelect.jsx";
+import CardSelect from "./CardSelect/CardSelect.jsx";
 import PowerSelect from "./PowerSelect/PowerSelect.jsx";
 import SelectCh from "./SelectCh/SelectCh.jsx";
 import Vote from "./Vote/Vote.jsx";
