@@ -151,14 +151,14 @@ EVENTOS DEL CLIENTE AL SERVER:*evento,carga que envia*
     join_room,roomkey                                                         |   Cliente indica a que room quiere entrar
     set_sv_position,position                                                  |   Front avisa al socket en sv para actualizar la posicion
 */
-
-app.use(express.static('../newFront/'))
-app.set('views','../newFront/')
+const path = require('path');
+const viewsPath = path.join(__dirname, '..', 'newFront');
+app.use(express.static(viewsPath))
+app.set('views',viewsPath)
 //app.set('view engine', 'ejs')
 app.engine('html',require('ejs').renderFile);
 app.set('view engine','html')
-const path = require('path');
-const viewsPath = path.join(__dirname, '..', 'newFront');
+
 
 app.get("/",(req,res)=>
 {
