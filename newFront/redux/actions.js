@@ -104,3 +104,9 @@ export function unit(payload)
 {
     return({type:"UNIT",payload})
 }
+
+//---LightBox
+
+export function setNewsBox(payload){
+    return({type:"ACTIVE_NEWS",payload:payload})
+}

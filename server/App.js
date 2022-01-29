@@ -257,7 +257,7 @@ io.on('connection', socket =>
         //asumo por ahora que lo guardo en un array posicion es el req.params.id del juego
         if(data.vote){socket.dataBase.votos.positivos++} //se suma el voto (que es un bool)
         else{socket.dataBase.votos.positivos--}
-        socket.dataBase.votos.total++
+        socket.dataBase.votos.total++;
         if(socket.dataBase.votos.total==socket.dataBase.cant_jugadores - socket.dataBase.mod_total) //si es el jugador final que voto
         {   
             if(socket.dataBase.votos.positivos>=0) //si hay mas del 50% de votos positivos, devuelve a todos que el gobierno es exitoso, si el cliente es el pm, accede a 3 cartas
@@ -404,7 +404,6 @@ io.on('connection', socket =>
         io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
         io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
     });
-
 })
 
 //Funciones Auxiliares:

@@ -7,7 +7,7 @@ import PowerSelect from "./PowerSelect/PowerSelect.jsx";
 import SelectCh from "./SelectCh/SelectCh.jsx";
 import Vote from "./Vote/Vote.jsx";
 
-import {setYou_chancelor,setNext_chancelor} from '../redux/actions.js';
+import {setYou_chancelor,setNext_chancelor,setNewsBox} from '../redux/actions.js';
 import { useSelector } from "react-redux";
 import './Hud.css';
 
@@ -32,11 +32,13 @@ function Hud(props)
         socket.on("asigned_pm",function(msg)
         {console.log("assigned_pm")
             setViewSelectedCh(true);});
+            dispatch(setNewsBox({title:"assigned_pm"}));
 
         socket.on("init_vote",function(msg) 
         {
             setVoteD(true);
             dispatch(setNext_chancelor(msg));
+            dispatch(setNewsBox({title:"chancellor_chosen"}));
         });
 
         socket.on("pm_desition_client",function(msg){setViewCardSelect([true,msg.cartas,"pm_desition"]);});

@@ -51,7 +51,11 @@ function Header()
         <div id="headerContainer" >
             <div id='imgHeaderShell'><img id='imgHeader' src="../img/output-onlinepngtools.png" alt="" /></div>
             <div id="nameChangeContainer">
-                <div id="nameImputCont"><input type="text" name="newName" id="newNameInput" placeholder="New Name" value={newName} onChange={e =>{setNewName(e.target.value)}}/></div>
+                <div id="nameImputCont">
+                    <input type="text" name="newName" id="newNameInput" placeholder="New Name" value={newName} onChange={e =>
+                        {if(e.target.value.length<10)setNewName(e.target.value)}}
+                    />
+                </div>
                <div id="sendCont"><button id="sendNewName" onClick={sendNewName}>Send Name</button></div> 
             </div> 
             <div id="infoContainer">
@@ -60,7 +64,7 @@ function Header()
                 <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Rol: </span>{player_data.rol}</p>
                 <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>State: </span>{player_data.estado}</p>
                 <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Wagon: </span>{player_data.sala} <FontAwesomeIcon className="copyIcon" onClick={handleCopy} icon={faCopy}/></p>
-                <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Copy Wagon: </span><FontAwesomeIcon className="copyIcon" onClick={handleCopy} icon={faCopy}/></p>
+                {/* <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Copy Wagon: </span><FontAwesomeIcon className="copyIcon" onClick={handleCopy} icon={faCopy}/></p> */}
             </div>
             {initButton()}
         </div>

@@ -88,12 +88,14 @@ function next_pm(state={},action)
     if(action.type=="NEXT_PM"){return action.payload;}
     else return state;
 }
+
 function next_chancelor(state={chancellor:{position:-1}},action)
 {
 
     if(action.type=="NEXT_CHANCELLOR"){return action.payload;}
     else return state;
 }
+
 function room(state={roomNumber:"",unit:""},action)
 {
     if(action.type=="ROOM_NUMBER"){return{...state,roomNumber:action.payload};}
@@ -101,6 +103,14 @@ function room(state={roomNumber:"",unit:""},action)
     else {return state;}
 }
 
+function newsBox(state={type:"",payload:{}},action)
+{
+    if(action.type=="ACTIVE_NEWS")
+    {
+        return action.payload;
+    }
+    else return state;
+}
 const rootReducer=combineReducers({
     all_players,
     player_data,
@@ -110,7 +120,8 @@ const rootReducer=combineReducers({
     alive,
     next_pm,
     next_chancelor,
-    room
+    room,
+    newsBox
 });
 
 export default rootReducer;

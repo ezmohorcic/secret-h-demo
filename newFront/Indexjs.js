@@ -8,13 +8,12 @@ import RoomSelect from './Rooms/RoomSelect.jsx'
 import {BrowserRouter,Routes,Route} from "react-router-dom";
 
 const socket = io.connect('https://secret-h-demo-bqsrf.ondigitalocean.app/')
+//const socket = io.connect('http://localhost:3000/')
 export const SocketContext = React.createContext()
 // element={<App/>}
 
 function Root()
 {
-  function rootLetBack(){return <App/>}
-
   return(
     <SocketContext.Provider value={socket}>
     <Provider store={store}>
