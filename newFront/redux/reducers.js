@@ -107,6 +107,7 @@ function newsBox(state={type:"",payload:{}},action)
 {
     if(action.type=="ACTIVE_NEWS")
     {
+        console.log(action.payload);
         return action.payload;
     }
     else return state;
@@ -122,6 +123,7 @@ const rootReducer=combineReducers({
     next_chancelor,
     room,
     newsBox
+        
 });
 
 export default rootReducer;

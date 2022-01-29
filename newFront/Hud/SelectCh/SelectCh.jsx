@@ -24,9 +24,9 @@ function SelectCh(props)
         }
         
     }
-    var chCandidates= all_players.map(element=>
+    var chCandidates= all_players.map((element,index)=>
         {
-            if(stats_turno.last_elected[0].position!=element.position && stats_turno.last_elected[1].position!=element.position && player_data.position!=element.position && element.estado!="dead")return(<ChCandidate element={element} setSelected={setSelected}/>)
+            if(stats_turno.last_elected[0].position!=element.position && stats_turno.last_elected[1].position!=element.position && player_data.position!=element.position && element.estado!="dead")return(<ChCandidate key={"candidate"+index} element={element} setSelected={setSelected}/>)
         });
 
     return(

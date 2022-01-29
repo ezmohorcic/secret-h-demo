@@ -247,7 +247,7 @@ io.on('connection', socket =>
     socket.on("selected_chancellor",data=>
     {//el primer ministro escogio chancellor y se inicia votacion
         socket.dataBase.chancellor=data;
-        //io.to(socket.dataBase.chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
+        io.to(socket.dataBase.chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
         io.to(socket.roomKey).emit("init_vote",{chancellor:data}) //evento para que en todos los front aparezca para votar si/no
         
     });
@@ -403,6 +403,26 @@ io.on('connection', socket =>
         var stats_stack=statStack(socket);
         io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
         io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
+    });
+
+    socket.on("rest_know_examine_deck",data=>
+    {
+        socket.to(socket.roomKey).emit("rest_know_examine_deck",data);
+    });
+
+    socket.on("rest_know_examine_player",data=>
+    {
+        socket.to(socket.roomKey).emit("rest_know_examine_player",data);
+    });
+
+    socket.on("rest_know_pick_candidate",data=>
+    {
+        socket.to(socket.roomKey).emit("rest_know_pick_candidate",data);
+    });
+
+    socket.on("rest_know_kill",data=>
+    {
+        socket.to(socket.roomKey).emit("rest_know_kill",data);
     });
 })
 

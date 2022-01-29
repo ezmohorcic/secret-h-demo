@@ -2,7 +2,7 @@ import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
 
-
+import { setNewsBox } from "../../redux/actions";
 import KillSelect from "./KillSelect.jsx";
 import DeckExam from "./DeckExam.jsx";
 import PlayerExam from "./PlayerExam.jsx";
@@ -14,27 +14,32 @@ function PowerSelect()
 {
     const socket = useContext(SocketContext);
     const [viewPower,setViewPower]=useState(["",[]]); 
+    const dispatch=useDispatch();
 
     useEffect(()=>
     {
         socket.on("examine_deck",function(msg)
         {
             setViewPower(["DeckExam",msg]);
+            dispatch(setNewsBox({title:"examine_deck"}));
         });
 
         socket.on("kill",function(msg)
         {
             setViewPower(["KillSelect",msg]);
+            dispatch(setNewsBox({title:"kill"}));
         });
 
         socket.on("examine_player",function(msg)
         {
             setViewPower(["PlayerExam",msg]);
+            dispatch(setNewsBox({title:"examine_player"}));
         });
 
         socket.on("pick_candidate",function(msg)
         {
             setViewPower(["PmSelect",msg]);
+            dispatch(setNewsBox({title:"pick_candidate"}));
         });
     },[socket]);
         

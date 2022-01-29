@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
 
 import Header from "./Header/Header.jsx";
-import Players from "./Players/Players.jsx"
-import Stats from "./Stats/Stats.jsx"
-import Hud from "./Hud/Hud.jsx"
+import Players from "./Players/Players.jsx";
+import Stats from "./Stats/Stats.jsx";
+import Hud from "./Hud/Hud.jsx";
+import NewsBox from "./NewsBox/NewsBox.jsx";
 
 import { SocketContext } from './Indexjs.js';
-import {setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols, roomNumber} from "./redux/actions.js"
+import {setNewsBox,setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols, roomNumber} from "./redux/actions.js"
 import './app.css';
 
 function App() 
@@ -61,17 +62,23 @@ function App()
             //setResetEv(true);
         });
 
+        socket.on("duo_won",function()
+        {
+            dispatch(setNewsBox({title:"duo_won"}));
+        });
+
         socket.on("assasinated",function(msg)
         {
             dispatch(unAlive());
             alert("You were executed by order of the president");
+            dispatch(setNewsBox({title:"assasinated"}));
         });
 
         socket.on("assasination",function(msg)
         {
             alert("You were not on the list, but someone else was...")
             dispatch(setOtherPlayer_Death(msg))
-        
+            dispatch(setNewsBox({title:"assasination"}));
         });
 
         socket.on("next_turn",function(msg)
@@ -96,9 +103,32 @@ function App()
 
         socket.on("you_chancellor",function(msg)
         {
-            setNewsBox({type:""})
+            dispatch(setNewsBox({title:"you_chancellor"}));
+            console.log("you chancellor")
             alert("You were selected to be the Chancellor")
+            
         });
+
+        socket.on("rest_know_examine_deck",function(msg)
+        {
+            dispatch(setNewsBox({title:"rest_know_examine_deck",payload:msg}));
+        });
+    
+        socket.on("rest_know_examine_player",function(msg)
+        {
+            dispatch(setNewsBox({title:"rest_know_examine_player",payload:msg}));
+        });
+    
+        socket.on("rest_know_pick_candidate",function(msg)
+        {
+            dispatch(setNewsBox({title:"rest_know_pick_candidate",payload:msg}));
+        });
+
+        socket.on("rest_know_kill",function(msg)
+        {
+            dispatch(setNewsBox({title:"rest_know_kill",payload:msg}));
+        });
+
     },[socket]);
 
     const fallBackRoom = ()=>
@@ -111,7 +141,8 @@ function App()
                     <Players/>
                     <Stats/>
                     {/* {renderHud()} */}
-                    <Hud/>      
+                    <Hud/>  
+                    <NewsBox/>    
                 </React.Fragment>
             )
         }

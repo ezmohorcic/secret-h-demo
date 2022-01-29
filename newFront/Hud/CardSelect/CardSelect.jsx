@@ -12,6 +12,7 @@ function CardSelect(props)
     {
         return(
             <Card
+                key={'card'+index}
                 arrCartas={props.cards}
                 numberCard={index}
                 content={element}

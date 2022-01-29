@@ -108,5 +108,6 @@ export function unit(payload)
 //---LightBox
 
 export function setNewsBox(payload){
+    console.log(payload);
     return({type:"ACTIVE_NEWS",payload:payload})
 }

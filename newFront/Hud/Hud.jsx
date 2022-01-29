@@ -30,7 +30,7 @@ function Hud(props)
     useEffect(()=>
     {
         socket.on("asigned_pm",function(msg)
-        {console.log("assigned_pm")
+        {console.log("asigned_pm")
             setViewSelectedCh(true);});
             dispatch(setNewsBox({title:"assigned_pm"}));
 
@@ -38,7 +38,7 @@ function Hud(props)
         {
             setVoteD(true);
             dispatch(setNext_chancelor(msg));
-            dispatch(setNewsBox({title:"chancellor_chosen"}));
+            //dispatch(setNewsBox({title:"chancellor_chosen"}));
         });
 
         socket.on("pm_desition_client",function(msg){setViewCardSelect([true,msg.cartas,"pm_desition"]);});

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSkull, faDove} from '@fortawesome/free-solid-svg-icons';
 
+import { setNewsBox } from "../redux/actions";
 import './Stats.css';
 
 const BLUE="blue"; //ley liberal
@@ -13,7 +14,9 @@ function Stats()
 {
     const socket = useContext(SocketContext);
 
-    const stats_turno=useSelector((state)=>state.stats_turno)
+    const stats_turno=useSelector((state)=>state.stats_turno);
+    const dispatch=useDispatch();
+
     const [blue,setBlue]=useState(0);
     const [red,setRed]=useState(0);
 
@@ -21,11 +24,13 @@ function Stats()
     {
         socket.on("law_done",function(msg)
         {
+            dispatch(setNewsBox({title:"law_done"}));
             msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);
         });
 
         socket.on("duo_lost",function(msg)
         {
+            dispatch(setNewsBox({title:"duo_lost"}));
             if(msg.passed_law){msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);}
         });
     },[socket]);
