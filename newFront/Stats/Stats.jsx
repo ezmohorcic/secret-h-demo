@@ -41,15 +41,15 @@ function Stats()
 
     for(var i=0;i<5;i++)
     {
-        if(i<blue){blueLaws.push(<div className="blueLaw"><div className="blueIcon"><FontAwesomeIcon className="fontAweDove" icon={faDove}/></div></div>)}
-        else{blueLaws.push(<div className="blueLaw"></div>)}
+        if(i<blue){blueLaws.push(<div key={"blueint"+i} className="blueLaw"><div className="blueIcon"><FontAwesomeIcon className="fontAweDove" icon={faDove}/></div></div>)}
+        else{blueLaws.push(<div key={"blueint"+i} className="blueLaw"></div>)}
     }
     for(var i=0;i<6;i++)
     {
-        if(i<red){redLaws.push(<div className="redLaw"> <div className="redIcon"><FontAwesomeIcon className="fontAweSkull" icon={faSkull}/></div></div>)}
-        else{{redLaws.push(<div className="redLaw"></div>)}}
+        if(i<red){redLaws.push(<div key={"redint"+i} className="redLaw"> <div className="redIcon"><FontAwesomeIcon className="fontAweSkull" icon={faSkull}/></div></div>)}
+        else{{redLaws.push(<div key={"redint"+i} className="redLaw"></div>)}}
     }
-    for(var i=0;i<stats_turno.skipped_turns;i++){skipped.push(<div className="skippedDot"></div>)}
+    for(var i=0;i<stats_turno.skipped_turns;i++){skipped.push(<div key={"skipint"+i} className="skippedDot"></div>)}
 
 
     return(

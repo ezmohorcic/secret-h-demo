@@ -221,6 +221,8 @@ io.on('connection', socket =>
     {
         if(socket.hasOwnProperty("dataBase"))
         {
+            console.log("disconnecting");
+            console.log(socket.username);
             socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
             socket.dataBase.cant_jugadores--;   //se va uno, resto
             for(var i=0;i<socket.dataBase.jugadores.length;i++)     

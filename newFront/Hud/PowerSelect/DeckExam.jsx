@@ -9,13 +9,13 @@ function DeckExam(props)
     const socket = useContext(SocketContext);
     //const all_players=useSelector((state)=>state.all_players);
     const player_data=useSelector(state=>state.player_data)
-    var arrShow = props.powerPayload.map((element)=>
+    var arrShow = props.powerPayload.map((element,index)=>
     {
         let view;
         if(element=="red")
         {
             return(
-                <div className="shellShowRed">
+                <div key={"cardChoose"+index} className="shellShowRed">
                     <div className="innerShowRed"></div>
                 </div>
             )
@@ -23,7 +23,7 @@ function DeckExam(props)
         else
         {
             return(
-                <div className="shellShowBlue">
+                <div key={"cardChoose"+index} className="shellShowBlue">
                     <div className="innerShowBlue"></div>
                 </div>
             )

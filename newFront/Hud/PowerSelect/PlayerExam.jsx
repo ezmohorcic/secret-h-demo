@@ -11,10 +11,10 @@ function PlayerExam(props)
     const all_players=useSelector((state)=>state.all_players);
     const knownRols=useSelector((state)=>state.knownRols);
     const dispatch = useDispatch();
-    var arrShow =all_players.map((element)=>
+    var arrShow =all_players.map((element,index)=>
     {   
         return(
-            <div className="genericSelectExam">
+            <div key={"selectExam"+index} className="genericSelectExam">
                 <div className="borderShowExam">
                     <button className="examBut" onClick={()=>
                     {

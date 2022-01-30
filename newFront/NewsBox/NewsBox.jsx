@@ -115,6 +115,10 @@ export default function NewsBox()
             innerInfo.img=faCrow;
         break;
 
+        case "deathy":
+            innerInfo.display={display:"none"}
+        break;
+
         default:
         break;    
     }

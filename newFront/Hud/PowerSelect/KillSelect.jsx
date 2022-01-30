@@ -11,12 +11,12 @@ function KillSelect(props)
     const socket = useContext(SocketContext);
     const all_players=useSelector((state)=>state.all_players);
 
-    var arrShow = all_players.map((element)=>
+    var arrShow = all_players.map((element,index)=>
     {
         if(element.estado!="dead")
         {
             return(
-                <div className="genericSelectKill">
+                <div key={"killChoose"+index} className="genericSelectKill">
                     <div className="borderKillShow">
                         <button className="killBut" onClick={()=>
                         {
