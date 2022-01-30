@@ -50,6 +50,7 @@ function Hud(props)
             setVoteD(false);
             setViewSelectedCh(false);
             setViewCardSelect([false,[],""]);
+            dispatch(setNewsBox({title:"deathy"}));
         });
 
     },[socket]);

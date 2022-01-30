@@ -70,15 +70,13 @@ function App()
         socket.on("assasinated",function(msg)
         {
             dispatch(unAlive());
-            alert("You were executed by order of the president");
-            dispatch(setNewsBox({title:"assasinated"}));
+            dispatch(setNewsBox({title:"assasinated",payload:msg}));
         });
 
         socket.on("assasination",function(msg)
         {
-            alert("You were not on the list, but someone else was...")
             dispatch(setOtherPlayer_Death(msg))
-            dispatch(setNewsBox({title:"assasination"}));
+            dispatch(setNewsBox({title:"assasination",payload:msg}));
         });
 
         socket.on("next_turn",function(msg)
@@ -104,9 +102,7 @@ function App()
         socket.on("you_chancellor",function(msg)
         {
             dispatch(setNewsBox({title:"you_chancellor"}));
-            console.log("you chancellor")
-            alert("You were selected to be the Chancellor")
-            
+            console.log("you chancellor")          
         });
 
         socket.on("rest_know_examine_deck",function(msg)
@@ -124,10 +120,10 @@ function App()
             dispatch(setNewsBox({title:"rest_know_pick_candidate",payload:msg}));
         });
 
-        socket.on("rest_know_kill",function(msg)
+        /*socket.on("rest_know_kill",function(msg)
         {
             dispatch(setNewsBox({title:"rest_know_kill",payload:msg}));
-        });
+        });*/
 
     },[socket]);
 

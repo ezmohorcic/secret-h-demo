@@ -20,7 +20,7 @@ function PmSelect(props)
                     <div className="borderShowPm">
                         <button className="pmBut" onClick={()=>
                         {
-                            socket.emit("pick_candidate",{element});
+                            socket.emit("rest_know_pick_candidate",element); //pick_candidate
                             props.setViewPower("");
                         }}>{element.username}</button>
                     </div>

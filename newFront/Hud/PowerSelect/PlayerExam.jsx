@@ -8,9 +8,12 @@ import './PlayerExam.css';
 
 function PlayerExam(props)
 {
+    const socket = useContext(SocketContext);
+
     const all_players=useSelector((state)=>state.all_players);
     const knownRols=useSelector((state)=>state.knownRols);
     const dispatch = useDispatch();
+
     var arrShow =all_players.map((element,index)=>
     {   
         return(
@@ -18,7 +21,8 @@ function PlayerExam(props)
                 <div className="borderShowExam">
                     <button className="examBut" onClick={()=>
                     {
-                        dispatch(setKnownRols(element.position))
+                        dispatch(setKnownRols(element.position));
+                        socket.emit("rest_know_examine_deck",element);
                         props.setViewPower("");
                     }}><p>{element.username}</p></button>
                 </div>
