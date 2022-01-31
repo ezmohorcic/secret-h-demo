@@ -111,3 +111,10 @@ export function setNewsBox(payload){
     console.log(payload);
     return({type:"ACTIVE_NEWS",payload:payload})
 }
+
+//---SoundEffects
+
+export function setSoundEffects()
+{
+    return({type:"ON/OF_SOUND"});
+}

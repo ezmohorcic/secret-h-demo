@@ -112,6 +112,13 @@ function newsBox(state={title:"",payload:{},disp:{display:"none"}},action)
     }
     else return state;
 }
+
+function soundEffects(state=true,action)
+{
+    if(action.type=="ON/OF_SOUND"){return !state}
+    else {return state;}
+}
+
 const rootReducer=combineReducers({
     all_players,
     player_data,
@@ -122,7 +129,8 @@ const rootReducer=combineReducers({
     next_pm,
     next_chancelor,
     room,
-    newsBox
+    newsBox,
+    soundEffects
         
 });
 

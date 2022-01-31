@@ -6,15 +6,32 @@ import { faSkull, faDove, faCrow} from '@fortawesome/free-solid-svg-icons';
 
 import './NewsBox.css';
 
+let gunShot = new Audio('../Sounds/GunShotSilencer.mp3');
+let fotoSound = new Audio('../Sounds/35mmCameraAutoWin.mp3');
+let pickCandidateSound = new Audio('../Sounds/ConcertBassDrum.mp3');
+let otherExamDeckSound = new Audio('../Sounds/Soundstorm.mp3');
+let next_turnSound = new Audio('../Sounds/next_turn.mp3');
+let trainWhistleSound = new Audio('../Sounds/train_whistle.mp3');
+let duoWon = new Audio('../Sounds/duoWon.mp3');
+let newChancellorSound = new Audio('../Sounds/new_chancellor.mp3');
+let lawDoneSound = new Audio('../Sound/ChurchBellRinging.mp3');
+let duoLost = new Audio('../Sounds/duoWon.mp3');
+
 export default function NewsBox()
 {
     const newsBox=useSelector((state)=>state.newsBox);
-    const [disp,setDisp]=useState({display:"none"});
+    const soundEffects=useSelector((state)=>state.soundEffects);
 
     let innerInfo={};
 
     console.log(newsBox.title)
     switch (newsBox.title) {
+        case "next_turn":
+            if(soundEffects){next_turnSound.play();}
+        break;
+        case "init_game":
+            if(soundEffects){trainWhistleSound.play();}
+        break;
         case "you_chancellor":
             
             innerInfo.flavorText=<p id="newsBoxFlavor">You've been selected by the president, you'll become his chancellor.</p>;
@@ -27,6 +44,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">A chancellor has been chosen, it's your moment to decide.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(The president selected chancellor, vote if you want them to pass a law this turn.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){newChancellorSound.play();}
         break;
 
         case "asigned_pm":
@@ -41,6 +59,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">Results are clear, the president and chancellor will take power now.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(The majority voted in favor of the duo president-chancellor.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){duoWon.play();}
         break;
 
         case "duo_lost":
@@ -48,6 +67,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">Until the popular opinion says otherwise, president and chancellor won't elected.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(The majority voted against of the duo president-chancellor.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){duoLost.play();}
         break;
 
         case "law_done":
@@ -55,6 +75,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">Chancellor and President made their decition, a new law has been stablished.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(Both president and chancellor discarted one law, the remaining one was played.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){lawDoneSound.play();}
         break;
 
         case "examine_deck":
@@ -90,6 +111,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">You've been executed.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(The president killed you.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){gunShot.play();}
         break;
 
         case "assasination":
@@ -97,6 +119,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">A bullet is heared in a dark alley, <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>  has been murdered.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(The president killed a player.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){gunShot.play();}
         break;
     
         case "rest_know_examine_deck":
@@ -104,6 +127,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">The president knows the posible futures of the nation.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(The president knows the next three laws of the stack.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){otherExamDeckSound.play();}
         break;
 
         case "rest_know_examine_player":
@@ -111,6 +135,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">The president uses their spies to know the identity of: <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(The president knows the rol of the selected player (liberal, fascist, hitler).)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){fotoSound.play();}
         break;
         
         case "rest_know_pick_candidate":
@@ -118,6 +143,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">A handshake seals the destiny of the nation, the next president will be: <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(The president chose the next .)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){pickCandidateSound.play();}
         break;
         
         /*case "rest_know_kill":

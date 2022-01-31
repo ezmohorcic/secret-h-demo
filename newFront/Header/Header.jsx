@@ -1,9 +1,9 @@
 import React, {useState, useContext, useCallback, useEffect} from "react";
 import { SocketContext } from "../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
-import {setPlayer_username,soyCeroTrue,soyCeroFalse} from "../redux/actions.js";
+import {setPlayer_username,setSoundEffects} from "../redux/actions.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLevelDownAlt, faCopy} from '@fortawesome/free-solid-svg-icons';
+import { faLevelDownAlt, faCopy, faVolumeUp, faVolumeOff} from '@fortawesome/free-solid-svg-icons';
 
 import './Header.css';
 
@@ -16,6 +16,7 @@ function Header()
     
     const player_data=useSelector((state)=>state.player_data);
     const soyCeroView=useSelector((state)=>state.soyCeroView);
+    const soundEffects=useSelector((state)=>state.soundEffects);
 
     const sendNewName = function ()
     {
@@ -27,6 +28,26 @@ function Header()
         }
     }
     const sendInit = function(){socket.emit("init_game",{})}
+
+    const soundEffectsButton = function()
+    {
+        if(soundEffects)
+        {
+            return(
+                <div id="soundEffectShell" onClick={()=>dispatch(setSoundEffects())}>
+                    <FontAwesomeIcon icon={faVolumeUp}/>
+                </div>
+            )
+        }
+        else
+        {
+            return(
+                <div id="soundEffectShell" onClick={()=>dispatch(setSoundEffects())}>
+                    <FontAwesomeIcon icon={faVolumeOff}/>
+                </div>
+            )
+        }
+    }
 
     const initButton = function()
     {
@@ -67,6 +88,9 @@ function Header()
                 {/* <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Copy Wagon: </span><FontAwesomeIcon className="copyIcon" onClick={handleCopy} icon={faCopy}/></p> */}
             </div>
             {initButton()}
+            <div id="soundEffectContainer">
+                {soundEffectsButton()}
+            </div>
         </div>
         
     )

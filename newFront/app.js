@@ -12,17 +12,17 @@ import { SocketContext } from './Indexjs.js';
 import {setNewsBox,setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols, roomNumber} from "./redux/actions.js"
 import './app.css';
 
+
 function App() 
 {
     const socket = useContext(SocketContext);
 
     const dispatch = useDispatch();
     const alive= useSelector((state)=>state.alive);
-    const room=useSelector((state)=>state.room)
-
+    const room=useSelector((state)=>state.room);
 
     useEffect(()=>
-    {   
+    {
         socket.on("connect_error", (err) => {console.log(`connect_error due to ${err.message}`)});
 
         socket.on("your_data",function(msg)
@@ -60,6 +60,7 @@ function App()
             dispatch(setAll_players(msg.jugadores));
             dispatch(setNext_pm(msg.next_pm));
             //setResetEv(true);
+            dispatch(setNewsBox({title:"init_game",disp:{display:"block"}}));
         });
 
         socket.on("duo_won",function()
@@ -84,6 +85,7 @@ function App()
         {
             dispatch(setStats_turno(msg.stats));
             dispatch(setNext_pm(msg.next_pm));
+            dispatch(setNewsBox({title:"next_turn",payload:msg,disp:{display:"block"}}));
         });
 
         socket.on("blue_wins",function(msg)

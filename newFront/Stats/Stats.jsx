@@ -10,6 +10,9 @@ import './Stats.css';
 const BLUE="blue"; //ley liberal
 const RED="red"; //ley fascista
 
+let lawDoneSound = new Audio('../Sound/ChurchBellRinging.mp3');
+let duoLost = new Audio('./Sounds/duoWon.mp3');
+
 function Stats()
 {
     const socket = useContext(SocketContext);

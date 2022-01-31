@@ -178,3 +178,20 @@
     font-size: 100px;
     color:#b25544;
 }
+
+
+#soundEffectShell{
+    width: 20px;
+    height: 10px;
+    padding:10px 10px 10px 10px;
+    margin: 0px 0px 10px 0;
+
+    font-size: 20px;
+    
+
+    color: #434243;
+    box-shadow: 0px -10px #fde1c0 inset;
+}
+#soundEffectShell:hover{
+    cursor: pointer;
+}
