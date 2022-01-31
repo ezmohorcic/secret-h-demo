@@ -16,6 +16,13 @@ let duoWon = new Audio('../Sounds/duoWon.mp3');
 let newChancellorSound = new Audio('../Sounds/new_chancellor.mp3');
 let lawDoneSound = new Audio('../Sound/ChurchBellRinging.mp3');
 let duoLost = new Audio('../Sounds/duoWon.mp3');
+let deckExamSound = new Audio('../Sounds/Whoosh.mp3');
+let killSelectSound = new Audio('../Sounds/GunCockSingle.mp3');
+let playerExamSound = new Audio('../Sounds/tap.mp3');
+let bookMovement = new Audio('../Sounds/bookMovement.mp3');
+let chairPresidentAssigned = new Audio('../Sounds/chairPresidentAssigned.mp3');
+let LetterOpener = new Audio('../Sounds/LetterOpener.mp3');
+
 
 export default function NewsBox()
 {
@@ -37,6 +44,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">You've been selected by the president, you'll become his chancellor.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(You'll act as chancellor this turn, you'll recieve two cards from the president adter he discarted one of the three he gets front the stack.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){LetterOpener.play();}
         break;
 
         case "chancellor_chosen":
@@ -52,6 +60,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">Now it's your turn in power, use it with discretion.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(You have to choose a chancellor to pass a law this turn.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){chairPresidentAssigned.play();}
         break;
 
         case "duo_won":
@@ -83,6 +92,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">Before leaving office, you have a vivid vision of what is to come.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(You can see the next three laws of the stack, remember them and click "close".)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){deckExamSound.play();}
         break;
 
         case "kill":
@@ -90,6 +100,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">You have to maintain your power, and those who defy you must die.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(You can choose one other player to kill, that player cant participate until the next game.)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){killSelectSound.play();}
         break;
 
         case "examine_player":
@@ -97,6 +108,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">Your spies are ready and waiting, just point who to investigate.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(Select another player to reveal, just to yourself, their rol (liberal, fascist, hitler).)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){playerExamSound.play();}
         break;
 
         case "pick_candidate":
@@ -104,6 +116,7 @@ export default function NewsBox()
             innerInfo.flavorText=<p id="newsBoxFlavor">Being in power means trying to perpetuate your influence, and that means to choose your succesor.</p>;
             innerInfo.aclaration=<p id='newsBoxAclaration'>(Choose the next president candidate (this will skip those players between you and the selected player).)</p>;
             innerInfo.img=faCrow;
+            if(soundEffects){bookMovement.play();}
         break;
 
         case "assasinated":
