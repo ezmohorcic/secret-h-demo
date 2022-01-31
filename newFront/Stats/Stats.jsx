@@ -24,13 +24,14 @@ function Stats()
     {
         socket.on("law_done",function(msg)
         {
-            dispatch(setNewsBox({title:"law_done"}));
+            dispatch(setNewsBox({title:"law_done",disp:{display:"block"}}));
             msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);
         });
 
         socket.on("duo_lost",function(msg)
         {
-            dispatch(setNewsBox({title:"duo_lost"}));
+            console.log(msg)
+            dispatch(setNewsBox({title:"duo_lost",disp:{display:"block"}}));
             if(msg.passed_law){msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);}
         });
     },[socket]);

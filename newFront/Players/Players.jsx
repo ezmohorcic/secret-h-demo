@@ -13,7 +13,7 @@ function Players()
     
     var players=all_players.map(element=>
         {
-            return(<Player key={'player'+element.position} qty={all_players.length} knownRols={knownRols} your_rol={player_data.rol} player={element}/>)
+            return(<Player key={'player'+element.position} your_pos={player_data.position} qty={all_players.length} knownRols={knownRols} your_rol={player_data.rol} player={element}/>)
         });
     return(
         <div id="playersContainer">

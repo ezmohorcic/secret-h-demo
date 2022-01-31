@@ -180,6 +180,8 @@ const dummy=function(out)
 
 io.on('connection', socket => 
 {
+    console.log("new player")
+    console.log(socket.id)
     socket.on("new_room",data=>
     {
 
@@ -189,6 +191,8 @@ io.on('connection', socket =>
 
     socket.on("join_room",data=>
     {
+        console.log("join room")
+        console.log(socket)
         socket.roomKey = data;
         socket.roomId=hash(data);
         socket.dataBase=assignDataBase(data,socket.roomId);
@@ -219,19 +223,22 @@ io.on('connection', socket =>
 
     socket.on("disconnecting",data=>
     {
-        if(socket.hasOwnProperty("dataBase"))
+        if(socket)
         {
-            console.log("disconnecting");
-            console.log(socket.username);
-            socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
-            socket.dataBase.cant_jugadores--;   //se va uno, resto
-            for(var i=0;i<socket.dataBase.jugadores.length;i++)     
+            if(socket.hasOwnProperty("dataBase"))
             {
-                socket.dataBase.jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
-                socket.position=i;  //coloco nueva posicion
-                io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
+                console.log("disconnecting");
+                console.log(socket.username);
+                socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
+                socket.dataBase.cant_jugadores--;   //se va uno, resto
+                for(var i=0;i<socket.dataBase.jugadores.length;i++)     
+                {
+                    socket.dataBase.jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
+                    socket.position=i;  //coloco nueva posicion
+                    io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
+                }
+                socket.leave(socket.roomKey);
             }
-            socket.leave(socket.roomKey);
         }
     });
 
@@ -311,7 +318,7 @@ io.on('connection', socket =>
                         socket.dataBase.stack_descartados=[];
                     } //se obtienen las cartas
                     law_to_send=socket.dataBase.stack_cartas.pop();
-                    lawCounter({selected:law_to_send},socket); //se suma la ley al contador
+                    lawCounter(law_to_send,socket); //se suma la ley al contador
                     io.to(socket.roomKey).emit("duo_lost",{passed_law:passed_law,selected:law_to_send,counter:socket.dataBase[law_to_send]});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                     resetVotos(socket); //resetea los valores de los votos
                     nextTurn(socket); //genera el siguiente pm
@@ -369,11 +376,11 @@ io.on('connection', socket =>
     {
         socket.dataBase.jugadores[data.position].estado="dead";
         socket.dataBase.jugadores.forEach(element => {
-            if(element.position!=data.position){io.to(element.socketId).emit("assasination",data.position)}
+            if(element.position!=data.position){io.to(element.socketId).emit("assasination",data)}
         });
         io.to(data.socketId).emit("assasinated",socket.dataBase.jugadores[data.position].position)
         socket.dataBase.mod_total++;
-        if(determine_winner("assasination",socket))
+        if(data.rol==H)
         {
             socket.dataBase.jugadores.forEach(element=>
             {
@@ -409,12 +416,12 @@ io.on('connection', socket =>
 
     socket.on("rest_know_examine_deck",data=>
     {
-        socket.to(socket.roomKey).emit("rest_know_examine_deck",data);
+        io.to(socket.roomKey).emit("rest_know_examine_deck",data);
     });
 
     socket.on("rest_know_examine_player",data=>
     {
-        socket.to(socket.roomKey).emit("rest_know_examine_player",data);
+        io.to(socket.roomKey).emit("rest_know_examine_player",data);
     });
 
     socket.on("rest_know_pick_candidate",data=>
@@ -577,9 +584,9 @@ function determine_winner(comm,socket)
 {
 
     if(socket.dataBase.blue==WINS_BLUE){return BLUE}
+    else if(comm=="assasination" && socket.rol==H){return BLUE}
     else if(socket.dataBase.red==WINS_RED){return RED}
     else if(socket.dataBase.red>=MIN_RED_H && socket.dataBase.chancellor.rol==H && comm=="h_chancellor"){return RED}
-    else if(comm=="assasination" && socket.rol==H){return BLUE}
     else{return false}
 }
 
@@ -640,6 +647,7 @@ function generateBoard(socket)
 {
     if(socket.dataBase.jugadores.length<7)
     {
+        socket.dataBase.board.position_2=EXAMINE_PLAYER;
         socket.dataBase.board.position_3=EXAMINE_DECK;
         socket.dataBase.board.position_4=KILL_PLAYER;
         socket.dataBase.board.position_5=KILL_PLAYER;

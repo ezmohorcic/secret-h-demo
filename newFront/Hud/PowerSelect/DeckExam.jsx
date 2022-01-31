@@ -38,7 +38,7 @@ function DeckExam(props)
                 {
                     socket.emit("rest_know_examine_deck",player_data);
                     props.setViewPower("");
-                }}>Return</button>
+                }}>Close</button>
             <div id="deckShell">{arrShow}</div>
         </div>
     )

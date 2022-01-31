@@ -64,19 +64,20 @@ function App()
 
         socket.on("duo_won",function()
         {
-            dispatch(setNewsBox({title:"duo_won"}));
+            dispatch(setNewsBox({title:"duo_won",disp:{display:"block"}}));
         });
 
         socket.on("assasinated",function(msg)
         {
             dispatch(unAlive());
-            dispatch(setNewsBox({title:"assasinated",payload:msg}));
+            dispatch(setOtherPlayer_Death(msg));
+            dispatch(setNewsBox({title:"assasinated",payload:msg,disp:{display:"block"}}));
         });
 
         socket.on("assasination",function(msg)
         {
-            dispatch(setOtherPlayer_Death(msg))
-            dispatch(setNewsBox({title:"assasination",payload:msg}));
+            dispatch(setOtherPlayer_Death(msg.position))
+            dispatch(setNewsBox({title:"assasination",payload:msg,disp:{display:"block"}}));
         });
 
         socket.on("next_turn",function(msg)
@@ -101,23 +102,23 @@ function App()
 
         socket.on("you_chancellor",function(msg)
         {
-            dispatch(setNewsBox({title:"you_chancellor"}));
+            dispatch(setNewsBox({title:"you_chancellor",disp:{display:"block"}}));
             console.log("you chancellor")          
         });
 
         socket.on("rest_know_examine_deck",function(msg)
         {
-            dispatch(setNewsBox({title:"rest_know_examine_deck",payload:msg}));
+            dispatch(setNewsBox({title:"rest_know_examine_deck",payload:msg,disp:{display:"block"}}));
         });
     
         socket.on("rest_know_examine_player",function(msg)
         {
-            dispatch(setNewsBox({title:"rest_know_examine_player",payload:msg}));
+            dispatch(setNewsBox({title:"rest_know_examine_player",payload:msg,disp:{display:"block"}}));
         });
     
         socket.on("rest_know_pick_candidate",function(msg)
         {
-            dispatch(setNewsBox({title:"rest_know_pick_candidate",payload:msg}));
+            dispatch(setNewsBox({title:"rest_know_pick_candidate",payload:msg,disp:{display:"block"}}));
         });
 
         /*socket.on("rest_know_kill",function(msg)

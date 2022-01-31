@@ -103,7 +103,7 @@ function room(state={roomNumber:"",unit:""},action)
     else {return state;}
 }
 
-function newsBox(state={type:"",payload:{}},action)
+function newsBox(state={title:"",payload:{},disp:{display:"none"}},action)
 {
     if(action.type=="ACTIVE_NEWS")
     {

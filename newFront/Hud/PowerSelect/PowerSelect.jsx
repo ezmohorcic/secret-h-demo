@@ -21,25 +21,25 @@ function PowerSelect()
         socket.on("examine_deck",function(msg)
         {
             setViewPower(["DeckExam",msg]);
-            dispatch(setNewsBox({title:"examine_deck"}));
+            dispatch(setNewsBox({title:"examine_deck",disp:{display:"block"}}));
         });
 
         socket.on("kill",function(msg)
         {
             setViewPower(["KillSelect",msg]);
-            dispatch(setNewsBox({title:"kill"}));
+            dispatch(setNewsBox({title:"kill",disp:{display:"block"}}));
         });
 
         socket.on("examine_player",function(msg)
         {
             setViewPower(["PlayerExam",msg]);
-            dispatch(setNewsBox({title:"examine_player"}));
+            dispatch(setNewsBox({title:"examine_player",disp:{display:"block"}}));
         });
 
         socket.on("pick_candidate",function(msg)
         {
             setViewPower(["PmSelect",msg]);
-            dispatch(setNewsBox({title:"pick_candidate"}));
+            dispatch(setNewsBox({title:"pick_candidate",disp:{display:"block"}}));
         });
     },[socket]);
         

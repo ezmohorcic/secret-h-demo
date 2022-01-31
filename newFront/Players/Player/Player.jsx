@@ -14,8 +14,9 @@ function Player(props)
     const next_chancelor=useSelector((state)=>state.next_chancelor);
 
     let rol; 
-    if(props.your_rol==FASC || props.knownRols.includes(props.player.position)){rol=props.player.rol}
-    else if(props.your_rol==H && props.qty<7){rol=props.player.rol}
+    if(props.your_rol==FASC || props.knownRols.includes(props.player.position)){rol=props.player.rol;}
+    else if(props.your_rol==H && props.qty<7){rol=props.player.rol;}
+    else if(props.your_pos==props.player.position){rol=props.player.rol;}
     else{ rol="desconocido";}
     let cargo = function()
     {

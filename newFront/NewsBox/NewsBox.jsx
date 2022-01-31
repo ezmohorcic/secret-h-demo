@@ -4,10 +4,10 @@ import { setNewsBox } from '../redux/actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSkull, faDove, faCrow} from '@fortawesome/free-solid-svg-icons';
 
+import './NewsBox.css';
 
 export default function NewsBox()
 {
-    const dispatch=useDispatch();
     const newsBox=useSelector((state)=>state.newsBox);
     const [disp,setDisp]=useState({display:"none"});
 
@@ -16,107 +16,107 @@ export default function NewsBox()
     console.log(newsBox.title)
     switch (newsBox.title) {
         case "you_chancellor":
-            setDisp({display:"block"});
-            innerInfo.flavorText="You've been selected by the president, you'll become his chancellor.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">You've been selected by the president, you'll become his chancellor.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(You'll act as chancellor this turn, you'll recieve two cards from the president adter he discarted one of the three he gets front the stack.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "chancellor_chosen":
-            setDisp({display:"block"});
-            innerInfo.flavorText="A chancellor has been chosen, it's your momento to decide.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">A chancellor has been chosen, it's your moment to decide.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president selected chancellor, vote if you want them to pass a law this turn.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "asigned_pm":
-            setDisp({display:"block"});
-            innerInfo.flavorText="Now it's your turn in power, use it with discretion.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">Now it's your turn in power, use it with discretion.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(You have to choose a chancellor to pass a law this turn.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "duo_won":
-            setDisp({display:"block"});
-            innerInfo.flavorText="Results are clear, the president and chancellor will take power now.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">Results are clear, the president and chancellor will take power now.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The majority voted in favor of the duo president-chancellor.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "duo_lost":
-            setDisp({display:"block"});
-            innerInfo.flavorText="Until the popular opinion says otherwise, president and chancellor weren't elected.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">Until the popular opinion says otherwise, president and chancellor won't elected.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The majority voted against of the duo president-chancellor.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "law_done":
-            setDisp({display:"block"});
-            innerInfo.flavorText="Chancellor and President made their decition, a new law has been stablished.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">Chancellor and President made their decition, a new law has been stablished.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(Both president and chancellor discarted one law, the remaining one was played.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "examine_deck":
-            setDisp({display:"block"});
-            innerInfo.flavorText="Before leaving office, you have a vivid vision of what is to come.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">Before leaving office, you have a vivid vision of what is to come.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(You can see the next three laws of the stack, remember them and click "close".)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "kill":
-            setDisp({display:"block"});
-            innerInfo.flavorText="You have to maintain your power, and those who defy you must die.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">You have to maintain your power, and those who defy you must die.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(You can choose one other player to kill, that player cant participate until the next game.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "examine_player":
-            setDisp({display:"block"});
-            innerInfo.flavorText="Your spies are ready and waiting, just point who to investigate.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">Your spies are ready and waiting, just point who to investigate.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(Select another player to reveal, just to yourself, their rol (liberal, fascist, hitler).)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "pick_candidate":
-            setDisp({display:"block"});
-            innerInfo.flavorText="Being in power means trying to perpetuate your influence, and that means to choose your succesor.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">Being in power means trying to perpetuate your influence, and that means to choose your succesor.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(Choose the next president candidate (this will skip those players between you and the selected player).)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "assasinated":
-            setDisp({display:"block"});
-            innerInfo.flavorText="You've been executed";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">You've been executed.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president killed you.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "assasination":
-            setDisp({display:"block"});
-            innerInfo.flavorText=`A bullet is heared in a dark alley, ${newsBox.payload.username} has been murdered.`;
-            innerInfo.aclaration="(.)";
+            console.log(newsBox.payload)
+            innerInfo.flavorText=<p id="newsBoxFlavor">A bullet is heared in a dark alley, <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>  has been murdered.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president killed a player.)</p>;
             innerInfo.img=faCrow;
         break;
     
         case "rest_know_examine_deck":
-            setDisp({display:"block"});
-            innerInfo.flavorText="The president knows the posible futures of the nation.";
-            innerInfo.aclaration="(.)";
+            
+            innerInfo.flavorText=<p id="newsBoxFlavor">The president knows the posible futures of the nation.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president knows the next three laws of the stack.)</p>;
             innerInfo.img=faCrow;
         break;
 
         case "rest_know_examine_player":
-            setDisp({display:"block"});
-            innerInfo.flavorText="The president uses their spies to know the identity of: "+ newsBox.payload.username;
-            innerInfo.aclaration="(.)";
+            console.log(newsBox.payload)
+            innerInfo.flavorText=<p id="newsBoxFlavor">The president uses their spies to know the identity of: <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president knows the rol of the selected player (liberal, fascist, hitler).)</p>;
             innerInfo.img=faCrow;
         break;
         
         case "rest_know_pick_candidate":
-            setDisp({display:"block"});
-            innerInfo.flavorText="A handshake seals the destiny of the nation, the next president will be: "+ newsBox.payload.username;
-            innerInfo.aclaration="(.)";
+            console.log(newsBox.payload)
+            innerInfo.flavorText=<p id="newsBoxFlavor">A handshake seals the destiny of the nation, the next president will be: <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president chose the next .)</p>;
             innerInfo.img=faCrow;
         break;
         
@@ -127,17 +127,22 @@ export default function NewsBox()
             innerInfo.img=faCrow;
         break;*/
 
-        case "deathy":
-            setDisp({display:"none"});
-        break;
-
         default:
-            setDisp({display:"none"});
+            
         break;    
     }
-    console.log(innerInfo);
     return(
-        <p>{innerInfo.flavorText}</p>
+        <div style={newsBox.disp} id='newsBoxContainer'>
+            <div id='newsBoxBorder'>
+                <div id='newsBoxFlavorShell'>
+                    {innerInfo.flavorText}
+                </div>
+                <div id='newsBoxAclarationShell'>
+                    {innerInfo.aclaration}
+                </div>
+            </div>
+        </div>
+        
     )
 }
 

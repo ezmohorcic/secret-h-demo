@@ -32,7 +32,7 @@ function Hud(props)
         socket.on("asigned_pm",function(msg)
         {console.log("asigned_pm")
             setViewSelectedCh(true);});
-            dispatch(setNewsBox({title:"assigned_pm"}));
+            dispatch(setNewsBox({title:"assigned_pm",disp:{display:"block"}}));
 
         socket.on("init_vote",function(msg) 
         {
@@ -47,10 +47,11 @@ function Hud(props)
 
         socket.on("reset_hud",function()
         {
+            console.log("reset hud")
             setVoteD(false);
             setViewSelectedCh(false);
             setViewCardSelect([false,[],""]);
-            dispatch(setNewsBox({title:"deathy"}));
+            dispatch(setNewsBox({title:"deathy",disp:{display:"block"}}));
         });
 
     },[socket]);

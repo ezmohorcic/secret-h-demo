@@ -1,6 +1,7 @@
 import React, {useState, useContext, useEffect} from "react";
+import { SocketContext } from "../../Indexjs.js";
 import { useDispatch, useSelector } from "react-redux";
-import {setKnownRols} from "../../redux/actions.js";
+import {setKnownRols,setNewsBox} from "../../redux/actions.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye} from '@fortawesome/free-solid-svg-icons';
 
@@ -22,7 +23,7 @@ function PlayerExam(props)
                     <button className="examBut" onClick={()=>
                     {
                         dispatch(setKnownRols(element.position));
-                        socket.emit("rest_know_examine_deck",element);
+                        socket.emit("rest_know_examine_player",element);
                         props.setViewPower("");
                     }}><p>{element.username}</p></button>
                 </div>
