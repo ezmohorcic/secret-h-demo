@@ -256,9 +256,8 @@ io.on('connection', socket =>
     socket.on("selected_chancellor",data=>
     {//el primer ministro escogio chancellor y se inicia votacion
         socket.dataBase.chancellor=data;
-        io.to(socket.dataBase.chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor
         io.to(socket.roomKey).emit("init_vote",{chancellor:data}) //evento para que en todos los front aparezca para votar si/no
-        
+        io.to(socket.dataBase.chancellor.socketId).emit("you_chancellor");  //avisa al cliente que se lo eligio chancellor que es chancellor 
     });
 
     socket.on("voted_gov",data=>
@@ -286,19 +285,22 @@ io.on('connection', socket =>
                         io.to(element.socketId).emit("reset_hud")
                     });}
                 }
-                var trio_cartas=[];
-                for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
+                else
                 {
-                    if(socket.dataBase.stack_cartas.length==0)
+                    var trio_cartas=[];
+                    for(var i=0;i<3;i++) //obtengo las 3 cartas que se le envia al pm
                     {
-                        socket.dataBase.stack_cartas=shuffle(socket.dataBase.stack_descartados)
-                        socket.dataBase.stack_descartados=[];
+                        if(socket.dataBase.stack_cartas.length==0)
+                        {
+                            socket.dataBase.stack_cartas=shuffle(socket.dataBase.stack_descartados)
+                            socket.dataBase.stack_descartados=[];
+                        }
+                        trio_cartas.push(socket.dataBase.stack_cartas.pop());
                     }
-                    trio_cartas.push(socket.dataBase.stack_cartas.pop());
+                    resetVotos(socket); //resetea los valores de los votos
+                    io.to(socket.dataBase.pm.socketId).emit("pm_desition_client",{cartas:trio_cartas});
+                    io.to(socket.roomKey).emit("duo_won");
                 }
-                resetVotos(socket); //resetea los valores de los votos
-                io.to(socket.dataBase.pm.socketId).emit("pm_desition_client",{cartas:trio_cartas});
-                io.to(socket.roomKey).emit("duo_won");
             }
             else
             {

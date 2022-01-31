@@ -38,7 +38,7 @@ function Hud(props)
         {
             setVoteD(true);
             dispatch(setNext_chancelor(msg));
-            //dispatch(setNewsBox({title:"chancellor_chosen"}));
+            dispatch(setNewsBox({title:"chancellor_chosen"}));
         });
 
         socket.on("pm_desition_client",function(msg){setViewCardSelect([true,msg.cartas,"pm_desition"]);});
@@ -51,7 +51,7 @@ function Hud(props)
             setVoteD(false);
             setViewSelectedCh(false);
             setViewCardSelect([false,[],""]);
-            dispatch(setNewsBox({title:"deathy",disp:{display:"block"}}));
+            dispatch(setNewsBox({title:"deathy",disp:{display:"none"}}));
         });
 
     },[socket]);
