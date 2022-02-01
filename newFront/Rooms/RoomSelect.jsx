@@ -89,5 +89,22 @@ export default function RoomSelect()
         }
     }
 
-    return(<React.Fragment>{roomsview()}</React.Fragment>)
+    return(
+        <React.Fragment>
+        {roomsview()}
+        <div id='howToPlayContainer'>
+            <h1>How To Play:</h1>
+            <h2>Overview:
+                <p>Secret Hitler is a deception game were there are two teams, liberals and fascists,the latest having hitler too.</p>
+                <p>It's a +17 game, for between 5-10 players, that takes from 25 to 50 minutes to play, depending on the number of players and strategies taken.</p>
+                <p>The game starts,after all players enter and change their name, by clicking on "Sound Whistle", then, you'll be given a team,
+                 and the player on position 0 (the one on the top left) becomes the first pre-elected President.</p>
+                <p>Each turn, a new player will be pre-selected President in order of position (starting from 0)</p>
+                <p></p>
+            </h2>
+            <h2>Queues in game:</h2>
+            <h2>In-Deph Rules:</h2>
+        </div>
+        </React.Fragment>
+    )
 }
