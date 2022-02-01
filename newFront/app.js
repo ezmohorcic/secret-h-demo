@@ -63,9 +63,9 @@ function App()
             dispatch(setNewsBox({title:"init_game",disp:{display:"block"}}));
         });
 
-        socket.on("duo_won",function()
+        socket.on("duo_won",function(msg)
         {
-            dispatch(setNewsBox({title:"duo_won",disp:{display:"block"}}));
+            dispatch(setNewsBox({title:"duo_won",disp:{display:"block"},eachVote:msg}));
         });
 
         socket.on("assasinated",function(msg)

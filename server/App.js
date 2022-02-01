@@ -64,7 +64,8 @@ class roomDataBase
         this.votos=
         {
             positivos:0,
-            total:0
+            total:0,
+            eachVote:{}
         }
     }
 }
@@ -266,8 +267,17 @@ io.on('connection', socket =>
     socket.on("voted_gov",data=>
     { //este cliente voto si/no sobre el gobierno
         //asumo por ahora que lo guardo en un array posicion es el req.params.id del juego
-        if(data.vote){socket.dataBase.votos.positivos++} //se suma el voto (que es un bool)
-        else{socket.dataBase.votos.positivos--}
+        if(data.vote)
+        {
+            socket.dataBase.votos.positivos++;
+            socket.dataBase.votos.eachVote[socket.username]="Ja!";
+        
+        } //se suma el voto (que es un bool)
+        else
+        {
+            socket.dataBase.votos.positivos--;
+            socket.dataBase.votos.eachVote[socket.username]="Nein!";
+        }
         socket.dataBase.votos.total++;
         if(socket.dataBase.votos.total==socket.dataBase.cant_jugadores - socket.dataBase.mod_total) //si es el jugador final que voto
         {   
@@ -302,7 +312,8 @@ io.on('connection', socket =>
                     }
                     resetVotos(socket); //resetea los valores de los votos
                     io.to(socket.dataBase.pm.socketId).emit("pm_desition_client",{cartas:trio_cartas});
-                    io.to(socket.roomKey).emit("duo_won");
+                    io.to(socket.roomKey).emit("duo_won",socket.dataBase.votos.eachVote);
+                    socket.dataBase.votos.eachVote={}
                 }
             }
             else
@@ -324,18 +335,18 @@ io.on('connection', socket =>
                     } //se obtienen las cartas
                     law_to_send=socket.dataBase.stack_cartas.pop();
                     lawCounter(law_to_send,socket); //se suma la ley al contador
-                    io.to(socket.roomKey).emit("duo_lost",{passed_law:passed_law,selected:law_to_send,counter:socket.dataBase[law_to_send]});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                    io.to(socket.roomKey).emit("duo_lost",{passed_law:passed_law,selected:law_to_send,counter:socket.dataBase[law_to_send],eachVote:socket.dataBase.votos.eachVote});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                     resetVotos(socket); //resetea los valores de los votos
                     nextTurn(socket); //genera el siguiente pm
                     powerTurn({selected:law_to_send},socket); //se envia al analisis de poder al pm
                 }
                 else
                 {   
-                    io.to(socket.roomKey).emit("duo_lost",{passed_law:passed_law,selected:law_to_send});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
+                    io.to(socket.roomKey).emit("duo_lost",{passed_law:passed_law,selected:law_to_send,eachVote:socket.dataBase.votos.eachVote});     //se envia que perdio y si tenemos que pasar una ley obligatoriamente
                     resetVotos(socket); //resetea los valores de los votos
                     nextTurn(socket);
                     var stats_stack=statStack(socket);
-                    io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}) //se envia a todos el nuevo pm con este evento 
+                    io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack,eachVote:socket.dataBase.votos.eachVote}) //se envia a todos el nuevo pm con este evento 
                     io.to(socket.dataBase.pm.socketId).emit("asigned_pm");
                 }
             }
@@ -405,7 +416,7 @@ io.on('connection', socket =>
             }
     
             var stats_stack=statStack(socket);
-            io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
+            io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack,eachVote:socket.dataBase.votos.eachVote}); //se envia a todos el nuevo pm con este evento 
             io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
         }
 
@@ -415,7 +426,7 @@ io.on('connection', socket =>
     {
         socket.dataBase.pm=socket.dataBase.jugadores[data.position];
         var stats_stack=statStack(socket);
-        io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
+        io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack,eachVote:socket.dataBase.votos.eachVote}); //se envia a todos el nuevo pm con este evento 
         io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
     });
 
@@ -448,14 +459,14 @@ function powerTurn(data,socket)
         if(!determinePower(socket)) //determina si la ley tiene un poder que para que el juego continue, el pm necesita enviar info
         {
             var stats_stack=statStack(socket);
-            io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
+            io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack,eachVote:socket.dataBase.votos.eachVote}); //se envia a todos el nuevo pm con este evento 
             io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
         } 
     }
     else    //La carta no es roja
     {   
         var stats_stack=statStack(socket);
-        io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack}); //se envia a todos el nuevo pm con este evento 
+        io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack,eachVote:socket.dataBase.votos.eachVote}); //se envia a todos el nuevo pm con este evento 
         io.to(socket.dataBase.jugadores[socket.dataBase.pm.position].socketId).emit("asigned_pm");
     }
 }

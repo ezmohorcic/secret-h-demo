@@ -3,7 +3,7 @@
     height: 96px;
     margin: 0;
 
-    background-color: #F2654B;
+
     box-shadow: 10px 10px #c59257;
     border: 2px dashed  #b8a38d;
 }
@@ -29,8 +29,6 @@
 
     font-size: 30px;
     text-align: center;
-    
-    color:#fde1c0;
 }
 
 .estadoMuerto{
@@ -41,4 +39,32 @@
     text-align: center;
     
     color:#8a0303;
+}
+
+
+.presidentColor{
+    background: linear-gradient(45deg, rgba(242,101,75,1) 40%, rgba(102,2,60,1));/*naranja purpura*/
+    /*background: linear-gradient(45deg, rgba(117,117,117,1) 37%, rgba(102,2,60,1) 80%); gris purpura*/
+}
+.chancellorColor{
+    background: linear-gradient(45deg, rgba(242,101,75,1) 40%, rgba(131,137,150,1) 80%); /*naranja plata*/
+    /* background: linear-gradient(45deg, rgba(117,117,117,1) 40%, rgba(131,137,150,1) 80%); gris plata*/
+}
+
+.noRolColor{
+    background-color: #F2654B;
+}
+
+.hitlerColor{
+    color:#eabe3f;
+}
+.fascColor{
+    color:#d53f1e;
+}
+.libColor{
+    color:#394f76;
+}
+
+.unkColor{
+    color:#fde1c0;
 }

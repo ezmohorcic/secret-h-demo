@@ -34,7 +34,7 @@ function Stats()
         socket.on("duo_lost",function(msg)
         {
             console.log(msg)
-            dispatch(setNewsBox({title:"duo_lost",disp:{display:"block"}}));
+            dispatch(setNewsBox({title:"duo_lost",disp:{display:"block"},eachVote:msg.eachVote}));
             if(msg.passed_law){msg.selected==BLUE ? setBlue(msg.counter):setRed(msg.counter);}
         });
     },[socket]);

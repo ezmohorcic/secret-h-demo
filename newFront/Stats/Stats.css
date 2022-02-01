@@ -247,5 +247,6 @@
     width: 30px;
 
     border-radius: 15px;
+    border: 1px dashed #f6d399;
     background-color: #F2654B;
 }

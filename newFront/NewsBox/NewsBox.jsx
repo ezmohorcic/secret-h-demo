@@ -30,15 +30,33 @@ export default function NewsBox()
     const soundEffects=useSelector((state)=>state.soundEffects);
 
     let innerInfo={};
+    let arrVotes=[];
 
-    console.log(newsBox.title)
+    
     switch (newsBox.title) {
         case "next_turn":
+            console.log(newsBox.payload)
+            arrVotes= Object.getOwnPropertyNames(newsBox.payload.eachVote).map((element,index)=>
+            {
+                return(
+                    <li key={"vote"+index}>{element}:{newsBox.payload.eachVote[element]}</li>
+                )
+            });
+            innerInfo.flavorText=(
+                <React.Fragment>
+                    <p id="newsBoxFlavor">A new turn begins. Pre-elected President: {newsBox.payload.next_pm.username}</p>
+                    <ul id='allVotesShell'>{arrVotes}</ul>
+                </React.Fragment>
+            );
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The next in position took the pre-elected President title and has to choose chancellor.)</p>;
+            innerInfo.img=faCrow;
             if(soundEffects){next_turnSound.play();}
         break;
+
         case "init_game":
             if(soundEffects){trainWhistleSound.play();}
         break;
+
         case "you_chancellor":
             
             innerInfo.flavorText=<p id="newsBoxFlavor">You've been selected by the president, you'll become his chancellor.</p>;
@@ -65,16 +83,39 @@ export default function NewsBox()
 
         case "duo_won":
             
-            innerInfo.flavorText=<p id="newsBoxFlavor">Results are clear, the president and chancellor will take power now.</p>;
-            innerInfo.aclaration=<p id='newsBoxAclaration'>(The majority voted in favor of the duo president-chancellor.)</p>;
+            arrVotes= Object.getOwnPropertyNames(newsBox.eachVote).map((element,index)=>
+            {
+                return(
+                    <li key={"vote"+index}>{element}:{newsBox.eachVote[element]}</li>
+                )
+            });
+            innerInfo.flavorText=(
+                <React.Fragment>
+                    <p id="newsBoxFlavor">Results are clear, the president and chancellor will take power now.</p>
+                    <ul id='allVotesShell'>{arrVotes}</ul>
+                </React.Fragment>
+            );
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The majority voted in favor of the duo president-chancellor, the president will take 3 cards from stack, discard one, chancellor wil do the same with the 2 left.)</p>;
             innerInfo.img=faCrow;
             if(soundEffects){duoWon.play();}
         break;
 
         case "duo_lost":
-            
-            innerInfo.flavorText=<p id="newsBoxFlavor">Until the popular opinion says otherwise, president and chancellor won't elected.</p>;
-            innerInfo.aclaration=<p id='newsBoxAclaration'>(The majority voted against of the duo president-chancellor.)</p>;
+            console.log(newsBox);
+            arrVotes= Object.getOwnPropertyNames(newsBox.eachVote).map((element,index)=>
+            {
+                return(
+                    <li key={"vote"+index}>{element}:{newsBox.eachVote[element]}</li>
+                )
+            });
+            console.log(arrVotes)
+            innerInfo.flavorText=(
+                <React.Fragment>
+                    <p id="newsBoxFlavor">Until the popular opinion says otherwise, president and chancellor won't elected.</p>
+                    <ul id='allVotesShell'>{arrVotes}</ul>
+                </React.Fragment>
+            );
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The majority voted against of the duo president-chancellor, the next position becomes pre-elected president.)</p>;
             innerInfo.img=faCrow;
             if(soundEffects){duoLost.play();}
         break;
@@ -98,7 +139,7 @@ export default function NewsBox()
         case "kill":
             
             innerInfo.flavorText=<p id="newsBoxFlavor">You have to maintain your power, and those who defy you must die.</p>;
-            innerInfo.aclaration=<p id='newsBoxAclaration'>(You can choose one other player to kill, that player cant participate until the next game.)</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(You can choose one other player to kill, that player cant participate until the next game, tell the other players you have this decition to make!.)</p>;
             innerInfo.img=faCrow;
             if(soundEffects){killSelectSound.play();}
         break;
