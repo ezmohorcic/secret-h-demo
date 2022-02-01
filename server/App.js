@@ -191,26 +191,29 @@ io.on('connection', socket =>
 
     socket.on("join_room",data=>
     {
-        console.log("join room")
-        console.log(socket)
-        socket.roomKey = data;
-        socket.roomId=hash(data);
-        socket.dataBase=assignDataBase(data,socket.roomId);
-        if(socket.dataBase==false)
+        if(socket)
         {
-            io.to(socket.id).emit("wagon_error");
-        }
-        else
-        {
-            socket.join(data);
-
-            socket.username = "Anon";
-            socket.position = socket.dataBase.jugadores.length;
-            socket.dataBase.cant_jugadores++;
-            socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}) 
-
-            io.to(socket.id).emit("your_data",dummy({all_players:socket.dataBase.jugadores,userData:{username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}})) //le envia la informacion propia del jugador a su front
-            socket.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+            console.log("join room")
+            console.log(socket)
+            socket.roomKey = data;
+            socket.roomId=hash(data);
+            socket.dataBase=assignDataBase(data,socket.roomId);
+            if(socket.dataBase==false)
+            {
+                io.to(socket.id).emit("wagon_error");
+            }
+            else
+            {
+                socket.join(data);
+    
+                socket.username = "Anon";
+                socket.position = socket.dataBase.jugadores.length;
+                socket.dataBase.cant_jugadores++;
+                socket.dataBase.jugadores.push({username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}) 
+    
+                io.to(socket.id).emit("your_data",dummy({all_players:socket.dataBase.jugadores,userData:{username:socket.username,position:socket.position,socketId:socket.id,estado:"alive",rol:"",sala:socket.roomKey}})) //le envia la informacion propia del jugador a su front
+                socket.to(socket.roomKey).emit('new_player', socket.dataBase.jugadores) //evento que indica que se debe agregar nuevo usuario en la posicion
+            }
         }
     });
 
@@ -649,7 +652,7 @@ function generateBoard(socket)
 {
     if(socket.dataBase.jugadores.length<7)
     {
-        socket.dataBase.board.position_2=EXAMINE_PLAYER;
+        //socket.dataBase.board.position_2=EXAMINE_PLAYER;
         socket.dataBase.board.position_3=EXAMINE_DECK;
         socket.dataBase.board.position_4=KILL_PLAYER;
         socket.dataBase.board.position_5=KILL_PLAYER;
