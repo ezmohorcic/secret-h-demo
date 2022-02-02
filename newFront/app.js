@@ -9,7 +9,7 @@ import Hud from "./Hud/Hud.jsx";
 import NewsBox from "./NewsBox/NewsBox.jsx";
 
 import { SocketContext } from './Indexjs.js';
-import {setNewsBox,setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols, roomNumber} from "./redux/actions.js"
+import {setNewsBox,setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols, roomNumber, setNext_chancelor} from "./redux/actions.js"
 import './app.css';
 
 
@@ -86,6 +86,7 @@ function App()
             dispatch(setStats_turno(msg.stats));
             dispatch(setNext_pm(msg.next_pm));
             dispatch(setNewsBox({title:"next_turn",payload:msg,disp:{display:"block"}}));
+            dispatch(setNext_chancelor({chancellor:{position:-1}}))
         });
 
         socket.on("blue_wins",function(msg)

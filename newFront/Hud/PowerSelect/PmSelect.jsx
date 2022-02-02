@@ -9,18 +9,22 @@ import './PmSelect.css';
 function PmSelect(props)
 {
     const socket = useContext(SocketContext);
-    const all_players=useSelector((state)=>state.all_players);
 
-    var arrShow = all_players.map((element)=>
+    const stats_turno=useSelector((state)=>state.stats_turno)
+    const all_players=useSelector((state)=>state.all_players)
+    const player_data=useSelector((state)=>state.player_data)
+
+    var arrShow = all_players.map((element,index)=>
     {
-        if(element.estado!="dead")
+        if(stats_turno.last_elected[0].position!=element.position && stats_turno.last_elected[1].position!=element.position && player_data.position!=element.position && element.estado!="dead")
         {
             return(
-                <div className="genericSelectPm">
+                <div key={"selectionPm"+index} className="genericSelectPm">
                     <div className="borderShowPm">
                         <button className="pmBut" onClick={()=>
                         {
                             socket.emit("rest_know_pick_candidate",element); //pick_candidate
+                            socket.emit("pick_candidate",element); //pick_candidate
                             props.setViewPower("");
                         }}>{element.username}</button>
                     </div>

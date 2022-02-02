@@ -178,16 +178,16 @@ export default function NewsBox()
     
         case "rest_know_examine_deck":
             
-            innerInfo.flavorText=<p id="newsBoxFlavor">The president knows the posible futures of the nation.</p>;
-            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president knows the next three laws of the stack.)</p>;
+            innerInfo.flavorText=<p id="newsBoxFlavor">{newsBox.payload.presidentUsr} knows the posible futures of the nation.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>({newsBox.payload.presidentUsr} knows the next three laws of the stack.)</p>;
             innerInfo.img=faCrow;
             if(soundEffects){otherExamDeckSound.play();}
         break;
 
         case "rest_know_examine_player":
             console.log(newsBox.payload)
-            innerInfo.flavorText=<p id="newsBoxFlavor">The president uses their spies to know the identity of: <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>.</p>;
-            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president knows the rol of the selected player (liberal, fascist, hitler).)</p>;
+            innerInfo.flavorText=<p id="newsBoxFlavor">{newsBox.payload.presidentUsr} uses their spies to know the identity of: <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>.</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>({newsBox.payload.presidentUsr} knows the rol of the selected player (liberal, fascist, hitler).)</p>;
             innerInfo.img=faCrow;
             if(soundEffects){fotoSound.play();}
         break;
@@ -195,7 +195,7 @@ export default function NewsBox()
         case "rest_know_pick_candidate":
             console.log(newsBox.payload)
             innerInfo.flavorText=<p id="newsBoxFlavor">A handshake seals the destiny of the nation, the next president will be: <span style={{fontStyle:"italic",fontWeight:"bolder"}}>{newsBox.payload.username}</span>.</p>;
-            innerInfo.aclaration=<p id='newsBoxAclaration'>(The president chose the next .)</p>;
+            innerInfo.aclaration=<p id='newsBoxAclaration'>(The {newsBox.payload.presidentUsr} chose the next pre-selected President.)</p>;
             innerInfo.img=faCrow;
             if(soundEffects){pickCandidateSound.play();}
         break;

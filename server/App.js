@@ -424,6 +424,8 @@ io.on('connection', socket =>
 
     socket.on(PICK_CANDIDATE,data=>
     {
+        console.log("-------PICK CANDIDATE----------")
+        console.log(data)
         socket.dataBase.pm=socket.dataBase.jugadores[data.position];
         var stats_stack=statStack(socket);
         io.to(socket.roomKey).emit("next_turn",{next_pm:socket.dataBase.pm,stats:stats_stack,eachVote:socket.dataBase.votos.eachVote}); //se envia a todos el nuevo pm con este evento 
@@ -432,22 +434,22 @@ io.on('connection', socket =>
 
     socket.on("rest_know_examine_deck",data=>
     {
-        io.to(socket.roomKey).emit("rest_know_examine_deck",data);
+        io.to(socket.roomKey).emit("rest_know_examine_deck",{...data,presidentUsr:socket.username});
     });
 
     socket.on("rest_know_examine_player",data=>
     {
-        io.to(socket.roomKey).emit("rest_know_examine_player",data);
+        io.to(socket.roomKey).emit("rest_know_examine_player",{...data,presidentUsr:socket.username});
     });
 
     socket.on("rest_know_pick_candidate",data=>
     {
-        socket.to(socket.roomKey).emit("rest_know_pick_candidate",data);
+        socket.to(socket.roomKey).emit("rest_know_pick_candidate",{...data,presidentUsr:socket.username});
     });
 
     socket.on("rest_know_kill",data=>
     {
-        socket.to(socket.roomKey).emit("rest_know_kill",data);
+        socket.to(socket.roomKey).emit("rest_know_kill",{...data,presidentUsr:socket.username});
     });
 })
 
@@ -663,7 +665,7 @@ function generateBoard(socket)
 {
     if(socket.dataBase.jugadores.length<7)
     {
-        //socket.dataBase.board.position_2=EXAMINE_PLAYER;
+        socket.dataBase.board.position_1=PICK_CANDIDATE;
         socket.dataBase.board.position_3=EXAMINE_DECK;
         socket.dataBase.board.position_4=KILL_PLAYER;
         socket.dataBase.board.position_5=KILL_PLAYER;

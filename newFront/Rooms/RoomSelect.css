@@ -161,3 +161,49 @@
     transition: 1s;
     color:#b25544;
 }
+
+/*---How To Play---*/
+
+#howToPlayContainer{
+    width: 96%;
+    margin-left: 2%;
+    margin-right: 2%;
+
+    background-color:#F2654B;
+    box-shadow: 10px 10px #c59257;
+}
+
+#howToPlayContainer>h1,#howToPlayContainer>h2{
+    font-weight: bold;
+
+    width: 400px;
+
+    color: #fde1c0;
+    box-shadow: 0px -10px #b25544 inset;
+}
+#howToPlayContainer>h1{
+    text-align: center;
+    width: 100%;
+}
+.h3{
+    font-weight: bold;
+
+    width: 500px;
+
+    color: #fde1c0;
+    box-shadow: 0px -15px #b25544 inset;
+}
+
+
+#overviewContainer>p,#inGameQContainer>p{
+    
+    color: #fde1c0;
+    
+}
+
+#ulListPower{
+
+}
+#ulListPower>li{
+    color: #fde1c0;
+}
