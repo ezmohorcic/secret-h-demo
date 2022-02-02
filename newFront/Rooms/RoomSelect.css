@@ -162,6 +162,13 @@
     color:#b25544;
 }
 
+/*---About Me---*/
+
+#AboutsContainer{
+    height: 60px;
+    width: 420px;
+}
+
 /*---How To Play---*/
 
 #howToPlayContainer{
@@ -227,7 +234,10 @@
 .mockBGShowLi{
     width: 100%;
 }
-.aclarationMockState{color: #fde1c0;}
+.aclarationMockState{
+    color: #fde1c0;
+    text-align: center;
+}
 
 
 #showNormalSelectionsContainer,#mockAllPowersContainer{

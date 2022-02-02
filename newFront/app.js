@@ -9,7 +9,7 @@ import Hud from "./Hud/Hud.jsx";
 import NewsBox from "./NewsBox/NewsBox.jsx";
 
 import { SocketContext } from './Indexjs.js';
-import {setNewsBox,setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,setNew_player,soyCeroFalse,soyCeroTrue,setKnownRols, roomNumber, setNext_chancelor} from "./redux/actions.js"
+import {unit,setNewsBox,setNext_pm, setStats_turno,setOtherPlayer_name, setAllPlayer_data,setPlayer_position,setPlayer_rol,unAlive,setOtherPlayer_Death,setAll_players,soyCeroFalse,soyCeroTrue, roomNumber, setNext_chancelor} from "./redux/actions.js"
 import './app.css';
 
 
@@ -20,9 +20,15 @@ function App()
     const dispatch = useDispatch();
     const alive= useSelector((state)=>state.alive);
     const room=useSelector((state)=>state.room);
-
+    console.log(room)
     useEffect(()=>
     {
+        socket.on("wagon_error",function(){
+            alert("This wagon was not found!");
+            dispatch(unit(""));
+            dispatch(roomNumber(""));
+        });
+
         socket.on("connect_error", (err) => {console.log(`connect_error due to ${err.message}`)});
 
         socket.on("your_data",function(msg)

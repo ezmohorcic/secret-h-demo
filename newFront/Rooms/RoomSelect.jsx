@@ -37,9 +37,7 @@ export default function RoomSelect()
             navigator.clipboard.writeText(msg).then(()=>{alert(`Wagon room copied on Clipboard! Send it to your friends!`);})
         });
 
-        socket.on("wagon_error",function(){
-            alert("This wagon was not found!");
-        });
+
     },[socket]);
 
     function roomsview(){
@@ -92,6 +90,11 @@ export default function RoomSelect()
     return(
         <React.Fragment>
         {roomsview()}
+        <div id="AboutsContainer">
+            <div id="AboutMeContainer" className='AboutsMeLinks'><a target="_blank" href="https://www.secrethitler.com/">About Me</a></div>
+            <div id="proyectContainer" className='AboutsMeLinks'><a target="_blank" href="https://www.secrethitler.com/">Project Repository</a></div>
+            <div id="LinkedInContainer" className='AboutsMeLinks'><a target="_blank" href="https://www.secrethitler.com/">LinkedIn</a></div>
+        </div>
         <div id='howToPlayContainer'>
             <h1>How To Play:</h1>
             <h2>Overview:</h2>
@@ -105,7 +108,7 @@ export default function RoomSelect()
                         <p>
                             Each turn, a new player will be pre-selected President in order of position (starting from 0), and has to
                             choose a pre-selected <span style={{fontStyle:"italic",fontWeight:"bolder"}}>chancellor</span> (that can't be the last <span style={{fontStyle:"italic",fontWeight:"bolder"}}>president</span> or <span>chancellor</span>), then all the players vote
-                            yes(Ja!) or no(Nein!). 
+                            yes(Ja!) or no(Nein!) on that duo. 
                         </p>
                     <h3 className='h3'>What if the duo doesn't get more that 50% of votes?...</h3>
                         <p>
@@ -247,7 +250,7 @@ export default function RoomSelect()
                                             </div> 
                                         </button>
                                     </div>
-                                    <p className='aclarationMockState'>The two types of card laws</p>
+                                    <p className='aclarationMockState'>The two types of card laws (click to discard)</p>
                                 </div>
                         </div>
                         

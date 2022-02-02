@@ -199,6 +199,7 @@ io.on('connection', socket =>
             socket.roomKey = data;
             socket.roomId=hash(data);
             socket.dataBase=assignDataBase(data,socket.roomId);
+            console.log(dataBase)
             if(socket.dataBase==false)
             {
                 io.to(socket.id).emit("wagon_error");
@@ -231,17 +232,20 @@ io.on('connection', socket =>
         {
             if(socket.hasOwnProperty("dataBase"))
             {
-                console.log("disconnecting");
-                console.log(socket.username);
-                socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
-                socket.dataBase.cant_jugadores--;   //se va uno, resto
-                for(var i=0;i<socket.dataBase.jugadores.length;i++)     
+                if(socket.dataBase)
                 {
-                    socket.dataBase.jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
-                    socket.position=i;  //coloco nueva posicion
-                    io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
+                    console.log("disconnecting");
+                    console.log(socket.username);
+                    socket.dataBase.jugadores=socket.dataBase.jugadores.filter(jugador => jugador.position!=socket.position);    //se remueve al jugador que se esta yendo 
+                    socket.dataBase.cant_jugadores--;   //se va uno, resto
+                    for(var i=0;i<socket.dataBase.jugadores.length;i++)     
+                    {
+                        socket.dataBase.jugadores[i].position=i; //el resto de los jugadores se acomoda en los asientos para que esten juntos y en orden
+                        socket.position=i;  //coloco nueva posicion
+                        io.to( socket.dataBase.jugadores[i].socketId).emit("new_position",{position: socket.dataBase.jugadores[i].position, players:socket.dataBase.jugadores}) //a cada jugador que se movio se le manda su nueva posicion
+                    }
+                    socket.leave(socket.roomKey);
                 }
-                socket.leave(socket.roomKey);
             }
         }
     });
@@ -568,11 +572,16 @@ function createDataBase()
 
 function assignDataBase(roomKey,roomId)
 {
-    if(dataBase[roomId].hasOwnProperty(roomKey))
+    if(dataBase[roomId])
     {
-        return dataBase[roomId][roomKey]
+        if(dataBase[roomId].hasOwnProperty(roomKey))
+        {
+            return dataBase[roomId][roomKey]
+        }
+        else{return false}
     }
-    else{return false}
+    else{return false} 
+
 }
 
 function cardStackGenerator(socket)
