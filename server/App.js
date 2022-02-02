@@ -674,7 +674,6 @@ function generateBoard(socket)
 {
     if(socket.dataBase.jugadores.length<7)
     {
-        socket.dataBase.board.position_1=PICK_CANDIDATE;
         socket.dataBase.board.position_3=EXAMINE_DECK;
         socket.dataBase.board.position_4=KILL_PLAYER;
         socket.dataBase.board.position_5=KILL_PLAYER;
@@ -682,7 +681,7 @@ function generateBoard(socket)
     else if(socket.dataBase.jugadores.length<9)
     {
         socket.dataBase.board.position_2=EXAMINE_PLAYER;
-        socket.dataBase.board.position_3=EXAMINE_DECK;
+        socket.dataBase.board.position_3=PICK_CANDIDATE;
         socket.dataBase.board.position_4=KILL_PLAYER;
         socket.dataBase.board.position_5=KILL_PLAYER;
     }
@@ -690,7 +689,7 @@ function generateBoard(socket)
     {
         socket.dataBase.board.position_1=EXAMINE_PLAYER;
         socket.dataBase.board.position_2=EXAMINE_PLAYER;
-        socket.dataBase.board.position_3=EXAMINE_DECK;
+        socket.dataBase.board.position_3=PICK_CANDIDATE;
         socket.dataBase.board.position_4=KILL_PLAYER;
         socket.dataBase.board.position_5=KILL_PLAYER;
     }
