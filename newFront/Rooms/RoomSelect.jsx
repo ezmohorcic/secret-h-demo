@@ -50,7 +50,7 @@ export default function RoomSelect()
                     <div id='imgTitleShell'><img id='imgTitle' src="../img/sh_banner.png" alt="" /></div>
                     <div id='ticketWholeContainer'>
                         <div id='mainTicketPart'>
-                            <p className='notesMain'>--  You've recieved your ticket back to the Weimar Republic  --  date: {date}193x  --</p>
+                            <p className='notesMain'>--  You've recieved your ticket back to the Weimar Republic  --  date: {date}1932  --</p>
                             <div id='mainJoinShell'>
                                 <div className="arrowShell"><FontAwesomeIcon icon={faArrowRight}/></div>
                                 <input type="text" name="roomNumber" placeholder='Wagon' id="idRoomInput" value={room.roomNumber} onChange={(e)=>dispatch(roomNumber(e.target.value))}/>
@@ -297,6 +297,7 @@ export default function RoomSelect()
                     </div> 
                 </div>
             <h2>In-Deph Rules:</h2>
+            <p>For a more in-deph analysis of the game and it's mecanics, visit the original creator's page: <a target="_blank" href="https://www.secrethitler.com/">Secret Hitler</a></p>
         </div>
         </React.Fragment>
     )

@@ -186,6 +186,9 @@
     text-align: center;
     width: 100%;
 }
+#howToPlayContainer>p{
+    color: #fde1c0;
+}
 .h3{
     font-weight: bold;
 
