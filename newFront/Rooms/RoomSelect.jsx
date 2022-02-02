@@ -96,7 +96,7 @@ export default function RoomSelect()
             <div id="LinkedInContainer" className='AboutsMeLinks'><a target="_blank" href="https://www.secrethitler.com/">LinkedIn</a></div>
         </div>
         <div id='howToPlayContainer'>
-            <h1>How To Play:</h1>
+            <h1> Quick How To Play:</h1>
             <h2>Overview:</h2>
                 <div id="overviewContainer">
                         <p>Secret Hitler is a deception game were there are two teams, liberals and fascists,the latest having hitler too.</p>
@@ -134,6 +134,8 @@ export default function RoomSelect()
                         <p>It depends on what team you are:</p>
                         <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Liberal:</span> Win when they get 5 <span style={{fontStyle:"italic",fontWeight:"bolder"}}>liberal</span> laws or Hitler is killed</p>
                         <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Fascist:</span> Win when they get 6 <span style={{fontStyle:"italic",fontWeight:"bolder"}}>fascist</span> laws or Hitler gets elected chancellor when 3 or more <span>fascist</span> laws are at play</p>
+                    <h3 className="h3">Video Tutorial...</h3>
+                        <div id="videoTutorial"><iframe width="560" height="315" src="https://www.youtube.com/embed/mbGXIDYdtas" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                 </div>
             <h2>In-Game Queues:</h2>
                 <div id="inGameQContainer">

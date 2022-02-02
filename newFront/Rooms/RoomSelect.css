@@ -165,10 +165,29 @@
 /*---About Me---*/
 
 #AboutsContainer{
+    display: flex;
+    justify-content: space-around;
+
     height: 60px;
     width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color:#F2654B;
+    box-shadow: 10px 10px #c59257;
 }
 
+.AboutsMeLinks{
+    margin: auto;
+
+    font-size: 17px;
+
+}
+.AboutsMeLinks>a{
+    text-decoration: none;
+    color:#434243;
+    box-shadow: 0px -10px #fde1c0 inset;
+}
 /*---How To Play---*/
 
 #howToPlayContainer{
@@ -205,6 +224,12 @@
     box-shadow: 0px -15px #b25544 inset;
 }
 
+#videoTutorial{
+    margin-left: auto;
+    margin-right: auto;
+    width:560px; 
+    height:315px;
+}
 
 #overviewContainer>p,#inGameQContainer>p{   
     color: #fde1c0;
