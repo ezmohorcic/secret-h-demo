@@ -18,7 +18,7 @@ function Player(props)
     if(props.your_rol==FASC || props.knownRols.includes(props.player.position)){rol=props.player.rol;}
     else if(props.your_rol==H && props.qty<7){rol=props.player.rol;}
     else if(props.your_pos==props.player.position){rol=props.player.rol;}
-    else{ rol="desconocido";}
+    else{ rol="unknown";}
 
     let cargo = function()
     {

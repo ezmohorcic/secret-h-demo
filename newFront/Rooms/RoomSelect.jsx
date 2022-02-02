@@ -5,7 +5,7 @@ import { SocketContext } from '../Indexjs.js';
 import { CSSTransition } from 'react-transition-group';
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faArrowLeft, faDemocrat, faEye, faSkull, faHandshake} from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faArrowLeft, faUser, faEye, faSkull, faHandshake,faSkullCrossbones, faDove} from '@fortawesome/free-solid-svg-icons';
 
 import {roomNumber,unit} from '../redux/actions.js';
 import './RoomSelect.css';
@@ -122,10 +122,10 @@ export default function RoomSelect()
                     <h3 className='h3'>Powers of the President:</h3>
                         <p>there are 4 types of power that the president can get through fascist laws:</p>
                         <ul id='ulListPower'>
-                            <li class='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Examine the Stack:</span>  This will show the top 3 cards of the stack.</li>
-                            <li class='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Examine a Player ~<FontAwesomeIcon icon={faEye}/>~:</span> This will show a hud from where you can choose to see the rol of another player. </li>
-                            <li class='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Select Next President ~<FontAwesomeIcon icon={faHandshake}/>~:</span> This will show a hud from where you can choose the next candidate to <span style={{fontStyle:"italic",fontWeight:"bolder"}}>president</span>. </li>
-                            <li class='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Kill a Player ~<FontAwesomeIcon icon={faSkull}/>~:</span> This will show a hud from where you can choose someone to kill.</li>
+                            <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Examine the Stack:</span>  This will show the top 3 cards of the stack.</li>
+                            <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Examine a Player ~<FontAwesomeIcon icon={faEye}/>~:</span> This will show a hud from where you can choose to see the rol of another player. </li>
+                            <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Select Next President ~<FontAwesomeIcon icon={faHandshake}/>~:</span> This will show a hud from where you can choose the next candidate to <span style={{fontStyle:"italic",fontWeight:"bolder"}}>president</span>. </li>
+                            <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Kill a Player ~<FontAwesomeIcon icon={faSkull}/>~:</span> This will show a hud from where you can choose someone to kill.</li>
                         </ul>
                     <h3 className='h3'>How Do I Win?...</h3>
                         <p>It depends on what team you are:</p>
@@ -138,34 +138,163 @@ export default function RoomSelect()
                         <p>
                             There are a few queues of whats happening in the game from the list of players, below it's shown what the
                             background of each players mean:
-                            <div id="backGColorContainer">
-                                
-                            </div> 
                         </p>
+                            <div id="backGColorContainer">
+                                <div className='mockBGShow' id="presidentShell">
+                                    <li className={"player" + " " + "presidentColor mockBGShowLi"}>
+                                        <p className='username playerP'>Player N</p>
+                                        <p className={"estado"+" "+"unkColor"}><FontAwesomeIcon className="estado"  icon={faUser}/></p>
+                                        <p className='rol playerP'>unkown</p> 
+                                        <p className="cargo playerP">President</p>
+                                    </li>
+                                    <p>President</p>
+                                </div>
+                                <div className='mockBGShow' id="chancellorShell">
+                                    <li className={"player" + " " + "chancellorColor mockBGShowLi"}>
+                                        <p className='username playerP'>Player N</p>
+                                        <p className={"estado"+" "+"unkColor"}><FontAwesomeIcon className="estado"  icon={faUser}/></p>
+                                        <p className='rol playerP'>unkown</p> 
+                                        <p className="cargo playerP">chancellor</p>
+                                    </li>
+                                    <p>Chancellor</p>
+                                </div>
+                                <div className='mockBGShow' id="noChargeShell">
+                                    <li className={"player" + " " + "noRolColor mockBGShowLi"}>
+                                        <p className='username playerP'>Player N</p>
+                                        <p className={"estado"+" "+"unkColor"}><FontAwesomeIcon className="estado"  icon={faUser}/></p>
+                                        <p className='rol playerP'>unkown</p> 
+                                        <p className="cargo playerP">chancellor</p>
+                                    </li>
+                                    <p>No position</p>
+                                </div>
+                            </div> 
+                        
                         <p>
                             Inside, the drawing in the center can be different and can have different colors depending on your rol and theirs 
-                            (Fascist and Hitler if there are less than 7 players can see everyone rol):
+                            (Fascists always knows the rols of everyone, and Hitler if there are less than 7 players can see everyone rol):
                         </p>
                         <div id="stateColorContainer">
-
+                                <div className="stateMockShow">
+                                    <p className={"estado"+" "+"hitlerColor"}><FontAwesomeIcon className="estado"  icon={faUser}/></p>
+                                    <p className='aclarationMockState'>Hitler player</p>
+                                </div>
+                                <div className="stateMockShow">
+                                    <p className={"estado"+" "+"fascColor"}><FontAwesomeIcon className="estado"  icon={faUser}/></p>
+                                    <p className='aclarationMockState'>Fascist player</p>
+                                </div>
+                                <div className="stateMockShow">
+                                    <p className={"estado"+" "+"libColor"}><FontAwesomeIcon className="estado"  icon={faUser}/></p>
+                                    <p className='aclarationMockState'>Liberal player</p>
+                                </div>
+                                <div className="stateMockShow">
+                                    <p className={"estado"+" "+"unkColor"}><FontAwesomeIcon className="estado"  icon={faUser}/></p>
+                                    <p className='aclarationMockState'>Unknown player</p>
+                                </div>
+                                <div className="stateMockShow">
+                                    <p className={"estado"}><FontAwesomeIcon className="estadoMuerto"  icon={faSkullCrossbones}/></p>
+                                    <p className='aclarationMockState'>Dead player</p>
+                                </div>
                         </div>
                     <h3 className='h3'>Stats Hud:</h3>
                         <p>the <span style={{fontStyle:"italic",fontWeight:"bolder"}}>Stack</span> card shows how many cards are left</p>
                         <p>the <span style={{fontStyle:"italic",fontWeight:"bolder"}}>Discarded</span> card shows how many cards have been discarted</p>
                         <p>the <span style={{fontStyle:"italic",fontWeight:"bolder"}}>Skipped Goverments</span> card shows how many cards have been discarted</p>
                     <h3 className='h3'>Selection Hud:</h3>
-                        <p>In "normal selection" you can have two huds open up, the voting hud or the chancellor selection hud</p>
+                        <p>In "normal selection" you can have 3 huds open up, the voting hud, the chancellor selection hud or the card discard hud</p>
                         <div id="showNormalSelectionsContainer">
                                 <div id="showVoteContainer">
-
+                                    <div id="VoteContainer">
+                                        <div className="voteCard">
+                                            <button id='voteNo'>
+                                                <div id="borderNo">
+                                                    <div id="thinBorderNo">
+                                                       <p id="nein">NEIN!</p> 
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div className="voteCard">
+                                            <button id='voteYes'>      
+                                                <div id="borderYes">
+                                                    <div id="thinBorderYes">
+                                                       <p>JA!</p>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p className='aclarationMockState'>Yes or no votes</p>
                                 </div>
                                 <div id="singleChancellorSelectButContainer">
-
+                                    <div className='chCandidate'>
+                                        <button className='chSelection'>Candidate</button>
+                                        <div className="showOff"></div>
+                                    </div>
+                                    <p className='aclarationMockState'>Button of pre-elected Chancellor</p>
+                                </div>
+                                <div id="cardsMockShow">
+                                    <div className={'CardShell'+ " " + "blueCard"}>
+                                        <button className={'buttonDiscard' + " " + "blueBut"}>
+                                            <div className="cardIcon">
+                                                <FontAwesomeIcon icon={faDove}/>
+                                            </div> 
+                                        </button>
+                                    </div>
+                                    <div className={'CardShell'+ " " + "redCard"}>
+                                        <button className={'buttonDiscard' + " " + "redBut"}>
+                                            <div className="cardIcon">
+                                                <FontAwesomeIcon icon={faSkull}/>
+                                            </div> 
+                                        </button>
+                                    </div>
+                                    <p className='aclarationMockState'>The two types of card laws</p>
                                 </div>
                         </div>
                         
                     <h3 className='h3'>Power Hud:</h3>
                         <p>There are, as said before, 4 types of power, below you can see a button of each to guide you </p>
+                    <div id="mockAllPowersContainer">   
+                        <div className="powerContainerMock">
+                            <div className="shellShowRed">
+                                <div className="innerShowRed"></div>
+                            </div>
+                            <div className="shellShowBlue">
+                                <div className="innerShowBlue"></div>
+                            </div>
+                            <p className="aclarationMockState">Stack examination power</p>
+                        </div>
+                        <div className="powerContainerMock">
+                        <div key={"killChoose"} className="genericSelectKill">
+                            <div className="borderKillShow">
+                                    <button className="killBut"><p className="killName">Player N</p></button>
+                            </div>
+                                <div className="showKill"><FontAwesomeIcon className="skullIcon" icon={faSkull}/></div>
+                            </div>
+                            <p className="aclarationMockState">Kill selection power</p>
+                        </div>
+                        <div className="powerContainerMock">
+                        <div key={"selectExam"} className="genericSelectExam">
+                            <div className="borderShowExam">
+                                <button className="examBut"><p>Player N</p></button>
+                            </div>
+                            <div className="showExam">
+                                <FontAwesomeIcon className="eyeIcon" icon={faEye}/>
+                            </div>
+                        </div>
+                                <p className="aclarationMockState">Player examination power</p>
+                            </div>
+                        <div className="powerContainerMock">
+                            <div className="genericSelectPm">
+                                <div className="borderShowPm">
+                                    <button className="pmBut">Player N</button>
+                                </div>
+                                <div className="showPm">
+                                    <FontAwesomeIcon className="handsIcon" icon={faHandshake}/>
+                                </div>
+                            </div>
+                            <p className="aclarationMockState">Next President candidate</p>
+                        </div>
+                    </div> 
                 </div>
             <h2>In-Deph Rules:</h2>
         </div>

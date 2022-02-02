@@ -168,6 +168,7 @@
     width: 96%;
     margin-left: 2%;
     margin-right: 2%;
+    padding: 5px;
 
     background-color:#F2654B;
     box-shadow: 10px 10px #c59257;
@@ -195,15 +196,46 @@
 }
 
 
-#overviewContainer>p,#inGameQContainer>p{
-    
+#overviewContainer>p,#inGameQContainer>p{   
     color: #fde1c0;
-    
 }
 
 #ulListPower{
-
+    
 }
 #ulListPower>li{
     color: #fde1c0;
+}
+
+#backGColorContainer,#stateColorContainer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    list-style: none;
+}
+.mockBGShow{
+    width: 120px;
+    margin-left: 30px;
+}
+.mockBGShow>p{
+    text-align: center;
+    color: #fde1c0;
+}
+.mockBGShowLi{
+    width: 100%;
+}
+.aclarationMockState{color: #fde1c0;}
+
+
+#showNormalSelectionsContainer,#mockAllPowersContainer{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+#singleChancellorSelectButContainer{
+    padding-top: 120px;
+}
+
+#cardsMockShow{
+    padding-top: 50px;
 }
