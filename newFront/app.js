@@ -139,8 +139,8 @@ function App()
 
     const fallBackRoom = ()=>
     {
-        /*if(room.roomNumber!="" || room.unit!="")
-        {*/
+        if(room.roomNumber!="" || room.unit!="")
+        {
             return(
                 <React.Fragment>
                     <Header/>
@@ -152,7 +152,7 @@ function App()
                     </div>
                 </React.Fragment>
             )
-        /*}
+        }
         else
         {
             return(
@@ -161,7 +161,7 @@ function App()
                 <a href='https://secret-h-demo-bqsrf.ondigitalocean.app/'>Try another ticket!</a>
                 </React.Fragment>
             )
-        }*/
+        }
     }
     return(
         <div id='appContainer'>
