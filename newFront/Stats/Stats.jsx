@@ -45,12 +45,13 @@ function Stats()
 
     const typePowerShow = function(i)
     {
-        if(stats_turno.board.hasOwnProperty("position_"+i))
+        if(stats_turno.board.hasOwnProperty("position_"+(i+1)))
         {
-            if(stats_turno.board["position_"+i]=="examine_deck"){return <FontAwesomeIcon icon={faLayerGroup}/>}
-            else if(stats_turno.board["position_"+i]=="kill"){return <FontAwesomeIcon icon={faSkullCrossbones}/>}
-            else if(stats_turno.board["position_"+i]=="examine_player"){return <FontAwesomeIcon icon={faEye}/>}
-            else if(stats_turno.board["position_"+i]=="pick_candidate"){return <FontAwesomeIcon icon={faHandshake}/>}
+
+            if(stats_turno.board["position_"+(i+1)]=="examine_deck"){return <FontAwesomeIcon icon={faLayerGroup}/>}
+            else if(stats_turno.board["position_"+(i+1)]=="kill"){return <FontAwesomeIcon icon={faSkullCrossbones}/>}
+            else if(stats_turno.board["position_"+(i+1)]=="examine_player"){return <FontAwesomeIcon icon={faEye}/>}
+            else if(stats_turno.board["position_"+(i+1)]=="pick_candidate"){return <FontAwesomeIcon icon={faHandshake}/>}
         }
         else return null;
     }
