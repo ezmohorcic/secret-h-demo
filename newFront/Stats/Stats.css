@@ -71,11 +71,12 @@
     color: #394f76;
     font-size: 25px;
 
-    margin-top: 5px;
-    margin-left: 5px;
+    margin-top: 12px;
+    margin-left: 20%;
 }
 .fontAweDove{
     margin: auto;
+    color: #f8c283;
 }
 
 .redLawShell{
@@ -129,12 +130,13 @@
     height: 30px;
     color: #d53f1e;
     font-size: 25px;
-    margin-top: 5px;
-    margin-left: 5px;
+    margin-top: 12px;
+    margin-left: 20%;
 
 }
 .fontAweSkull{
     margin: auto;
+    color: #f8c283;
 }
 
 
@@ -301,11 +303,10 @@
     .blueIcon{
         width: 40px;
         height: 40px;
-        color: #394f76;
         font-size: 40px;
     
-        margin-top: 45px;
-        margin-left: 35px;
+        margin-top: 40px;
+        margin-left: 20px;
     }
 
 
@@ -344,8 +345,8 @@
         width: 40px;
         height: 40px;
         font-size: 40px;
-        margin-top: 45px;
-        margin-left: 35px;
+        margin-top: 40px;
+        margin-left: 20px;
     
     }
     .fontAweSkull{

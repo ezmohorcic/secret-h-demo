@@ -2,7 +2,7 @@ import React, {useState, useContext, useEffect} from "react";
 import { SocketContext } from "../Indexjs";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSkull, faDove} from '@fortawesome/free-solid-svg-icons';
+import { faSkull, faDove, faHandshake, faEye, faLayerGroup, faSkullCrossbones} from '@fortawesome/free-solid-svg-icons';
 
 import { setNewsBox } from "../redux/actions";
 import './Stats.css';
@@ -43,6 +43,18 @@ function Stats()
     var redLaws=[];
     var skipped=[];
 
+    const typePowerShow = function(i)
+    {
+        if(stats_turno.board.hasOwnProperty("position_"+i))
+        {
+            if(stats_turno.board["position_"+i]=="examine_deck"){return <FontAwesomeIcon icon={faLayerGroup}/>}
+            else if(stats_turno.board["position_"+i]=="kill"){return <FontAwesomeIcon icon={faSkullCrossbones}/>}
+            else if(stats_turno.board["position_"+i]=="examine_player"){return <FontAwesomeIcon icon={faEye}/>}
+            else if(stats_turno.board["position_"+i]=="pick_candidate"){return <FontAwesomeIcon icon={faHandshake}/>}
+        }
+        else return null;
+    }
+
     for(var i=0;i<5;i++)
     {
         if(i<blue){blueLaws.push(<div key={"blueint"+i} className="blueLaw"><div className="blueIcon"><FontAwesomeIcon className="fontAweDove" icon={faDove}/></div></div>)}
@@ -50,8 +62,11 @@ function Stats()
     }
     for(var i=0;i<6;i++)
     {
-        if(i<red){redLaws.push(<div key={"redint"+i} className="redLaw"> <div className="redIcon"><FontAwesomeIcon className="fontAweSkull" icon={faSkull}/></div></div>)}
-        else{{redLaws.push(<div key={"redint"+i} className="redLaw"></div>)}}
+        if(i<red){redLaws.push(<div key={"redint"+i} className="redLaw"><div className="redIcon"><FontAwesomeIcon className="fontAweSkull" icon={faSkull}/></div></div>)}
+        else
+        {
+            redLaws.push(<div key={"redint"+i} className="redLaw"><div className="redIcon">{typePowerShow(i)}</div></div>)
+        }
     }
     for(var i=0;i<stats_turno.skipped_turns;i++){skipped.push(<div key={"skipint"+i} className="skippedDot"></div>)}
 

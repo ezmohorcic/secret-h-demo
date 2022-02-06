@@ -5,7 +5,7 @@ import { SocketContext } from '../Indexjs.js';
 import { CSSTransition } from 'react-transition-group';
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight, faArrowLeft, faUser, faEye, faSkull, faHandshake,faSkullCrossbones, faDove} from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faArrowLeft, faUser, faEye, faSkull, faHandshake,faSkullCrossbones, faDove, faLayerGroup} from '@fortawesome/free-solid-svg-icons';
 
 import {roomNumber,unit} from '../redux/actions.js';
 import './RoomSelect.css';
@@ -125,7 +125,7 @@ export default function RoomSelect()
                     <h3 className='h3'>Powers of the President:</h3>
                         <p>there are 4 types of power that the president can get through fascist laws:</p>
                         <ul id='ulListPower'>
-                            <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Examine the Stack:</span>  This will show the top 3 cards of the stack.</li>
+                            <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Examine the Stack ~<FontAwesomeIcon icon={faLayerGroup}/>~:</span>  This will show the top 3 cards of the stack.</li>
                             <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Examine a Player ~<FontAwesomeIcon icon={faEye}/>~:</span> This will show a hud from where you can choose to see the rol of another player. </li>
                             <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Select Next President ~<FontAwesomeIcon icon={faHandshake}/>~:</span> This will show a hud from where you can choose the next candidate to <span style={{fontStyle:"italic",fontWeight:"bolder"}}>president</span>. </li>
                             <li className='liListPower'><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Kill a Player ~<FontAwesomeIcon icon={faSkull}/>~:</span> This will show a hud from where you can choose someone to kill.</li>

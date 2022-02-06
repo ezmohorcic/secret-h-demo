@@ -644,7 +644,9 @@ function statStack(socket)
         cant_descart:socket.dataBase.stack_descartados.length,
         pm_pos:socket.dataBase.pm.position,
         skipped_turns:socket.dataBase.skipped,
-        last_elected:socket.dataBase.last_elected
+        last_elected:socket.dataBase.last_elected,
+        board_length:Object.getOwnPropertyNames(socket.dataBase.board).length,
+        board:socket.dataBase.board
     }
 }
 

@@ -13,7 +13,7 @@ const initialState =
         chancelor:false
     },
     soyCeroView: false,
-    stats_turno:{},
+    stats_turno:{board:{}},
     alive:true,
     knownRols:[],
     test:{}
