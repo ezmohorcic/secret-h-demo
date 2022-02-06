@@ -91,9 +91,9 @@ export default function RoomSelect()
         <React.Fragment>
         {roomsview()}
         <div id="AboutsContainer">
-            <div id="AboutMeContainer" className='AboutsMeLinks'><a target="_blank" href="https://www.secrethitler.com/">About Me</a></div>
-            <div id="proyectContainer" className='AboutsMeLinks'><a target="_blank" href="https://www.secrethitler.com/">Project Repository</a></div>
-            <div id="LinkedInContainer" className='AboutsMeLinks'><a target="_blank" href="https://www.secrethitler.com/">LinkedIn</a></div>
+            <div id="AboutMeContainer" className='AboutsMeLinks'><a target="_blank" href="https://github.com/ezmohorcic">About Me</a></div>
+            <div id="proyectContainer" className='AboutsMeLinks'><a target="_blank" href="https://github.com/ezmohorcic/secret-h-demo">Project Repository</a></div>
+            <div id="LinkedInContainer" className='AboutsMeLinks'><a target="_blank" href="https://www.linkedin.com/in/ivanna-mohorcic-94b96420a/">LinkedIn</a></div>
         </div>
         <div id='howToPlayContainer'>
             <h1> Quick How To Play:</h1>
@@ -135,7 +135,7 @@ export default function RoomSelect()
                         <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Liberal:</span> Win when they get 5 <span style={{fontStyle:"italic",fontWeight:"bolder"}}>liberal</span> laws or Hitler is killed</p>
                         <p><span style={{fontStyle:"italic",fontWeight:"bolder"}}>Fascist:</span> Win when they get 6 <span style={{fontStyle:"italic",fontWeight:"bolder"}}>fascist</span> laws or Hitler gets elected chancellor when 3 or more <span>fascist</span> laws are at play</p>
                     <h3 className="h3">Video Tutorial...</h3>
-                        <div id="videoTutorial"><iframe width="560" height="315" src="https://www.youtube.com/embed/mbGXIDYdtas" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                        <div id="videoTutorial"><iframe width="100%" height="100%" src="https://www.youtube.com/embed/mbGXIDYdtas" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
                 </div>
             <h2>In-Game Queues:</h2>
                 <div id="inGameQContainer">

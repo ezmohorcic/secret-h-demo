@@ -20,9 +20,6 @@ function Players()
             <ul id='playersUl'>
                 {players}
             </ul>
-            <div id="pmContainer">
-                
-            </div>
         </div>
     )
 }

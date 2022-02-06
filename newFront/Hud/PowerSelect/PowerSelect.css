@@ -10,3 +10,19 @@
     border-right: 2px dashed  #8e4336;
     border-bottom: 2px dashed  #8e4336;
 }
+
+@media (min-width: 2000px){
+    #PowerSelectContainer{
+        width: 420px;
+        height: 380px;
+        margin:10px;
+    
+        background-color: #F2654B;
+        box-shadow: 5px 5px #8e4336;
+    
+        border: 2px dashed  #b25544;
+        border-right: 2px dashed  #8e4336;
+        border-bottom: 2px dashed  #8e4336;
+    }
+    
+}

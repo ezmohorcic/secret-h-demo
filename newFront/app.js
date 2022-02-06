@@ -139,28 +139,29 @@ function App()
 
     const fallBackRoom = ()=>
     {
-        if(room.roomNumber!="" || room.unit!="")
-        {
+        /*if(room.roomNumber!="" || room.unit!="")
+        {*/
             return(
                 <React.Fragment>
                     <Header/>
-                    <Players/>
-                    <Stats/>
-                    {/* {renderHud()} */}
-                    <Hud/>  
-                    <NewsBox/>    
+                    <div id='gameShowNHeader'>
+                        <Players/>
+                        <Stats/>
+                        <Hud/>  
+                        <NewsBox/> 
+                    </div>
                 </React.Fragment>
             )
-        }
+        /*}
         else
         {
             return(
                 <React.Fragment>
                 <p>OOPSIE WOOPSIE!! UwU We made a fucky wucky!! A wittle fucko boingo! The code monkeys at our headquarters are working VEWY HAWD to fix this!</p>
-                <Link to={"/"}>Try another ticket!</Link>
+                <a href='https://secret-h-demo-bqsrf.ondigitalocean.app/'>Try another ticket!</a>
                 </React.Fragment>
             )
-        }
+        }*/
     }
     return(
         <div id='appContainer'>

@@ -14,3 +14,19 @@
     width: 100%;
     height: 100%;
 }
+
+
+
+@media (min-width: 2000px) {
+    #playersContainer{
+        width: 900px;
+        height: 400px;
+        margin: 0 2% 30px 2%;     
+    }
+
+    #playersUl{
+        padding-left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}

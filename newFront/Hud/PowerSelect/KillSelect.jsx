@@ -10,7 +10,7 @@ function KillSelect(props)
 {
     const socket = useContext(SocketContext);
     const all_players=useSelector((state)=>state.all_players);
-
+    let dummy=[{username:"anon1"},{username:"anon2"},{username:"anon3"},{username:"anon2"},{username:"anon3"},{username:"anon1"},{username:"anon2"},{username:"anon3"},{username:"anon2"},{username:"anon3"}]
     var arrShow = all_players.map((element,index)=>
     {
         if(element.estado!="dead")

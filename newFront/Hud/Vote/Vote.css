@@ -99,3 +99,81 @@
 
     transform: rotate(-90deg);
 }
+
+
+@media (min-width: 2000px){
+    #VoteContainer{
+        width: 400px;
+        height: 400px;
+        margin: 0px auto 0 auto;
+    }
+    .voteCard{
+        width: 180px;
+        height: 300px;
+        margin: 50px 10px 50px 10px;  
+        transition: 0.2s;
+    }
+
+
+    #voteNo,#voteYes{
+        width: 180px;
+        height: 300px;
+    }
+    #borderNo,#borderYes{
+        width: 130px;
+        height: 250px;
+        margin: 10px;
+        border: 15px solid #6b5041;
+    }
+    #thinBorderNo{
+        width: 122px;
+        height: 242px;
+        margin: 4px;
+    
+        background-color: #6b5041;
+    }
+    #thinBorderNo>p{
+        position: relative;
+        top: 85px;
+        left: -50px;
+    
+        width: 220px;
+        height: 60px;
+        margin: auto;
+        margin-bottom: 30px;
+    
+        text-align: center;
+        font-size: 60px;
+    
+        color: #f6d399;
+    
+        transform: rotate(-90deg);
+    }
+
+    #thinBorderYes{
+        width: 120px;
+        height: 240px;
+        margin: 2px;
+    
+        border:3px solid #6b5041;
+        background-color: #f6d399;
+    }
+    
+    #thinBorderYes>p{
+        position: relative;
+        top: 85px;
+        left: -50px;
+    
+        width: 220px;
+        height: 60px;
+        margin: auto;
+        margin-bottom: 30px;
+    
+        text-align: center;
+        font-size: 60px;
+    
+        color: #6b5041;
+    
+        transform: rotate(-90deg);
+    }
+}

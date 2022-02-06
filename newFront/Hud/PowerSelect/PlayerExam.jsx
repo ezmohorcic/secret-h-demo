@@ -14,7 +14,8 @@ function PlayerExam(props)
     const all_players=useSelector((state)=>state.all_players);
     const knownRols=useSelector((state)=>state.knownRols);
     const dispatch = useDispatch();
-
+    let dummy=[{username:"anon1"},{username:"anon2"},{username:"anon3"},{username:"anon2"},{username:"anon3"},{username:"anon1"},{username:"anon2"},{username:"anon3"},{username:"anon2"},{username:"anon3"}]
+    
     var arrShow =all_players.map((element,index)=>
     {   
         return(

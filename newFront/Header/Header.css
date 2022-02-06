@@ -195,3 +195,140 @@
 #soundEffectShell:hover{
     cursor: pointer;
 }
+
+
+@media (min-width: 2000px) {
+    #headerContainer{
+        width: 100%;
+        height: 250px;
+    }
+    #imgHeaderShell{
+        width: 240px;
+        height: 250px;
+    }
+    #imgHeader{
+        width: 220px;
+        height: 154px;
+    
+        padding-top: 30px;
+        padding-bottom: auto;
+    }
+
+
+    #nameChangeContainer{
+        font-size: 50px;
+    
+        width: 240px;
+        height: 220px;
+    
+        padding-right: 20px;
+        padding-top: 30px;
+        margin-left: 20px;
+        margin-right: 20px;       
+    }
+    #nameImputCont{
+        width: 220px;
+        height: 60px;
+        margin: 27px auto 0 auto;
+        box-shadow: 0px -20px #fde1c0 inset;
+    }
+    #newNameInput{
+        width: 220px;
+        height: 60px;
+    
+        border: none; 
+        font-size: 40px;
+    }
+
+
+    #sendCont{
+        width: 220px;
+        height: 60px;
+        margin: 0 auto 20px auto;
+        box-shadow: 0px -20px #fde1c0 inset;
+    }
+    #sendNewName{
+        width: 220px;
+        height: 60px;
+        padding:0;
+        font-size: 35px;
+        margin: auto;
+    }
+
+
+    #infoContainer{
+        padding-top: 30px;
+        width: 900px;
+    }
+    
+    #infoContainer>p{
+        width: 30%;
+        height: 40px;
+        padding:13px 10px 0px 0;
+        margin: 0px 0px 10px 0;
+    
+        font-size: 30px;
+        
+    
+        color: #fde1c0;
+        box-shadow: 0px -20px #b25544 inset;
+    }
+    .copyIcon:hover{
+        cursor: pointer;
+    }
+    .copyIcon{
+        transition: 0.5s;
+    }
+
+
+    #initGameContainer{
+        width: 170px;
+        height: 250px;
+        margin-left: 20px;
+    
+        margin-top: auto;
+        margin-bottom: auto;
+    
+        transition: 0.5s;
+    }
+    #initGameContainer:hover>#leverCont{
+        transition: 0.5s;
+        top: 10px;
+    }
+    #leverCont{
+        position: relative;
+        top: 0px;
+        transition: 0.5s;
+    }
+    #initGame{
+        position: relative;
+        top: -105px;
+    
+        width: 210px;
+        height: 40px;
+        font-size: 30px;
+    
+        box-shadow: 0px -20px #fde1c0 inset;
+    }
+    #leverInit{
+        padding-left: 20px;   
+        font-size: 230px;
+    }
+
+
+    #soundEffectShell{
+        width: 40px;
+        height: 40px;
+        padding:30px 10px 10px 10px;
+        margin: 0px 0px 10px 0;
+    
+        font-size: 40px;
+        
+    
+        color: #434243;
+        box-shadow: 0px -20px #fde1c0 inset;
+    }
+    #soundEffectShell:hover{
+        cursor: pointer;
+    }
+}

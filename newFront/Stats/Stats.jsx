@@ -70,15 +70,16 @@ function Stats()
             <div id="stacksCounters">
                 <div className='stackLayoutShell' id='mainStackLayout'>
                     <div id="stackBorder">
-                        <p>Stack</p>   
-                        {stats_turno.cant_left}
+                        <p className="stackName">Stack</p> 
+                        <p className="textStack">{stats_turno.cant_left}</p>  
+                        
                     </div>
                     
                 </div>
                 <div className='stackLayoutShell' id='discardStackLayout'>
                     <div id="stackBorder">
-                        <p>Discard</p> 
-                        {stats_turno.cant_descart}
+                        <p className="stackName">Discard</p> 
+                        <p className="textStack">{stats_turno.cant_descart}</p>
                     </div>
                 </div>
                 <div id='skippedTurnsShell'>

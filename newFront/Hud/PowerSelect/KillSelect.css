@@ -92,3 +92,72 @@
     margin-bottom: 10px;
     transition: 0.1s;
 }
+
+
+@media (min-width: 2000px){
+    #killSelectContainer{
+        margin-left: 10px;
+    }
+    
+    #killSlFlavor{
+        height: 30px;
+        width: 400px;
+        margin: 0px 5px 0px 0px;
+        font-size: 30px;
+        font-weight: bold;
+        box-shadow: 0px -10px #b25544 inset;
+    }
+    
+    #killContainer{
+        height: 350px;
+        width: 390px;
+        padding: 5px;
+        margin: 0px 5px 0px 0px;
+    }
+    
+    .genericSelectKill{
+        display: flex;
+        flex-direction: row;
+    
+        width: 190px;
+        height: 55px;
+    
+        margin: 5px 0px 5px 0px;
+    }
+    .genericSelectKill:hover>.showKill{
+        width: 30px;
+    }
+    
+    .borderKillShow{
+        height: 55px;
+        width: 155px;
+    }
+    
+    .killBut{
+        width: 130px;
+        height: 45px;
+        margin: 5px;
+        font-size: 25px;
+    }
+    
+    .killBut>p{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+    .showKill{
+        width: 0px;
+        height: 55px;
+    }
+    .skullIcon{
+        position: relative;
+        display: none;
+        top: -5px;
+        left: -15px;
+        width: 30px;
+        font-size: 40px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        transition: 0.1s;
+    } 
+}

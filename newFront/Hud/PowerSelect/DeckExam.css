@@ -66,3 +66,51 @@
 .innerShowBlue{
     background: linear-gradient(90deg, rgba(57,79,118,1) 0%, rgba(107,80,65,1) 50%);;
 }
+
+
+
+@media (min-width: 2000px){
+    #deckExamContainer{
+        width: 420px;
+        height: 380px;
+        margin: 10px;
+    }
+    #deckExFlavor{
+        height: 30px;
+        width: 400px;
+        margin: 0px 0px 0px 0px;
+        font-size: 26px;
+        font-weight: bold;
+        box-shadow: 0px -15px #b25544 inset;
+    }
+    #closeDeckExam{
+        width: 100px;
+        height: 40px;
+        margin: 10px 150px 10px 150px;
+    
+        font-size: 25px;
+        text-align: center;
+    
+        background-color: transparent;
+        color: #434243;
+        box-shadow: 0px -15px #fde1c0 inset;
+    
+        border: none;
+    }
+    
+    .shellShowRed,.shellShowBlue{
+        width: 300px;
+        height: 60px;
+        margin: 10px 50px 10px 50px;
+    }
+
+    .innerShowRed,.innerShowBlue{
+        position: relative;
+        top: 15px;
+    
+        width: 270px;
+        height: 30px;
+        border-radius: 5px;
+        margin: 15px;
+    }
+}

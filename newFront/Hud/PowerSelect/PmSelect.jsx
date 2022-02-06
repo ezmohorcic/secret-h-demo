@@ -13,6 +13,7 @@ function PmSelect(props)
     const stats_turno=useSelector((state)=>state.stats_turno)
     const all_players=useSelector((state)=>state.all_players)
     const player_data=useSelector((state)=>state.player_data)
+    let dummy=[{username:"anon1"},{username:"anon2"},{username:"anon3"},{username:"anon2"},{username:"anon3"},{username:"anon1"},{username:"anon2"},{username:"anon3"},{username:"anon2"},{username:"anon3"}]
 
     var arrShow = all_players.map((element,index)=>
     {

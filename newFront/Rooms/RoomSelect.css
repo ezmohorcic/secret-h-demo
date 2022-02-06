@@ -57,7 +57,7 @@
     width: 192px;
     
     margin: 34px auto 54px auto;
-    box-shadow: 0px -20px #fde1c0 inset
+    box-shadow: 0px -20px #fde1c0 inset;
 }
 #idRoomInput{
     width: 110px;
@@ -68,9 +68,9 @@
     /* border:2px solid #b8a58f; */
     z-index: 1;
     border: none;
-    background-color: #F2654B;
+    background-color: transparent;
     color:#434243;
-    box-shadow: 0px -20px #fde1c0 inset;
+    /* box-shadow: 0px -20px #fde1c0 inset; */
 }
 #idRoomInput:focus, textarea:focus{
     outline:none;
@@ -119,7 +119,7 @@
 
     margin:5px auto 5px auto ;
 
-    box-shadow: 0px -10px #fde1c0 inset
+    box-shadow: 0px -10px #fde1c0 inset;
 }
 
 #createButton{
@@ -276,4 +276,157 @@
 
 #cardsMockShow{
     padding-top: 50px;
+}
+
+
+@media (min-width: 2000px) {
+    #roomSelect{
+        height: 700px;
+    }
+    #imgTitleShell{
+        height: 300px;
+        width: 810px;
+    }
+    #imgTitle{
+        width: 810px;
+        height: 300px;
+    }
+    #ticketWholeContainer{
+        width: 810px;
+        height: 275px;
+    }
+    #mainTicketPart{
+        height: 275px;
+        width: 600px;
+    }
+    .notesMain{
+        font-size: 17px;
+        width: 550px;
+    }
+    #mainJoinShell{
+        width: 380px;
+        margin-top: 50px;
+        margin-bottom: 70px;
+        box-shadow: 0px -25px #fde1c0 inset;
+    }
+    #idRoomInput{
+        width: 162px;
+        height: 60px;
+        font-size: 50px;
+        padding-left: 20px; 
+    }
+    .arrowShell{
+        width: 30px;
+        font-size: 30px;
+        padding-top: 20px;
+    }
+    .joinBShell{
+        padding-top: 5px;
+        margin-left: 10px;
+        width: 120px;
+        font-size: 30px;
+    }
+    .joinB{
+        font-size: 50px;
+    }
+    #sideTicketPart{
+        width: 275px;
+        height: 180px;
+        margin: auto 0px -192px -2px;
+    }    
+    #sideTicketPart>p{
+        height: 25px;
+        width: 275px;
+        font-size: 20px; 
+    
+        margin:10px auto 10px auto ;
+    
+        box-shadow: 0px -15px #fde1c0 inset;
+    }
+    #createButton{
+        width: 162px;
+        height: 130px;
+        margin: auto 55px auto 55px; 
+    }
+    #newRoomImg{
+        width: 162px;
+        height: 130px;
+        margin-bottom: 5px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /*---About Me---*/
+
+    #AboutsContainer{
+        height: 100px;
+        width: 710px;
+    }
+
+    .AboutsMeLinks{
+        margin: auto;
+        font-size: 25px;
+    }
+    .AboutsMeLinks>a{
+        box-shadow: 0px -15px #fde1c0 inset;
+    }
+
+    /*---How To Play---*/
+    #howToPlayContainer>h1,#howToPlayContainer>h2{
+        width: 600px;
+ 
+    
+        color: #fde1c0;
+        box-shadow: 0px -10px #b25544 inset;
+    }
+    #howToPlayContainer>h1{
+        text-align: center;
+        font-size: 80px;
+        width: 100%;
+    }
+    #howToPlayContainer>h2{
+        font-size: 60px;
+    }
+    #howToPlayContainer>p{
+        color: #fde1c0;
+    }
+    .h3{
+        font-weight: bold;
+    
+        width: 1300px;
+        font-size: 50px;
+    
+        color: #fde1c0;
+        box-shadow: 0px -15px #b25544 inset;
+    }
+    #overviewContainer>p,#inGameQContainer>p{   
+        font-size: 30px;
+        color: #fde1c0;
+    }
+    #videoTutorial{
+        margin-left: auto;
+        margin-right: auto;
+        width:810px; 
+        height:455px;
+    }
+    .mockBGShow{
+        width: 120px;
+        margin-left: 30px;
+    }
+    .mockBGShow>p{
+        text-align: center;
+        color: #fde1c0;
+    }
+    .mockBGShowLi{
+        width: 100%;
+    }
+    .aclarationMockState{
+        color: #fde1c0;
+        text-align: center;
+    }
+    #ulListPower>li{
+        font-size: 30px;
+        color: #fde1c0;
+    }
+    
 }

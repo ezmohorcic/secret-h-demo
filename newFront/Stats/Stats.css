@@ -22,10 +22,6 @@
     border-right: 2px dashed #c59257;
 }
 
-#lawLayoutShell{
-    width: 48%;
-    height: 100px;
-}
 .blueLawShell{
     display: flex;
     flex-direction: row;
@@ -179,7 +175,7 @@
     border: 15px solid #6b5041;
     border-radius: 5px;
 }
-#stackBorder>p{
+.stackName{
     position: relative;
     top: -15px;
     left: -0px;
@@ -193,6 +189,16 @@
 
     color: #f6d399;
     background-color: #6b5041;
+}
+
+.textStack{
+    position: relative;
+    top: -5px;
+    width: 20px;
+    text-align: center;
+    height: 20px;
+    margin: auto;
+    font-size: 20px;
 }
 
 
@@ -249,4 +255,190 @@
     border-radius: 15px;
     border: 1px dashed #f6d399;
     background-color: #F2654B;
+}
+
+
+@media (min-width: 2000px) {
+    #lawLayourContainer{
+        width: 980px;
+        height: 400px;
+        margin: 0 1% 10px 1%;
+    }
+    #lawsCounters{
+        width: 100%;
+        height: 186px;
+        padding-bottom: 10px;
+    }
+
+
+    .blueLawShell{
+        width: 426px;
+        height: 166px;
+        margin: 10px;
+        margin-right: 5px;
+        margin-left: 5px;
+
+    }
+    #thinBlueBorder{
+        width: 410px;
+        height: 150px;
+        margin: 5px;
+    
+        border: 3px solid #394f76;
+    }
+    #blueBorder{
+        width: 390px;
+        height: 130px;
+        margin: 5px;
+        border: 5px solid #394f76;
+    }
+    .blueLaw{
+        width: 81px;
+        height: 130px;
+        margin: 0px;
+        border: 2px solid #394f76;
+    }
+    .blueIcon{
+        width: 40px;
+        height: 40px;
+        color: #394f76;
+        font-size: 40px;
+    
+        margin-top: 45px;
+        margin-left: 35px;
+    }
+
+
+    .redLawShell{
+        width: 526px;
+        height: 166px;
+        margin: 10px;
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+    #thinRedBorder{
+        width: 510px;
+        height: 150px;
+        margin: 5px;
+    
+        border: 3px solid #d53f1e;
+    }
+    #redBorder{
+
+        width: 490px;
+        height: 130px;
+        margin: 5px;
+        border: 5px solid #d53f1e;
+    }
+    .redLaw{
+        width: 81px;
+        height: 130px;
+        margin: auto;
+    
+        color:#d53f1e;
+    
+        border: 1px solid #d53f1e;
+    
+    }
+    .redIcon{
+        width: 40px;
+        height: 40px;
+        font-size: 40px;
+        margin-top: 45px;
+        margin-left: 35px;
+    
+    }
+    .fontAweSkull{
+        margin: auto;
+    }
+
+
+    #stacksCounters{
+        width: 100%;
+        height: 186px;
+        padding-bottom: 10px;
+    }
+    .stackLayoutShell{
+        width: 200px;
+        height: 180px;
+        margin: 5px 0% 5px 0%;
+        
+        background-color: #f6d399;
+        box-shadow: 3px 3px #b64c39;
+    
+        border-radius: 5px;
+    }
+    #stackBorder{
+        width: 140px;
+        height: 120px;
+        margin: 5px;   
+        text-align: center;   
+        border: 25px solid #6b5041;
+    }
+    .stackName{
+        position: relative;
+        top: -25px;
+        left: 0px; 
+        height: 24px;
+        width: 140px;
+        margin-top:0;
+        margin-bottom: 0;
+        font-size: 22px;
+    }
+    .textStack{
+        position: relative;
+        top: 0px;
+        width: 30px;
+        text-align: center;
+        height: 40px;
+        margin: auto;
+        font-size: 40px;
+    }
+
+    #skippedTurnsShell{
+        width: 400px;
+        height: 180px;
+        margin: 5px 0% 5px 0%;    
+        border-radius: 5px;
+    }
+    #borderSkipped{
+        width: 340px;
+        height: 120px;
+        margin: 5px;
+        border: 25px solid #6b5041;
+        border-radius: 5px;
+    }
+    #borderSkipped>p{
+        position: relative;
+        top: -25px;
+        left: -0px;
+    
+        height: 24px;
+        width: 340px;
+        margin: 0;
+    
+        font-size: 22px;
+    
+        color: #f6d399;
+        background-color: #6b5041;
+    }
+    .skippedTurns{  
+        display: flex;
+        justify-content: space-evenly;
+    
+        position: relative;
+        top: -0px;
+    
+        height: 40px;
+        width: 260px;
+        margin: auto;
+    }
+    .skippedDot{
+        height: 40px;
+        width: 40px;
+    
+        border-radius: 20px;
+        border: 2px dashed #f6d399;
+        background-color: #F2654B;
+    }
 }

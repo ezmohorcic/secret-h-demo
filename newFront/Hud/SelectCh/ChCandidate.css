@@ -34,3 +34,31 @@
 
     transition: 0.2s;
 }
+
+
+
+@media (min-width: 2000px){
+    .chCandidate{
+        width: 190px;
+        height: 45px;
+    }
+    .chCandidate:hover>.showOff{
+        width: 30px;
+        transition: 0.2s;
+    }
+    .chSelection{
+        width: 155px;
+        height: 45px;
+        font-size: 25px;
+    }
+    .showOff{
+        width: 0px;
+        height: 45px;
+    
+        background-color: #6b5041;
+        box-shadow: 5px 5px #8e4336;
+    
+        transition: 0.2s;
+    }
+    
+}

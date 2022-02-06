@@ -8,6 +8,7 @@ function DeckExam(props)
 {
     const socket = useContext(SocketContext);
     //const all_players=useSelector((state)=>state.all_players);
+    let dummy=["blue","blue","red"]
     const player_data=useSelector(state=>state.player_data)
     var arrShow = props.powerPayload.map((element,index)=>
     {

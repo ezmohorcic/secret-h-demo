@@ -68,3 +68,44 @@
 .unkColor{
     color:#fde1c0;
 }
+
+
+@media (min-width: 2000px) {
+    .player{
+        width: 176px;
+        height: 196px;
+        margin: 0;
+    }
+    .playerP{
+        width: 160px;
+        height: 30px;
+        margin: 0 auto 5px auto;
+        margin-top: 0;
+        margin-bottom: 0;
+    
+        text-align: center;
+        font-size: 25px;
+    
+        color: #fde1c0;
+        box-shadow: 0px -15px #b25544 inset;
+    }
+    
+    .estado{
+    
+        height: 60px;
+        margin: 10px auto 10px auto;
+    
+        font-size: 60px;
+        text-align: center;
+    }
+    
+    .estadoMuerto{
+        height: 60px;
+        margin: 0px auto 0px auto;
+    
+        font-size: 60px;
+        text-align: center;
+        
+        color:#8a0303;
+    }
+}
